@@ -1,0 +1,223 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="page-title">User Access Management</h2>
+    <p class="page-subtitle">Kelola role, hak akses, dan pemetaan karyawan sistem.</p>
+  </div>
+  <button mat-flat-button color="primary" class="btn-primary">
+    <mat-icon>person_add</mat-icon>
+    TAMBAH USER
+  </button>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="loading-overlay">
+  <mat-spinner diameter="48"></mat-spinner>
+  <p>Memuat data pengguna...</p>
+</div>
+
+<div class="flex-row-responsive" *ngIf="!loading && selectedUser">
+
+  <!-- Left Column: System Users Table -->
+  <div class="col-60">
+    <div class="card-panel h-100">
+
+      <div class="flex-space-between mb-3">
+        <h3 class="section-title">System Users</h3>
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Cari pengguna...</mat-label>
+          <input matInput (input)="applyFilter($event)" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z0 w-full-table user-table">
+
+        <!-- Name / Username Column -->
+        <ng-container matColumnDef="employeeName">
+          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Nama / Username</th>
+          <td mat-cell *matCellDef="let user">
+            <div class="user-name-cell">
+              <div class="user-avatar-sm">{{ user.employeeName?.charAt(0) ?? 'U' }}</div>
+              <div>
+                <div class="user-full-name">{{ user.employeeName }}</div>
+                <div class="user-username">{{ user.username }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Role</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="role-badge">{{ user.roleName }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Status</th>
+          <td mat-cell *matCellDef="let user">
+            <div class="gap-2">
+              <div class="status-dot" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'"></div>
+              <span class="status-text" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'">
+                {{ user.status === 'Y' ? 'Active' : 'Inactive' }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="text-align:center;">Aksi</th>
+          <td mat-cell *matCellDef="let user" style="text-align:center;">
+            <button mat-icon-button matTooltip="Edit User" class="action-btn"
+              (click)="selectUser(user)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="table-row-hover"
+          [class.selected-row]="selectedUser!.id === row.id"
+          (click)="selectUser(row)"
+          style="cursor: pointer;">
+        </tr>
+      </table>
+
+      <div *ngIf="filteredUsers.length === 0 && !loading" class="empty-state">
+        <mat-icon>manage_accounts</mat-icon>
+        <p>Tidak ada pengguna ditemukan.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right Column: Details & Matrix -->
+  <div class="col-40 gap-4">
+
+    <!-- User Details Card -->
+    <div class="card-panel" *ngIf="selectedUser">
+      <div class="flex-space-between mb-2">
+        <div>
+          <h3 class="section-title" style="margin-bottom: 0.25rem;">User Details</h3>
+          <p class="page-subtitle" style="margin: 0;">
+            {{ selectedUser.employeeName }} ({{ selectedUser.username }})
+          </p>
+        </div>
+        <span *ngIf="selectedUser.status === 'Y'" class="status-badge-active">ACTIVE</span>
+        <span *ngIf="selectedUser.status !== 'Y'" class="status-badge-inactive">INACTIVE</span>
+      </div>
+
+      <div class="gap-5 mt-4">
+        <!-- Role Select -->
+        <div>
+          <label class="text-xs-caps" style="display: block; margin-bottom: 0.5rem;">Assigned Role</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Pilih Role</mat-label>
+            <mat-select [(ngModel)]="selectedUser.roleId" (ngModelChange)="onRoleChange($event)">
+              <mat-option *ngFor="let role of roles" [value]="role.id">
+                {{ role.roleName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Employee Mapping -->
+        <div>
+          <label class="text-xs-caps" style="display: block; margin-bottom: 0.5rem;">Employee Mapping</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Karyawan Terhubung</mat-label>
+            <input matInput
+              [value]="'EMP-00' + selectedUser.employeeId + ' — ' + selectedUser.employeeName"
+              disabled />
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-icon matSuffix>link</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permission Matrix Card -->
+    <div class="card-panel">
+      <h3 class="section-title">Permission Matrix</h3>
+      <p class="page-subtitle" *ngIf="selectedRole" style="margin-bottom: 1rem;">
+        Konfigurasi hak akses untuk role
+        <strong style="color: #1e3a8a;">{{ selectedRole.roleName }}</strong>
+      </p>
+
+      <table mat-table [dataSource]="permissions" class="mat-elevation-z0 w-full-table permission-table">
+
+        <!-- Module Column -->
+        <ng-container matColumnDef="module">
+          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Modul</th>
+          <td mat-cell *matCellDef="let perm" style="font-weight: 500; font-size: 0.875rem;">
+            {{ perm.module }}
+          </td>
+        </ng-container>
+
+        <!-- Create Column -->
+        <ng-container matColumnDef="create">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Create">add_circle_outline</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let perm" style="text-align:center;">
+            <mat-checkbox [(ngModel)]="perm.create" color="primary"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Read Column -->
+        <ng-container matColumnDef="read">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Read">visibility</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let perm" style="text-align:center;">
+            <mat-checkbox [(ngModel)]="perm.read" color="primary"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Update Column -->
+        <ng-container matColumnDef="update">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Update">edit</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let perm" style="text-align:center;">
+            <mat-checkbox [(ngModel)]="perm.update" color="primary"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Delete Column -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
+            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Delete">delete_outline</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let perm" style="text-align:center;">
+            <mat-checkbox [(ngModel)]="perm.delete" color="warn"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['module','create','read','update','delete']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['module','create','read','update','delete'];"></tr>
+      </table>
+
+      <div class="permission-actions">
+        <button mat-stroked-button class="btn-cancel">BATAL</button>
+        <button mat-flat-button color="primary" class="btn-primary"
+          [disabled]="isSavingPermissions" (click)="savePermissions()">
+          <mat-icon>save</mat-icon>
+          {{ isSavingPermissions ? 'MENYIMPAN...' : 'SIMPAN PERMISSIONS' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Empty State (no data) -->
+<div *ngIf="!loading && !selectedUser" class="empty-detail-state card-panel">
+  <mat-icon>manage_accounts</mat-icon>
+  <p>Tidak ada data pengguna. Tambahkan pengguna baru.</p>
+</div>

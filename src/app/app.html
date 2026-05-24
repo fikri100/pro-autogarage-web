@@ -1,0 +1,59 @@
+<mat-sidenav-container class="layout-wrapper" autosize>
+  
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="layout-sidebar" style="width: 16rem; border-right: 1px solid #e2e8f0; background-color: #f8fafc;">
+    <!-- Logo -->
+    <div class="sidebar-logo-container">
+      <h1 class="sidebar-logo">Bengkel Pro</h1>
+      <span class="sidebar-subtitle">Professional Edition</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <ul class="sidebar-menu">
+        <li *ngFor="let item of menuItems">
+          <a [routerLink]="item.routerLink" 
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{exact: false}"
+             (click)="isMobile ? sidenav.close() : null"
+             class="sidebar-menu-item">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="layout-main" style="background-color: #f1f5f9;">
+    <!-- Topbar -->
+    <mat-toolbar class="layout-topbar" style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 1.5rem; justify-content: space-between;">
+      
+      <div style="display: flex; align-items: center;">
+        <!-- Hamburger Menu (Visible on Mobile) -->
+        <button mat-icon-button (click)="sidenav.toggle()" *ngIf="isMobile" style="margin-right: 1rem; color: #64748b;">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <button mat-icon-button style="color: #94a3b8;">
+          <i class="pi pi-bell" style="font-size: 1.25rem;"></i>
+        </button>
+        <button mat-icon-button style="color: #94a3b8;">
+          <i class="pi pi-cog" style="font-size: 1.25rem;"></i>
+        </button>
+        <div class="profile-avatar" style="margin-left: 0.5rem;">
+          A
+        </div>
+      </div>
+    </mat-toolbar>
+
+    <!-- Content Area -->
+    <main class="layout-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

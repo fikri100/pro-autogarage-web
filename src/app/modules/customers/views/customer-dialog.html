@@ -1,0 +1,109 @@
+<!-- Confirm Delete Dialog -->
+<ng-container *ngIf="data.mode === 'confirm'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon warn">delete_outline</mat-icon>
+    Konfirmasi Hapus
+  </h2>
+  <mat-dialog-content class="confirm-content">
+    <p>{{ data.message }}</p>
+    <p class="confirm-hint">Tindakan ini tidak dapat dibatalkan.</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">Batal</button>
+    <button mat-flat-button color="warn" (click)="onConfirm()">Hapus</button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- Add / Edit Customer Dialog -->
+<ng-container *ngIf="data.mode !== 'confirm'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">{{ data.mode === 'edit' ? 'edit' : 'person_add' }}</mat-icon>
+    {{ data.mode === 'edit' ? 'Edit Data Pelanggan' : 'Tambah Pelanggan Baru' }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="customerForm">
+
+      <!-- Section: Profil Pelanggan -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <mat-icon>person</mat-icon>
+          <span>Profil Pelanggan</span>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nama Lengkap <span class="required">*</span></mat-label>
+          <input matInput formControlName="name" placeholder="e.g. Budi Santoso" />
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
+            Nama wajib diisi
+          </mat-error>
+        </mat-form-field>
+
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nomor WhatsApp <span class="required">*</span></mat-label>
+            <span matTextPrefix class="phone-prefix">+62&nbsp;</span>
+            <input matInput formControlName="phone" placeholder="812-3456-7890" />
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="customerForm.get('phone')?.hasError('required')">
+              Nomor WhatsApp wajib diisi
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email (Opsional)</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="budi@example.com" />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="customerForm.get('email')?.hasError('email')">
+              Format email tidak valid
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Alamat</mat-label>
+          <textarea matInput formControlName="address" rows="2"
+            placeholder="Masukkan alamat lengkap"></textarea>
+          <mat-icon matSuffix>location_on</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Section: Data Kendaraan (hanya saat tambah baru) -->
+      <div class="dialog-section" *ngIf="data.mode === 'add'">
+        <div class="dialog-section-header">
+          <mat-icon>directions_car</mat-icon>
+          <span>Data Kendaraan</span>
+          <span class="optional-badge">OPSIONAL</span>
+        </div>
+
+        <div class="three-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Plat Nomor</mat-label>
+            <input matInput formControlName="plate" placeholder="B 1234 ABC"
+              style="font-family: monospace; font-weight: 600;" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Brand / Model</mat-label>
+            <input matInput formControlName="brand" placeholder="e.g. Toyota Avanza" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tahun</mat-label>
+            <input matInput formControlName="year" placeholder="2020" type="number" />
+          </mat-form-field>
+        </div>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
+      <mat-icon>save</mat-icon>
+      {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN PELANGGAN' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>
