@@ -1,0 +1,89 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">add_shopping_cart</mat-icon>
+  Tambah Sparepart / Jasa
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="itemForm">
+
+    <!-- Section: Pilih Item -->
+    <div class="dialog-section">
+      <div class="dialog-section-header">
+        <mat-icon>search</mat-icon>
+        <span>Cari & Pilih Item</span>
+      </div>
+
+      <!-- Filter text input to search products quickly -->
+      <mat-form-field appearance="outline" class="full-width" style="margin-bottom: 0.5rem;">
+        <mat-label>Ketik untuk menyaring item...</mat-label>
+        <input matInput (keyup)="filterProducts($event)" placeholder="Contoh: Oli / Rem" />
+        <mat-icon matSuffix>filter_alt</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Pilih Sparepart / Jasa <span class="required">*</span></mat-label>
+        <mat-select formControlName="productId">
+          <mat-option *ngFor="let p of filteredProducts" [value]="p.id">
+            [{{ p.code }}] {{ p.name }} - {{ p.salePrice | currency:'IDR':'Rp ':'1.0-0' }} 
+            <ng-container *ngIf="p.itemType === 'SPR'">(Stok: {{ p.stockQuantity }})</ng-container>
+            <ng-container *ngIf="p.itemType === 'SRV'">(JASA)</ng-container>
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="itemForm.get('productId')?.hasError('required')">
+          Item wajib dipilih
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Section: Jumlah Quantity -->
+    <div class="dialog-section" *ngIf="selectedProduct">
+      <div class="dialog-section-header">
+        <mat-icon>shopping_basket</mat-icon>
+        <span>Jumlah & Kalkulasi</span>
+      </div>
+
+      <!-- Detail Snapshot Card -->
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 0.35rem; padding: 0.75rem; margin-bottom: 1rem;">
+        <div style="font-weight: 700; color: #1e3a8a; font-size: 0.9rem;">{{ selectedProduct.name }}</div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+          <span>Harga: <b>{{ selectedProduct.salePrice | currency:'IDR':'Rp ':'1.0-0' }}</b></span>
+          <span *ngIf="selectedProduct.itemType === 'SPR'">
+            Stok Tersedia: <b [style.color]="selectedProduct.stockQuantity <= 0 ? '#ef4444' : '#10b981'">{{ selectedProduct.stockQuantity }} Pcs</b>
+          </span>
+        </div>
+      </div>
+
+      <div class="two-col-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity <span class="required">*</span></mat-label>
+          <input matInput type="number" formControlName="quantity" min="1" />
+          <mat-error *ngIf="itemForm.get('quantity')?.hasError('required')">
+            Quantity wajib diisi
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('quantity')?.hasError('min')">
+            Minimal quantity adalah 1
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('quantity')?.hasError('max')">
+            Stok tidak cukup! Maksimal {{ selectedProduct.stockQuantity }} Pcs
+          </mat-error>
+        </mat-form-field>
+
+        <div style="display: flex; flex-direction: column; justify-content: center; padding-left: 0.5rem;">
+          <span class="text-xs-caps" style="font-size: 0.65rem; color: #94a3b8;">Total Biaya Item:</span>
+          <span style="font-size: 1.2rem; font-weight: 800; color: #10b981; margin-top: 0.15rem;">
+            {{ (itemForm.get('quantity')?.value * selectedProduct.salePrice) | currency:'IDR':'Rp ':'1.0-0' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="itemForm.invalid" class="btn-save">
+    <mat-icon>playlist_add</mat-icon>
+    TAMBAHKAN ITEM
+  </button>
+</mat-dialog-actions>

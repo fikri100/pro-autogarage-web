@@ -1,0 +1,287 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="page-title">Manajemen Stok & Inventaris</h2>
+    <p class="page-subtitle">Kelola stok sparepart fisik, master data jasa, harga beli/HPP, dan sistem kontrol minimum stok.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem; align-items: center;">
+    <!-- Search Field -->
+    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: -1.25rem;">
+      <mat-label>Cari Kode / Nama...</mat-label>
+      <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <!-- Low Stock Quick Toggle -->
+    <button mat-stroked-button class="btn-filter" 
+            [style.border-color]="lowStockOnly ? '#ef4444' : '#e2e8f0'"
+            [style.color]="lowStockOnly ? '#ef4444' : '#475569'"
+            [style.background-color]="lowStockOnly ? '#fef2f2' : 'white'"
+            (click)="toggleLowStock()">
+      <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">warning_amber</mat-icon>
+      Stok Menipis
+    </button>
+
+    <button mat-flat-button color="primary" class="btn-primary" (click)="showAddModal()">
+      <mat-icon>add</mat-icon>
+      ITEM INVENTARIS BARU
+    </button>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="loading-overlay">
+  <mat-spinner diameter="48"></mat-spinner>
+  <p>Memuat data inventaris...</p>
+</div>
+
+<div class="flex-row-responsive" *ngIf="!loading">
+
+  <!-- Left Column: Unified list with filter controls -->
+  <div class="col-30">
+    <div class="card-panel h-100" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      
+      <!-- Type Filter Pills -->
+      <div style="padding: 1rem; border-bottom: 1px solid #e2e8f0; display: flex; gap: 0.35rem;">
+        <button mat-button style="flex: 1; font-size: 0.75rem; font-weight: 600; min-width: 0; padding: 0;"
+                [style.background-color]="selectedType === 'ALL' ? '#eff6ff' : 'transparent'"
+                [style.color]="selectedType === 'ALL' ? '#1e40af' : '#64748b'"
+                (click)="filterByType('ALL')">
+          SEMUA ({{ products.length }})
+        </button>
+        <button mat-button style="flex: 1; font-size: 0.75rem; font-weight: 600; min-width: 0; padding: 0;"
+                [style.background-color]="selectedType === 'SPR' ? '#eff6ff' : 'transparent'"
+                [style.color]="selectedType === 'SPR' ? '#1e40af' : '#64748b'"
+                (click)="filterByType('SPR')">
+          SPAREPART
+        </button>
+        <button mat-button style="flex: 1; font-size: 0.75rem; font-weight: 600; min-width: 0; padding: 0;"
+                [style.background-color]="selectedType === 'SRV' ? '#eff6ff' : 'transparent'"
+                [style.color]="selectedType === 'SRV' ? '#1e40af' : '#64748b'"
+                (click)="filterByType('SRV')">
+          JASA
+        </button>
+      </div>
+
+      <div class="list-header">
+        <h3>Daftar Inventaris</h3>
+        <span class="count-badge" [class.warn]="lowStockOnly">{{ products.length }} Item</span>
+      </div>
+
+      <div class="list-column-labels">
+        <span class="text-xs-caps">KODE / NAMA</span>
+        <span class="text-xs-caps" style="text-align: right;">INFO STOK</span>
+      </div>
+
+      <div class="customer-list-scroll" style="flex: 1; overflow-y: auto; max-height: 580px;">
+        <div *ngIf="products.length === 0" class="empty-state">
+          <mat-icon>inventory</mat-icon>
+          <p>Tidak ada item inventaris.</p>
+        </div>
+
+        <div *ngFor="let product of products"
+             class="list-item-hover"
+             [class.list-item-active]="selectedProduct?.id === product.id"
+             (click)="selectProduct(product)"
+             style="display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1.25rem;">
+          
+          <div style="display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; flex: 1;">
+            <span class="plate-badge" style="font-size: 0.7rem; padding: 0.1rem 0.35rem; align-self: flex-start;">
+              {{ product.code }}
+            </span>
+            <div style="font-weight: 600; color: #334155; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.25rem;">
+              {{ product.name }}
+            </div>
+          </div>
+
+          <div style="text-align: right; margin-left: 0.5rem; flex-shrink: 0;">
+            <ng-container *ngIf="product.itemType === 'SPR'; else jasaBadge">
+              <div style="font-weight: 700; font-size: 0.9rem;"
+                   [style.color]="getStockStatus(product) === 'danger' ? '#ef4444' : (getStockStatus(product) === 'warning' ? '#f59e0b' : '#10b981')">
+                {{ product.stockQuantity }} Pcs
+              </div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #94a3b8;">Limit: {{ product.minStockLimit }}</span>
+            </ng-container>
+            <ng-template #jasaBadge>
+              <span class="role-badge" style="background-color: #f1f5f9; color: #475569; font-size: 0.6rem; border-color: #cbd5e1;">
+                JASA
+              </span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Detail View of selected item -->
+  <div class="col-70">
+    <div class="card-panel h-100" *ngIf="selectedProduct" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Detail Profile Header -->
+      <div class="detail-header" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 1.25rem; margin-bottom: 0;">
+        <div class="detail-profile">
+          <div class="avatar-lg" 
+               [style.background]="selectedProduct.itemType === 'SPR' ? 'linear-gradient(135deg, #dbeafe, #bfdbfe)' : 'linear-gradient(135deg, #ecfdf5, #a7f3d0)'"
+               [style.color]="selectedProduct.itemType === 'SPR' ? '#1e40af' : '#047857'">
+            {{ selectedProduct.itemType === 'SPR' ? 'SP' : 'JS' }}
+          </div>
+          <div>
+            <h2 class="detail-name">{{ selectedProduct.name }}</h2>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.35rem;">
+              <span class="plate-badge" style="font-size: 0.8125rem; font-weight: 700;">{{ selectedProduct.code }}</span>
+              <span class="role-badge" 
+                    [style.background-color]="selectedProduct.itemType === 'SPR' ? '#eff6ff' : '#ecfdf5'"
+                    [style.color]="selectedProduct.itemType === 'SPR' ? '#1e40af' : '#047857'">
+                {{ selectedProduct.itemType === 'SPR' ? 'Sparepart' : 'Jasa / Layanan' }}
+              </span>
+              <span class="role-badge" style="background-color: #f8fafc; color: #64748b; font-weight: 500; text-transform: none; letter-spacing: normal;">
+                Kategori: {{ selectedProduct.category || '-' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button mat-stroked-button class="btn-secondary" (click)="showEditModal(selectedProduct)">
+            <mat-icon>edit</mat-icon>
+            Edit Item
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteProduct(selectedProduct)" matTooltip="Hapus Item">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Detail Body Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        
+        <!-- Panel Stok Kontrol (Hanya Sparepart) -->
+        <div class="card-panel" *ngIf="selectedProduct.itemType === 'SPR'" 
+             style="border-left: 4px solid"
+             [style.border-left-color]="getStockStatus(selectedProduct) === 'danger' ? '#ef4444' : (getStockStatus(selectedProduct) === 'warning' ? '#f59e0b' : '#10b981')"
+             style="background-color: #f8fafc; padding: 1.25rem;">
+          <h3 class="text-xs-caps" style="margin-bottom: 1rem; color: #475569;">Kontrol & Status Stok</h3>
+          
+          <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-top: 0.5rem;">
+            <span style="font-size: 2.25rem; font-weight: 800; color: #0f172a; line-height: 1;">
+              {{ selectedProduct.stockQuantity }}
+            </span>
+            <span style="font-weight: 600; color: #64748b; font-size: 1rem;">Pcs</span>
+            
+            <div style="margin-left: auto;">
+              <span *ngIf="getStockStatus(selectedProduct) === 'danger'" class="status-badge-inactive" style="font-size: 0.7rem; padding: 0.25rem 0.75rem;">
+                HABIS / RE-STOCK WAJIB
+              </span>
+              <span *ngIf="getStockStatus(selectedProduct) === 'warning'" class="status-badge-inactive" 
+                    style="font-size: 0.7rem; padding: 0.25rem 0.75rem; background-color: #fffbeb; color: #d97706; border-color: #fde68a;">
+                STOK MENIPIS
+              </span>
+              <span *ngIf="getStockStatus(selectedProduct) === 'success'" class="status-badge-active" style="font-size: 0.7rem; padding: 0.25rem 0.75rem;">
+                STOK AMAN
+              </span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Batas Stok Minimum</span>
+              <div style="font-weight: 600; font-size: 1rem; color: #334155; margin-top: 0.15rem;">
+                {{ selectedProduct.minStockLimit }} Pcs
+              </div>
+            </div>
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Satus Peringatan</span>
+              <div style="font-weight: 600; font-size: 0.85rem; margin-top: 0.15rem;"
+                   [style.color]="selectedProduct.stockQuantity! <= selectedProduct.minStockLimit! ? '#ef4444' : '#10b981'">
+                {{ selectedProduct.stockQuantity! <= selectedProduct.minStockLimit! ? '⚠️ Butuh Restock' : '✓ Cukup' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Jasa Info -->
+        <div class="card-panel" *ngIf="selectedProduct.itemType === 'SRV'"
+             style="border-left: 4px solid #10b981; background-color: #f8fafc; padding: 1.25rem; grid-column: span 2;">
+          <h3 class="text-xs-caps" style="margin-bottom: 0.5rem; color: #475569;">Informasi Jasa / Layanan</h3>
+          <p style="color: #64748b; font-size: 0.875rem; margin: 0.5rem 0 1rem 0;">
+            Item ini tergolong sebagai Jasa/Layanan servis di bengkel. Item bertipe jasa tidak memiliki kontrol stok fisik maupun HPP beli. Harga jasa bersifat tetap dan langsung dipetakan ke Work Order.
+          </p>
+          <div style="display: flex; gap: 2rem;">
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Tarif Jasa</span>
+              <div style="font-size: 1.5rem; font-weight: 800; color: #1e3a8a; margin-top: 0.25rem;">
+                {{ selectedProduct.salePrice | currency:'IDR':'Rp ':'1.0-0' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Keuangan / Pricing (Untuk Sparepart) -->
+        <div class="card-panel" *ngIf="selectedProduct.itemType === 'SPR'" style="background-color: #f8fafc; padding: 1.25rem;">
+          <h3 class="text-xs-caps" style="margin-bottom: 1rem; color: #475569;">Struktur Harga & Keuntungan</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Harga Beli (HPP)</span>
+              <div style="font-weight: 700; font-size: 1.15rem; color: #ef4444; margin-top: 0.15rem;">
+                {{ selectedProduct.purchasePrice | currency:'IDR':'Rp ':'1.0-0' }}
+              </div>
+            </div>
+
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Harga Jual</span>
+              <div style="font-weight: 700; font-size: 1.15rem; color: #10b981; margin-top: 0.15rem;">
+                {{ selectedProduct.salePrice | currency:'IDR':'Rp ':'1.0-0' }}
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem; border-top: 1px solid #e2e8f0; padding-top: 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Estimasi Margin Bersih</span>
+              <div style="font-weight: 800; font-size: 1.15rem; color: #1e3a8a; margin-top: 0.15rem;">
+                {{ (selectedProduct.salePrice - (selectedProduct.purchasePrice ?? 0)) | currency:'IDR':'Rp ':'1.0-0' }}
+              </div>
+            </div>
+            
+            <div style="text-align: right;">
+              <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Markup Keuntungan</span>
+              <div style="font-weight: 700; font-size: 0.95rem; color: #2563eb; margin-top: 0.15rem;" *ngIf="selectedProduct.purchasePrice! > 0">
+                {{ ((selectedProduct.salePrice - selectedProduct.purchasePrice!) / selectedProduct.purchasePrice! * 100) | number:'1.0-1' }}%
+              </div>
+              <div style="font-weight: 700; font-size: 0.95rem; color: #2563eb; margin-top: 0.15rem;" *ngIf="!selectedProduct.purchasePrice! || selectedProduct.purchasePrice! <= 0">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Audit Trails Info Card -->
+      <div class="card-panel" style="background-color: #ffffff; padding: 1.25rem; border-color: #f1f5f9;">
+        <h3 class="text-xs-caps" style="margin-bottom: 0.75rem; color: #94a3b8;">Audit Trail System</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.8rem; color: #64748b;">
+          <div>
+            Dibuat oleh: <span style="font-weight: 600; color: #334155;">{{ selectedProduct.createdBy || 'system' }}</span>
+            <br />
+            Pada Tanggal: <span style="font-weight: 500;">{{ selectedProduct.createdAt | date:'dd MMM yyyy, HH:mm' }}</span>
+          </div>
+          <div>
+            Terakhir Update: <span style="font-weight: 600; color: #334155;">{{ selectedProduct.updatedBy || 'system' }}</span>
+            <br />
+            Pada Tanggal: <span style="font-weight: 500;">{{ selectedProduct.updatedAt | date:'dd MMM yyyy, HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty Detail State -->
+    <div class="card-panel h-100 empty-detail-state" *ngIf="!selectedProduct"
+         style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5rem; gap: 1rem; color: #94a3b8;">
+      <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #cbd5e1;">find_in_page</mat-icon>
+      <p style="font-size: 1rem; font-weight: 500;">Pilih item inventaris atau jasa di daftar sebelah kiri untuk memuat detail.</p>
+    </div>
+  </div>
+
+</div>

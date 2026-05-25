@@ -8,6 +8,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { App } from './app';
 import { routes } from './app.routes';
 
+import { registerLocaleData } from '@angular/common';
+import localeId from '@angular/common/locales/id';
+import { LOCALE_ID } from '@angular/core';
+
+registerLocaleData(localeId, 'id-ID');
+
 // Angular Material Imports
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +42,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     MatSnackBarModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'id-ID' },
     provideHttpClient(),
     provideAnimationsAsync(),
     providePrimeNG({

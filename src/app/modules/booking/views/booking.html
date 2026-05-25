@@ -1,0 +1,139 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="page-title">Reservasi & Booking Pelanggan</h2>
+    <p class="page-subtitle">Kelola daftar pemesanan servis mandiri (WhatsApp/Web) dan buat antrean mekanik aktif.</p>
+  </div>
+  <div style="display: flex; gap: 0.75rem; align-items: center;">
+    <!-- Search Field -->
+    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: -1.25rem;">
+      <mat-label>Cari Nama / Plat Mobil...</mat-label>
+      <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" class="btn-primary" (click)="showAddModal()">
+      <mat-icon>add</mat-icon>
+      RESERVASI BARU
+    </button>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="loading-overlay">
+  <mat-spinner diameter="48"></mat-spinner>
+  <p>Memuat data booking...</p>
+</div>
+
+<!-- Main Content Grid -->
+<div *ngIf="!loading">
+
+  <!-- Filter Pills -->
+  <div class="card-panel" style="padding: 0.75rem 1.25rem; display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem;">
+    <span class="text-xs-caps" style="margin-right: 1rem;">Status Antrean:</span>
+    <button mat-stroked-button class="btn-filter"
+            [style.background-color]="selectedStatus === 'ALL' ? '#eff6ff' : 'white'"
+            [style.color]="selectedStatus === 'ALL' ? '#1e40af' : '#475569'"
+            [style.border-color]="selectedStatus === 'ALL' ? '#1e40af' : '#e2e8f0'"
+            (click)="filterByStatus('ALL')">
+      Semua Antrean
+    </button>
+    <button mat-stroked-button class="btn-filter"
+            [style.background-color]="selectedStatus === 'PENDING' ? '#fffbeb' : 'white'"
+            [style.color]="selectedStatus === 'PENDING' ? '#d97706' : '#475569'"
+            [style.border-color]="selectedStatus === 'PENDING' ? '#f59e0b' : '#e2e8f0'"
+            (click)="filterByStatus('PENDING')">
+      Menunggu (PENDING)
+    </button>
+    <button mat-stroked-button class="btn-filter"
+            [style.background-color]="selectedStatus === 'CONFIRMED' ? '#ecfdf5' : 'white'"
+            [style.color]="selectedStatus === 'CONFIRMED' ? '#047857' : '#475569'"
+            [style.border-color]="selectedStatus === 'CONFIRMED' ? '#10b981' : '#e2e8f0'"
+            (click)="filterByStatus('CONFIRMED')">
+      Dikonfirmasi (CONFIRMED)
+    </button>
+    <button mat-stroked-button class="btn-filter"
+            [style.background-color]="selectedStatus === 'CANCELLED' ? '#fef2f2' : 'white'"
+            [style.color]="selectedStatus === 'CANCELLED' ? '#b91c1c' : '#475569'"
+            [style.border-color]="selectedStatus === 'CANCELLED' ? '#ef4444' : '#e2e8f0'"
+            (click)="filterByStatus('CANCELLED')">
+      Dibatalkan (CANCELLED)
+    </button>
+  </div>
+
+  <!-- Bookings List Cards -->
+  <div *ngIf="filteredBookings.length === 0" class="card-panel" style="padding: 5rem; text-align: center; color: #94a3b8;">
+    <mat-icon style="font-size: 3.5rem; width: 3.5rem; height: 3.5rem; color: #cbd5e1; margin-bottom: 0.5rem;">event_busy</mat-icon>
+    <p style="font-size: 1.1rem; font-weight: 500;">Tidak ditemukan adanya reservasi untuk filter ini.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;">
+    <div class="card-panel" *ngFor="let b of filteredBookings" 
+         style="display: flex; flex-direction: column; gap: 1rem; border-top: 4px solid"
+         [style.border-top-color]="b.operationalStatus === 'PENDING' ? '#f59e0b' : (b.operationalStatus === 'CONFIRMED' ? '#10b981' : '#ef4444')">
+      
+      <!-- Top profile -->
+      <div style="display: flex; gap: 0.875rem; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;">
+        <div class="avatar-lg" style="width: 2.75rem; height: 2.75rem; font-size: 0.95rem; background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #374151;">
+          {{ getInitials(b.customerName || '') }}
+        </div>
+        <div>
+          <h4 style="margin: 0; font-size: 0.9rem; font-weight: 700; color: #1e293b;">{{ b.customerName }}</h4>
+          <span style="font-size: 0.75rem; color: #64748b; font-family: monospace;">{{ b.customerPhone }}</span>
+        </div>
+
+        <div style="margin-left: auto;">
+          <span *ngIf="b.operationalStatus === 'PENDING'" class="status-badge-inactive" style="background-color: #fffbeb; color: #d97706; border-color: #fde68a;">
+            PENDING
+          </span>
+          <span *ngIf="b.operationalStatus === 'CONFIRMED'" class="status-badge-active">
+            CONFIRMED
+          </span>
+          <span *ngIf="b.operationalStatus === 'CANCELLED'" class="status-badge-inactive">
+            CANCELLED
+          </span>
+        </div>
+      </div>
+
+      <!-- Vehicle info -->
+      <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 0.5rem 0.75rem; border-radius: 0.35rem;">
+        <div style="display: flex; flex-direction: column;">
+          <span class="text-xs-caps" style="font-size: 0.6rem; color: #94a3b8;">Kendaraan</span>
+          <span style="font-weight: 600; font-size: 0.85rem; color: #334155;">{{ b.vehicleBrand }} {{ b.vehicleModel }}</span>
+        </div>
+        <div class="plate-badge" style="font-size: 0.75rem; font-weight: 700;">{{ b.licensePlate }}</div>
+      </div>
+
+      <!-- DateTime & complaints -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem; color: #475569;">
+        <div>
+          <mat-icon style="font-size: 0.9rem; width: 0.9rem; height: 0.9rem; vertical-align: middle; margin-right: 0.25rem; color: #64748b;">calendar_today</mat-icon>
+          <span>Tanggal: <b>{{ b.bookingDate | date:'dd MMM yyyy' }}</b></span>
+        </div>
+        <div>
+          <mat-icon style="font-size: 0.9rem; width: 0.9rem; height: 0.9rem; vertical-align: middle; margin-right: 0.25rem; color: #64748b;">schedule</mat-icon>
+          <span>Jam: <b>{{ b.bookingTime }} WIB</b></span>
+        </div>
+      </div>
+
+      <!-- Complaints area -->
+      <div style="border-top: 1px dashed #e2e8f0; padding-top: 0.75rem;">
+        <span class="text-xs-caps" style="font-size: 0.6rem;">Keluhan / Kendala Utama:</span>
+        <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #64748b; line-height: 1.4; height: 40px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+          {{ b.complaints || 'Tidak ada catatan keluhan spesifik.' }}
+        </p>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;" *ngIf="b.operationalStatus === 'PENDING'">
+        <button mat-stroked-button color="warn" style="flex: 1; font-size: 0.75rem;" (click)="cancelBooking(b)">
+          BATALKAN
+        </button>
+        <button mat-flat-button color="primary" style="flex: 1.5; font-size: 0.75rem;" (click)="confirmBooking(b)">
+          KONFIRMASI
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

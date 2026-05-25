@@ -1,0 +1,110 @@
+<!-- Confirm Action Dialog (Confirm/Cancel) -->
+<ng-container *ngIf="data.mode === 'confirm' || data.mode === 'cancel'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon" [class.warn]="data.mode === 'cancel'">
+      {{ data.mode === 'confirm' ? 'check_circle_outline' : 'highlight_off' }}
+    </mat-icon>
+    {{ data.mode === 'confirm' ? 'Konfirmasi Booking' : 'Batalkan Booking' }}
+  </h2>
+  <mat-dialog-content class="confirm-content">
+    <p>{{ data.message }}</p>
+    <p *ngIf="data.mode === 'confirm'" style="color: #475569; font-size: 0.8rem;">
+      Tindakan ini akan memicu pembuatan tiket **Work Order aktif** secara otomatis untuk memulai servis kendaraan.
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">Batal</button>
+    <button mat-flat-button [color]="data.mode === 'confirm' ? 'primary' : 'warn'" (click)="onConfirm()">
+      {{ data.mode === 'confirm' ? 'Konfirmasi & Mulai Servis' : 'Batalkan' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- Add Booking Dialog -->
+<ng-container *ngIf="data.mode === 'add'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">calendar_today</mat-icon>
+    Buat Booking Baru
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="bookingForm">
+
+      <!-- Section: Pelanggan & Kendaraan -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <mat-icon>person</mat-icon>
+          <span>Profil & Aset Pelanggan</span>
+        </div>
+
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Pelanggan <span class="required">*</span></mat-label>
+            <mat-select formControlName="customerId">
+              <mat-option *ngFor="let c of customers" [value]="c.id">
+                {{ c.name }} ({{ c.phone }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">
+              Pelanggan wajib dipilih
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Kendaraan Terdaftar <span class="required">*</span></mat-label>
+            <mat-select formControlName="vehicleId" [disabled]="!bookingForm.get('customerId')?.value">
+              <mat-option *ngFor="let v of filteredVehicles" [value]="v.id">
+                {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bookingForm.get('vehicleId')?.hasError('required')">
+              Kendaraan wajib dipilih
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Section: Tanggal & Waktu -->
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <mat-icon>schedule</mat-icon>
+          <span>Jadwal Reservasi</span>
+        </div>
+
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Tanggal Servis <span class="required">*</span></mat-label>
+            <input matInput type="date" formControlName="bookingDate" />
+            <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">
+              Tanggal reservasi wajib diisi
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Jam Servis <span class="required">*</span></mat-label>
+            <input matInput type="time" formControlName="bookingTime" />
+            <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
+              Jam reservasi wajib diisi
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.5rem;">
+          <mat-label>Keluhan / Catatan Awal</mat-label>
+          <textarea matInput formControlName="complaints" rows="3" 
+                    placeholder="Contoh: Bunyi berdecit di rem depan, AC kurang dingin"></textarea>
+          <mat-icon matSuffix>notes</mat-icon>
+        </mat-form-field>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
+      <mat-icon>save</mat-icon>
+      {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN BOOKING' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

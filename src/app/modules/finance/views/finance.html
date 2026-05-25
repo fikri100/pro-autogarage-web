@@ -1,0 +1,331 @@
+<div class="page-container" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+
+  <!-- Header -->
+  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Laporan Keuangan & Cashflow</h2>
+      <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Dashboard pelacakan pemasukan, pengeluaran, dan laba kotor Pro Auto Garage.</p>
+    </div>
+    <div>
+      <button mat-flat-button color="primary" (click)="openAddDialog()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 0.6rem 1.25rem; border-radius: 8px; letter-spacing: 0.02em; background-color: #3b82f6;">
+        <mat-icon style="margin-right: 0.25rem;">add_circle</mat-icon>
+        <span>CATAT KAS MANUAL</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI SUMMARY CARDS -->
+  <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+
+    <!-- CARD: Pemasukan -->
+    <div class="kpi-card emerald" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 1.25rem; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #065f46; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Total Pemasukan (INC)</span>
+          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #047857; font-size: 1.6rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+            Rp {{ summary.totalIncome | number:'1.0-0':'id-ID' }}
+          </h3>
+          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #059669;">Akumulasi kas masuk</span>
+        </div>
+        <div style="background-color: #a7f3d0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #047857;">
+          <mat-icon>trending_up</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Pengeluaran -->
+    <div class="kpi-card rose" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 1px solid #fecdd3; border-radius: 12px; padding: 1.25rem; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #9f1239; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Total Pengeluaran (EXP)</span>
+          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #be123c; font-size: 1.6rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+            Rp {{ summary.totalExpense | number:'1.0-0':'id-ID' }}
+          </h3>
+          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #e11d48;">Gaji, listrik, & restock</span>
+        </div>
+        <div style="background-color: #fecdd3; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #be123c;">
+          <mat-icon>trending_down</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Saldo Bersih -->
+    <div class="kpi-card blue" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.25rem; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #1e40af; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Saldo Bersih Kas</span>
+          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1d4ed8; font-size: 1.6rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+            Rp {{ summary.netCashflow | number:'1.0-0':'id-ID' }}
+          </h3>
+          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #2563eb;">Arus kas tersedia saat ini</span>
+        </div>
+        <div style="background-color: #bfdbfe; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #1d4ed8;">
+          <mat-icon>account_balance</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD: Laba Kotor -->
+    <div class="kpi-card gold" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; border-radius: 12px; padding: 1.25rem; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #92400e; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Estimasi Laba Kotor</span>
+          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #b45309; font-size: 1.6rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+            Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}
+          </h3>
+          <div style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #d97706; display: flex; flex-direction: column; gap: 0.1rem; margin-top: 0.35rem;">
+            <span>Jasa Servis: Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</span>
+            <span>Sparepart Margin: Rp {{ (summary.totalSparepartSales - summary.totalSparepartCOGS) | number:'1.0-0':'id-ID' }}</span>
+          </div>
+        </div>
+        <div style="background-color: #fde68a; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #b45309;">
+          <mat-icon>assessment</mat-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VISUAL CHART SECTION -->
+  <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+      <div>
+        <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.1rem;">Visualisasi Perbandingan Kas Masuk vs Kas Keluar</h4>
+        <p style="font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #64748b; margin: 0.15rem 0 0 0;">Representasi grafis rekapitulasi transaksi arus kas secara visual.</p>
+      </div>
+      <div style="display: flex; background-color: #f1f5f9; padding: 0.25rem; border-radius: 8px; gap: 0.25rem;">
+        <button mat-button 
+                [style.background-color]="chartPeriod === 'daily' ? '#ffffff' : 'transparent'"
+                [style.box-shadow]="chartPeriod === 'daily' ? '0 1px 3px 0 rgba(0,0,0,0.1)' : 'none'"
+                (click)="changeChartPeriod('daily')"
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-radius: 6px; padding: 0.25rem 0.75rem; min-width: auto; height: 32px; color: #1e293b;">
+          Harian (30 Hari)
+        </button>
+        <button mat-button 
+                [style.background-color]="chartPeriod === 'monthly' ? '#ffffff' : 'transparent'"
+                [style.box-shadow]="chartPeriod === 'monthly' ? '0 1px 3px 0 rgba(0,0,0,0.1)' : 'none'"
+                (click)="changeChartPeriod('monthly')"
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-radius: 6px; padding: 0.25rem 0.75rem; min-width: auto; height: 32px; color: #1e293b;">
+          Bulanan (12 Bulan)
+        </button>
+      </div>
+    </div>
+
+    <!-- CUSTOM PREMIUM SVG BAR CHART -->
+    <div style="position: relative; width: 100%; height: 260px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div *ngIf="chartLoading" style="position: absolute; inset: 0; background-color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; z-index: 10;">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!chartLoading && chartItems.length === 0" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
+        <mat-icon style="font-size: 3rem; width: auto; height: auto; margin-bottom: 0.5rem; color: #cbd5e1;">bar_chart</mat-icon>
+        <span>Belum ada data grafik untuk periode ini</span>
+      </div>
+
+      <!-- SVG Drawing -->
+      <div *ngIf="chartItems.length > 0" style="flex: 1; width: 100%; display: flex; align-items: flex-end; padding-bottom: 1.5rem;">
+        
+        <!-- Y-Axis indicator line and values -->
+        <div style="width: 70px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; padding-right: 0.75rem; border-right: 1px solid #e2e8f0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #64748b;">
+          <span>Rp {{ maxChartVal | number:'1.0-0':'id-ID' }}</span>
+          <span>Rp {{ (maxChartVal * 0.5) | number:'1.0-0':'id-ID' }}</span>
+          <span>Rp 0</span>
+        </div>
+
+        <!-- Columns container -->
+        <div style="flex: 1; height: 100%; display: flex; justify-content: space-around; align-items: flex-end; padding-left: 0.75rem; position: relative;">
+          
+          <!-- Mid Gridline -->
+          <div style="position: absolute; left: 0; right: 0; bottom: 50%; border-top: 1px dashed #f1f5f9; z-index: 1;"></div>
+          
+          <!-- Bar pairs -->
+          <div *ngFor="let item of chartItems" style="display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; position: relative; z-index: 2; max-width: 80px;">
+            <div style="display: flex; gap: 4px; align-items: flex-end; height: 100%; width: 100%; justify-content: center;">
+              
+              <!-- Income Bar (Emerald) -->
+              <div [style.height.%]="getBarHeight(item.income)" 
+                   matTooltip="Masuk: Rp {{ item.income | number:'1.0-0':'id-ID' }}"
+                   style="width: 14px; background: linear-gradient(to top, #10b981, #34d399); border-radius: 4px 4px 0 0; transition: height 0.4s ease-in-out; cursor: pointer; position: relative;">
+              </div>
+
+              <!-- Expense Bar (Rose) -->
+              <div [style.height.%]="getBarHeight(item.expense)"
+                   matTooltip="Keluar: Rp {{ item.expense | number:'1.0-0':'id-ID' }}"
+                   style="width: 14px; background: linear-gradient(to top, #f43f5e, #fb7185); border-radius: 4px 4px 0 0; transition: height 0.4s ease-in-out; cursor: pointer; position: relative;">
+              </div>
+
+            </div>
+
+            <!-- X-Axis Label -->
+            <span style="position: absolute; bottom: -20px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem; font-weight: 600; color: #64748b; white-space: nowrap; transform: rotate(-15deg); transform-origin: top center;">
+              {{ getChartLabelShort(item.label) }}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Legend -->
+      <div style="display: flex; justify-content: center; gap: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 600; color: #475569; padding-top: 0.5rem; border-top: 1px solid #f1f5f9;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 12px; height: 12px; background-color: #10b981; border-radius: 3px;"></div>
+          <span>Kas Masuk (INC)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 12px; height: 12px; background-color: #f43f5e; border-radius: 3px;"></div>
+          <span>Kas Keluar (EXP)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FILTERS & TABLE -->
+  <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);">
+    
+    <!-- Filter Header -->
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background-color: #fafafa;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <mat-icon style="color: #64748b;">filter_list</mat-icon>
+        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Filter & Pencarian Arus Kas</span>
+      </div>
+      <button mat-button (click)="resetFilters()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.8rem; color: #64748b; padding: 0 0.75rem;">
+        RESET FILTER
+      </button>
+    </div>
+
+    <!-- Filters Body -->
+    <div style="padding: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; border-bottom: 1px solid #f1f5f9;">
+      
+      <!-- Type Filter -->
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Tipe Arus Kas</mat-label>
+        <mat-select [(ngModel)]="filterType" (selectionChange)="onFilterChange()">
+          <mat-option value="">Semua Tipe</mat-option>
+          <mat-option value="INC">Pemasukan (Kas Masuk)</mat-option>
+          <mat-option value="EXP">Pengeluaran (Kas Keluar)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Category Filter -->
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Kategori</mat-label>
+        <mat-select [(ngModel)]="filterCategory" (selectionChange)="onFilterChange()">
+          <mat-option value="">Semua Kategori</mat-option>
+          <mat-option value="SERVICE">Pemasukan Jasa Servis</mat-option>
+          <mat-option value="SALARY">Gaji Karyawan</mat-option>
+          <mat-option value="ELECTRICITY">Listrik & Air</mat-option>
+          <mat-option value="STOCK">Pembelian Stok</mat-option>
+          <mat-option value="RENT">Sewa Tempat</mat-option>
+          <mat-option value="OTHER">Lain-lain</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Start Date -->
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Dari Tanggal</mat-label>
+        <input matInput type="date" [(ngModel)]="filterStartDate" (change)="onFilterChange()" />
+      </mat-form-field>
+
+      <!-- End Date -->
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Sampai Tanggal</mat-label>
+        <input matInput type="date" [(ngModel)]="filterEndDate" (change)="onFilterChange()" />
+      </mat-form-field>
+
+    </div>
+
+    <!-- TABLE BODY -->
+    <div style="position: relative; width: 100%;">
+      
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" style="padding: 3rem; display: flex; align-items: center; justify-content: center;">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && cashflows.length === 0" style="padding: 4rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
+        <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1;">content_paste</mat-icon>
+        <span style="font-weight: 500;">Tidak ada catatan arus kas yang cocok dengan filter</span>
+        <span style="font-size: 0.8rem; color: #94a3b8;">Coba ganti filter atau catat kas manual baru</span>
+      </div>
+
+      <!-- mat-table -->
+      <div *ngIf="!loading && cashflows.length > 0" class="table-responsive" style="overflow-x: auto;">
+        <table mat-table [dataSource]="cashflows" style="width: 100%;">
+
+          <!-- Column: Tanggal -->
+          <ng-container matColumnDef="flowDate">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem;">Tanggal</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem 1.5rem; color: #334155;">
+              {{ row.flowDate | date:'dd MMM yyyy':'':'id-ID' }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Tipe -->
+          <ng-container matColumnDef="cashflowType">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem;">Tipe</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 1rem 1.5rem;">
+              <span *ngIf="row.cashflowType === 'INC'" style="background-color: #d1fae5; color: #065f46; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; letter-spacing: 0.02em;">
+                PEMASUKAN
+              </span>
+              <span *ngIf="row.cashflowType === 'EXP'" style="background-color: #ffe4e6; color: #9f1239; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; letter-spacing: 0.02em;">
+                PENGELUARAN
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Column: Kategori -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem;">Kategori</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem 1.5rem; color: #475569; font-weight: 500;">
+              {{ getCategoryLabel(row.category) }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Nominal -->
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem;">Nominal</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; padding: 1rem 1.5rem; font-size: 0.95rem;">
+              <span [style.color]="row.cashflowType === 'INC' ? '#047857' : '#be123c'">
+                {{ row.cashflowType === 'INC' ? '+' : '-' }} Rp {{ row.amount | number:'1.0-0':'id-ID' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Column: Keterangan -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem;">Keterangan</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem 1.5rem; color: #64748b; font-size: 0.85rem; max-width: 300px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+              {{ row.description || '-' }}
+              <span *ngIf="row.transactionId" style="font-family: 'JetBrains Mono', monospace; color: #3b82f6; font-size: 0.75rem; margin-left: 0.5rem; font-weight: 600;">(Auto)</span>
+            </td>
+          </ng-container>
+
+          <!-- Column: Aksi -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; padding: 1rem 1.5rem; text-align: center; width: 80px;">Aksi</th>
+            <td mat-cell *matCellDef="let row" style="padding: 0.5rem 1.5rem; text-align: center;">
+              <button mat-icon-button 
+                      color="warn" 
+                      [disabled]="row.transactionId" 
+                      (click)="deleteCashflow(row)" 
+                      matTooltip="Hapus pencatatan manual" 
+                      [style.color]="row.transactionId ? '#cbd5e1' : '#ef4444'">
+                <mat-icon style="font-size: 1.25rem;">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'"></tr>
+
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,101 @@
+<mat-dialog-content style="padding: 1.5rem !important; overflow: visible !important;">
+  
+  <div id="print-dialog-root">
+    <!-- Header -->
+    <div class="receipt-header">
+      <h3 style="margin: 0; font-size: 14px; font-weight: 800; letter-spacing: -0.02em;">PRO AUTO GARAGE</h3>
+      <div style="font-size: 9px; margin-top: 0.15rem;">Jalan Raya Otomotif No. 88, Jakarta</div>
+      <div style="font-size: 9px;">WA: +62 812-3456-7890</div>
+    </div>
+
+    <div class="receipt-divider"></div>
+
+    <!-- Metadata -->
+    <div style="font-size: 10px; margin-bottom: 0.5rem;">
+      <div class="receipt-row">
+        <span>No. Invoice:</span>
+        <span style="font-weight: 700;">{{ t.invoiceNumber }}</span>
+      </div>
+      <div class="receipt-row">
+        <span>Tanggal:</span>
+        <span>{{ t.transactionDate | date:'dd/MM/yyyy HH:mm' }} WIB</span>
+      </div>
+      <div class="receipt-row">
+        <span>Pelanggan:</span>
+        <span>{{ t.customerName || 'Walk-in Customer' }}</span>
+      </div>
+      <div class="receipt-row">
+        <span>Plat Nomor:</span>
+        <span style="font-weight: 700;">{{ t.licensePlate }}</span>
+      </div>
+    </div>
+
+    <div class="receipt-divider"></div>
+
+    <!-- Items List -->
+    <div style="margin-bottom: 0.5rem;">
+      <div *ngFor="let item of t.details" style="margin-bottom: 0.35rem;">
+        <div class="receipt-item-title">{{ item.productName }}</div>
+        <div class="receipt-item-calc">
+          <span>{{ item.quantity }} x {{ item.priceAtTransaction | currency:'IDR':'Rp ':'1.0-0' }}</span>
+          <span style="font-weight: 600;">{{ (item.quantity * item.priceAtTransaction) | currency:'IDR':'Rp ':'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="receipt-divider"></div>
+
+    <!-- Financial Summary -->
+    <div style="font-size: 10px;">
+      <div class="receipt-row">
+        <span>Subtotal:</span>
+        <span>{{ subtotal | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+      <div class="receipt-row" *ngIf="t.discount > 0">
+        <span>Diskon:</span>
+        <span>-{{ t.discount | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+      <div class="receipt-row">
+        <span>PPN (11%):</span>
+        <span>{{ tax | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+      <div class="receipt-row" style="font-weight: 800; font-size: 12px; margin-top: 0.25rem;">
+        <span>TOTAL TAGIHAN:</span>
+        <span>{{ t.totalAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+      
+      <div class="receipt-divider" style="border-style: dotted;"></div>
+
+      <div class="receipt-row">
+        <span>Metode Bayar:</span>
+        <span>{{ t.paymentMethod || 'Tunai' }}</span>
+      </div>
+      <div class="receipt-row">
+        <span>Uang Diterima:</span>
+        <span>{{ cashAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+      <div class="receipt-row" style="font-weight: 700;">
+        <span>Kembalian:</span>
+        <span>{{ changeAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
+      </div>
+    </div>
+
+    <div class="receipt-divider"></div>
+
+    <!-- Footer -->
+    <div style="text-align: center; font-size: 9px; margin-top: 0.5rem;">
+      <b>TERIMA KASIH ATAS KUNJUNGAN ANDA</b>
+      <div style="margin-top: 0.15rem;">Garansi Servis: 7 Hari / 100 KM</div>
+      <div>Sistem Manajemen Bengkel Pro Auto Garage</div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="no-print" style="border-top: 1px solid #f1f5f9; padding: 0.75rem 1.5rem !important;">
+  <button mat-stroked-button (click)="closeDialog()">TUTUP</button>
+  <button mat-flat-button color="primary" (click)="printReceipt()">
+    <mat-icon>print</mat-icon>
+    CETAK STRUK
+  </button>
+</mat-dialog-actions>

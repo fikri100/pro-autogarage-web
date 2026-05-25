@@ -1,0 +1,235 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h2 class="page-title">Monitoring Servis & Work Order</h2>
+    <p class="page-subtitle">Kelola penugasan mekanik, keluhan pelanggan, dan kalkulasi estimasi sparepart/jasa.</p>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="loading-overlay">
+  <mat-spinner diameter="48"></mat-spinner>
+  <p>Memuat data Work Order...</p>
+</div>
+
+<div class="flex-row-responsive" *ngIf="!loading">
+
+  <!-- Left Column: Active list -->
+  <div class="col-30">
+    <div class="card-panel h-100" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <div class="list-header">
+        <h3>Antrean Servis Aktif</h3>
+        <span class="count-badge">{{ workOrders.length }} Unit</span>
+      </div>
+
+      <div class="list-column-labels">
+        <span class="text-xs-caps">KENDARAAN / PLAT</span>
+        <span class="text-xs-caps" style="text-align: right;">STATUS</span>
+      </div>
+
+      <div class="customer-list-scroll" style="flex: 1; overflow-y: auto; max-height: 580px;">
+        <div *ngIf="workOrders.length === 0" class="empty-state">
+          <mat-icon>build_circle</mat-icon>
+          <p>Tidak ada mobil di area servis.</p>
+        </div>
+
+        <div *ngFor="let wo of workOrders"
+             class="list-item-hover"
+             [class.list-item-active]="selectedWO?.id === wo.id"
+             (click)="selectWorkOrder(wo)"
+             style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem;">
+          
+          <div style="display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; flex: 1;">
+            <div class="plate-badge" style="font-size: 0.8rem; font-weight: 700; align-self: flex-start;">
+              {{ wo.licensePlate }}
+            </div>
+            <div style="font-weight: 600; color: #334155; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.25rem;">
+              {{ wo.customerName }}
+            </div>
+            <span style="font-size: 0.7rem; color: #64748b;">Mekanik: {{ wo.mechanicName || 'Belum ditunjuk' }}</span>
+          </div>
+
+          <div style="text-align: right; margin-left: 0.5rem; flex-shrink: 0;">
+            <span *ngIf="wo.workStatus === 'IN_PROGRESS'" class="status-badge-inactive" style="background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe;">
+              SERVIS
+            </span>
+            <span *ngIf="wo.workStatus === 'COMPLETED'" class="status-badge-active" style="background-color: #ecfdf5; color: #047857; border-color: #a7f3d0;">
+              SELESAI
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Detail Work Order -->
+  <div class="col-70">
+    <div class="card-panel h-100" *ngIf="selectedWO" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Profile Header -->
+      <div class="detail-header" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 0;">
+        <div class="detail-profile">
+          <div class="avatar-lg" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; border-radius: 0.5rem;">
+            <mat-icon style="font-size: 1.75rem; width: 1.75rem; height: 1.75rem;">build</mat-icon>
+          </div>
+          <div>
+            <h2 class="detail-name" style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="plate-badge" style="font-size: 1.25rem; font-weight: 800; padding: 0.2rem 0.625rem;">{{ selectedWO.licensePlate }}</span>
+              <span style="font-size: 1.15rem; color: #475569;">{{ selectedWO.vehicleBrand }} {{ selectedWO.vehicleModel }}</span>
+            </h2>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.35rem; font-size: 0.8rem; color: #64748b;">
+              <span>Pemilik: <b>{{ selectedWO.customerName }}</b></span>
+              <span>•</span>
+              <span>Mulai Servis: <b>{{ selectedWO.startTime | date:'dd MMM yyyy, HH:mm' }} WIB</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;" *ngIf="selectedWO.workStatus === 'IN_PROGRESS'">
+          <button mat-flat-button color="primary" class="btn-primary" 
+                  [disabled]="estimationDetails.length === 0 || !selectedWO.mechanicId" 
+                  (click)="completeWO()">
+            <mat-icon>check_circle</mat-icon>
+            SELESAI SERVIS
+          </button>
+        </div>
+      </div>
+
+      <!-- Mechanic Assignment Panel -->
+      <div class="card-panel" style="background-color: #f8fafc; padding: 1.25rem; border-color: #e2e8f0;">
+        <h3 class="text-xs-caps" style="margin-bottom: 1rem; color: #475569; display: flex; align-items: center; gap: 0.35rem;">
+          <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #3b82f6;">engineering</mat-icon>
+          Tunjuk Mekanik & Diagnosa Masalah
+        </h3>
+
+        <div style="display: grid; grid-template-columns: 1.5fr 3fr auto; gap: 1rem; align-items: flex-start;">
+          
+          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            <mat-label>Pilih Mekanik <span class="required">*</span></mat-label>
+            <mat-select [(ngModel)]="selectedMechanicId" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'">
+              <mat-option *ngFor="let m of mechanics" [value]="m.id">
+                {{ m.name }} ({{ m.position }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            <mat-label>Diagnosa Keluhan & Catatan Servis</mat-label>
+            <textarea matInput [(ngModel)]="woNotes" rows="1" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'"
+                      placeholder="e.g. Kampas rem tipis perlu ganti, oli mesin hitam pekat"></textarea>
+          </mat-form-field>
+
+          <button mat-flat-button class="btn-secondary" style="height: 3.25rem; border-color: #cbd5e1;" 
+                  *ngIf="selectedWO.workStatus === 'IN_PROGRESS'"
+                  [disabled]="!selectedMechanicId"
+                  (click)="saveMechanicAssignment()">
+            <mat-icon>save</mat-icon>
+            Simpan
+          </button>
+        </div>
+      </div>
+
+      <!-- Estimation Pricing Details Table -->
+      <div style="flex: 1; display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 class="text-xs-caps" style="color: #475569; display: flex; align-items: center; gap: 0.35rem;">
+            <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #10b981;">receipt_long</mat-icon>
+            Rincian Estimasi Biaya Servis
+          </h3>
+          <button mat-stroked-button color="primary" style="font-size: 0.75rem;" 
+                  *ngIf="selectedWO.workStatus === 'IN_PROGRESS'"
+                  (click)="showAddItemModal()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            + SPAREPART / JASA
+          </button>
+        </div>
+
+        <!-- Details Table -->
+        <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; background: white;">
+          <div *ngIf="estimationDetails.length === 0" class="empty-state" style="padding: 4rem;">
+            <mat-icon style="color: #cbd5e1; font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">post_add</mat-icon>
+            <p style="margin-top: 0.5rem;">Belum ada estimasi biaya. Klik "+ Sparepart / Jasa" untuk menambahkan.</p>
+          </div>
+
+          <table mat-table [dataSource]="estimationDetails" class="mat-elevation-z0 w-full-table" *ngIf="estimationDetails.length > 0">
+            
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Kode</th>
+              <td mat-cell *matCellDef="let d" style="font-family: monospace; font-weight: 600;">{{ d.productCode }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Nama Item</th>
+              <td mat-cell *matCellDef="let d" style="font-weight: 500; color: #334155;">{{ d.productName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Tipe</th>
+              <td mat-cell *matCellDef="let d">
+                <span class="role-badge" [style.background-color]="d.productType === 'SPR' ? '#eff6ff' : '#ecfdf5'"
+                      [style.color]="d.productType === 'SPR' ? '#1e40af' : '#047857'" style="font-size: 0.55rem; padding: 0.1rem 0.35rem;">
+                  {{ d.productType === 'SPR' ? 'BARANG' : 'JASA' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="qty">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="text-align: center;">Qty</th>
+              <td mat-cell *matCellDef="let d" style="text-align: center; font-weight: 600;">{{ d.quantity }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Harga</th>
+              <td mat-cell *matCellDef="let d">{{ d.priceAtTransaction | currency:'IDR':'Rp ':'1.0-0' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="subtotal">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Subtotal</th>
+              <td mat-cell *matCellDef="let d" style="font-weight: 700; color: #1e3a8a;">
+                {{ (d.quantity * d.priceAtTransaction) | currency:'IDR':'Rp ':'1.0-0' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="width: 50px;"></th>
+              <td mat-cell *matCellDef="let d; let i = index">
+                <button mat-icon-button color="warn" matTooltip="Hapus Estimasi" 
+                        *ngIf="selectedWO.workStatus === 'IN_PROGRESS'" (click)="deleteItem(i)">
+                  <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">delete_outline</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="detailsColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: detailsColumns;" class="table-row-hover"></tr>
+          </table>
+        </div>
+
+        <!-- Total Panel -->
+        <div style="background-color: #f1f5f9; padding: 1rem 1.5rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border: 1px solid #cbd5e1;">
+          <div>
+            <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Total Estimasi Sementara:</span>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #1e3a8a; margin-top: 0.15rem;">
+              {{ estimationTotal | currency:'IDR':'Rp ':'1.0-0' }}
+            </div>
+          </div>
+          
+          <div *ngIf="selectedWO.workStatus === 'COMPLETED'" style="text-align: right; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.5rem 1rem; border-radius: 0.35rem;">
+            <span style="font-size: 0.65rem; font-weight: 700; color: #047857; letter-spacing: 0.05em; text-transform: uppercase;">Menunggu Kasir</span>
+            <div style="font-size: 0.8rem; font-weight: 500; color: #065f46; margin-top: 0.15rem;">Servis Selesai & Estimasi Terkunci</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Empty Detail State -->
+    <div class="card-panel h-100 empty-detail-state" *ngIf="!selectedWO"
+         style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5rem; gap: 1rem; color: #94a3b8;">
+      <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #cbd5e1;">home_repair_service</mat-icon>
+      <p style="font-size: 1rem; font-weight: 500;">Pilih tiket Work Order di daftar antrean sebelah kiri untuk melihat detail.</p>
+    </div>
+  </div>
+
+</div>
