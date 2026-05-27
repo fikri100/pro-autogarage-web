@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from './models/object';
+import { Product, StockLog } from './models/object';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +42,13 @@ export class InventoryService {
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  restockProduct(payload: { productId: number; quantity: number; purchasePrice: number; referenceId: string; recordExpense: boolean }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/restock`, payload);
+  }
+
+  getProductStockLogs(id: number): Observable<StockLog[]> {
+    return this.http.get<StockLog[]>(`${this.apiUrl}/${id}/stock-logs`);
+  }
 }
+

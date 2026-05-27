@@ -34,7 +34,7 @@ export class BookingDialogComponent implements OnInit {
         customerId: [null, [Validators.required]],
         vehicleId: [null, [Validators.required]],
         bookingDate: [null, [Validators.required]],
-        bookingTime: [null, [Validators.required]],
+        bookingTime: ['09:00', [Validators.required]],
         complaints: [null]
       });
 
@@ -70,7 +70,15 @@ export class BookingDialogComponent implements OnInit {
       this.bookingForm.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.bookingForm.value);
+    const val = { ...this.bookingForm.value };
+    if (val.bookingDate instanceof Date) {
+      const d = val.bookingDate;
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      val.bookingDate = `${year}-${month}-${day}`;
+    }
+    this.dialogRef.close(val);
   }
 
   onConfirm(): void {

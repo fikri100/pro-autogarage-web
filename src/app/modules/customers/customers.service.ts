@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Customer } from './models/object';
+import { Customer, Vehicle } from './models/object';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerService {
   private apiUrl = '/api/customers';
+  private vehicleUrl = '/api/vehicles';
 
   constructor(private http: HttpClient) {}
 
@@ -29,5 +30,22 @@ export class CustomerService {
 
   deleteCustomer(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // Real Vehicle Operations
+  getVehiclesByCustomer(customerId: number): Observable<Vehicle[]> {
+    return this.http.get<Vehicle[]>(`${this.vehicleUrl}?customerId=${customerId}`);
+  }
+
+  createVehicle(vehicle: Vehicle): Observable<any> {
+    return this.http.post<any>(this.vehicleUrl, vehicle);
+  }
+
+  updateVehicle(id: number, vehicle: Vehicle): Observable<any> {
+    return this.http.put<any>(`${this.vehicleUrl}/${id}`, vehicle);
+  }
+
+  deleteVehicle(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.vehicleUrl}/${id}`);
   }
 }

@@ -1,0 +1,88 @@
+<!-- Confirm Delete Dialog -->
+<ng-container *ngIf="data.mode === 'confirm'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon warn">delete_outline</mat-icon>
+    Konfirmasi Hapus
+  </h2>
+  <mat-dialog-content class="confirm-content">
+    <p>{{ data.message }}</p>
+    <p class="confirm-hint">Tindakan ini tidak dapat dibatalkan.</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button (click)="onCancel()">Batal</button>
+    <button mat-flat-button color="warn" (click)="onConfirm()">Hapus</button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- Add / Edit Vehicle Dialog -->
+<ng-container *ngIf="data.mode !== 'confirm'">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">directions_car</mat-icon>
+    {{ data.mode === 'edit' ? 'Edit Data Kendaraan' : 'Tambah Kendaraan Baru' }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="vehicleForm">
+      <div class="dialog-section">
+        <div class="dialog-section-header">
+          <mat-icon>directions_car</mat-icon>
+          <span>Detail Kendaraan</span>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Plat Nomor <span class="required">*</span></mat-label>
+          <input matInput formControlName="licensePlate" placeholder="e.g. B 1234 ABC" 
+                 style="font-family: monospace; font-weight: 600; text-transform: uppercase;" />
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
+            Plat nomor wajib diisi
+          </mat-error>
+        </mat-form-field>
+
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Brand / Merk <span class="required">*</span></mat-label>
+            <input matInput formControlName="brand" placeholder="e.g. Honda" />
+            <mat-icon matSuffix>directions_car</mat-icon>
+            <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
+              Brand wajib diisi
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Model / Seri <span class="required">*</span></mat-label>
+            <input matInput formControlName="model" placeholder="e.g. Jazz GE8" />
+            <mat-icon matSuffix>minor_crash</mat-icon>
+            <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
+              Model wajib diisi
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="two-col-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Tahun Pembuatan</mat-label>
+            <input matInput type="number" formControlName="yearMade" placeholder="e.g. 2013" min="1900" max="2100" />
+            <mat-icon matSuffix>calendar_today</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Transmisi</mat-label>
+            <mat-select formControlName="transmission">
+              <mat-option value="Manual (MT)">Manual (MT)</mat-option>
+              <mat-option value="Automatic (AT)">Automatic (AT)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving" class="btn-save">
+      <mat-icon>save</mat-icon>
+      {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN KENDARAAN' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

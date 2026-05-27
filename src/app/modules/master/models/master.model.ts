@@ -1,0 +1,18 @@
+export interface Role {
+  id?: number;
+  roleName: string;
+  permissions?: string; // JSONB stringified mapping
+}
+
+export interface Category {
+  id?: number;
+  name: string;
+}
+
+export interface Employee {
+  id?: number;
+  name: string;
+  phone: string;
+  address?: string;
+  position: string;
+}

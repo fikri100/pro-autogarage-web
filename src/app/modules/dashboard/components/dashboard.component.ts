@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from '../services/dashboard.service';
 import { DashboardSummary } from '../models/dashboard.model';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +27,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private refreshInterval: any;
 
   bookingColumns = ['time', 'customer', 'vehicle', 'complaints', 'actions'];
-  woColumns = ['plate', 'vehicle', 'mechanic', 'status', 'progress'];
+  woColumns = ['plate', 'vehicle', 'mechanic', 'status'];
 
   statusMap: { [key: string]: { label: string; color: string } } = {
     IN_PROGRESS: { label: 'Sedang Dikerjakan', color: '#3b82f6' }, // Blue
@@ -36,7 +38,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private dashboardService: DashboardService,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -81,47 +84,73 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   approveBooking(booking: any): void {
-    if (confirm(`Apakah Anda yakin ingin menyetujui reservasi dari ${booking.customerName} (Plat: ${booking.licensePlate})?\nHal ini akan otomatis membuat perintah kerja (Work Order) baru.`)) {
-      this.actionLoading = true;
-      this.cdr.detectChanges();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Setujui Reservasi',
+        message: `Apakah Anda yakin ingin menyetujui reservasi dari ${booking.customerName} (Plat: ${booking.licensePlate})? Hal ini akan otomatis membuat perintah kerja (Work Order) baru.`,
+        confirmText: 'Setujui',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
 
-      this.dashboardService.approveBooking(booking.id).subscribe({
-        next: () => {
-          this.snackBar.open('Booking berhasil disetujui! Work Order aktif telah dibuat.', 'OK', { duration: 3000, panelClass: 'snack-success' });
-          this.loadSummary();
-          this.actionLoading = false;
-        },
-        error: (err) => {
-          console.error('Failed to approve booking:', err);
-          const msg = err.error || 'Gagal menyetujui booking';
-          this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
-          this.actionLoading = false;
-          this.cdr.detectChanges();
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.actionLoading = true;
+        this.cdr.detectChanges();
+
+        this.dashboardService.approveBooking(booking.id).subscribe({
+          next: () => {
+            this.snackBar.open('Booking berhasil disetujui! Work Order aktif telah dibuat.', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadSummary();
+            this.actionLoading = false;
+          },
+          error: (err) => {
+            console.error('Failed to approve booking:', err);
+            const msg = err.error || 'Gagal menyetujui booking';
+            this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+            this.actionLoading = false;
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    });
   }
 
   cancelBooking(booking: any): void {
-    if (confirm(`Apakah Anda yakin ingin membatalkan reservasi dari ${booking.customerName} (Plat: ${booking.licensePlate})?`)) {
-      this.actionLoading = true;
-      this.cdr.detectChanges();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Batalkan Reservasi',
+        message: `Apakah Anda yakin ingin membatalkan reservasi dari ${booking.customerName} (Plat: ${booking.licensePlate})?`,
+        confirmText: 'Batalkan',
+        cancelText: 'Batal',
+        warn: true
+      }
+    });
 
-      this.dashboardService.cancelBooking(booking.id).subscribe({
-        next: () => {
-          this.snackBar.open('Booking telah dibatalkan', 'OK', { duration: 3000, panelClass: 'snack-success' });
-          this.loadSummary();
-          this.actionLoading = false;
-        },
-        error: (err) => {
-          console.error('Failed to cancel booking:', err);
-          const msg = err.error || 'Gagal membatalkan booking';
-          this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
-          this.actionLoading = false;
-          this.cdr.detectChanges();
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.actionLoading = true;
+        this.cdr.detectChanges();
+
+        this.dashboardService.cancelBooking(booking.id).subscribe({
+          next: () => {
+            this.snackBar.open('Booking telah dibatalkan', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadSummary();
+            this.actionLoading = false;
+          },
+          error: (err) => {
+            console.error('Failed to cancel booking:', err);
+            const msg = err.error || 'Gagal membatalkan booking';
+            this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+            this.actionLoading = false;
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    });
   }
 
   getStatusDetails(status: string): { label: string; color: string } {

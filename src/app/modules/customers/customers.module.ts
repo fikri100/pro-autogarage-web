@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { CustomersComponent } from './components/customers.component';
 import { CustomerDialogComponent } from './components/customer-dialog.component';
+import { VehicleDialogComponent } from './components/vehicle-dialog.component';
 import { routes } from './customers.routes';
 
 // Angular Material
@@ -21,11 +22,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
     CustomersComponent,
-    CustomerDialogComponent
+    CustomerDialogComponent,
+    VehicleDialogComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +47,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatChipsModule,
     MatTooltipModule,
     MatSortModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule
   ]
 })
 export class CustomersModule { }

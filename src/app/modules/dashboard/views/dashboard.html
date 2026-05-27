@@ -1,4 +1,4 @@
-<div class="page-container" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="page-container">
 
   <!-- Header -->
   <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -94,13 +94,13 @@
   </div>
 
   <!-- DOUBLE PANEL GRID -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 1.5rem;">
+  <div class="double-panel-grid">
 
     <!-- PANEL 1: ANTREAN RESERVASI PENDING -->
     <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
       
       <!-- Panel Header -->
-      <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+      <div class="card-header-responsive">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <mat-icon style="color: #d97706;">pending_actions</mat-icon>
           <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Antrean Validasi Booking Baru</span>
@@ -139,7 +139,13 @@
             <ng-container matColumnDef="customer">
               <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Pelanggan</th>
               <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem;">
-                <div style="font-weight: 600; color: #334155;">{{ row.customerName }}</div>
+                <div class="flex-responsive-stack">
+                  <span style="font-weight: 600; color: #334155;">{{ row.customerName }}</span>
+                  <span *ngIf="row.createdBy === 'SELF_SERVICE'" 
+                        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.65rem; background-color: #ecfdf5; color: #059669; padding: 0.1rem 0.35rem; border-radius: 4px; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid #a7f3d0; display: inline-block;">
+                    Self-Service
+                  </span>
+                </div>
                 <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.15rem;">+62 {{ row.customerPhone }}</div>
               </td>
             </ng-container>
@@ -152,6 +158,13 @@
                   {{ row.licensePlate }}
                 </div>
                 <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">{{ row.vehicleBrand }} {{ row.vehicleModel }}</div>
+                <!-- Ownership Conflict warning -->
+                <div *ngIf="row.vehicleCustomerId && row.vehicleCustomerId !== row.customerId"
+                     style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; color: #ef4444; font-weight: 600; margin-top: 0.35rem; display: flex; align-items: center; gap: 0.25rem;"
+                     [matTooltip]="'Plat nomor ini sebelumnya sudah terdaftar atas nama pelanggan lain'">
+                  <mat-icon style="font-size: 0.85rem; width: auto; height: auto;">warning</mat-icon>
+                  <span>⚠️ Plat milik: {{ row.vehicleOwnerName }}</span>
+                </div>
               </td>
             </ng-container>
 
@@ -203,7 +216,7 @@
     <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
       
       <!-- Panel Header -->
-      <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+      <div class="card-header-responsive">
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <mat-icon style="color: #3b82f6;">car_repair</mat-icon>
           <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Live Monitor Pengerjaan Bengkel</span>
@@ -252,7 +265,7 @@
             <ng-container matColumnDef="mechanic">
               <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Mekanik</th>
               <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #475569; font-size: 0.85rem; font-weight: 500;">
-                <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <div class="flex-responsive-stack">
                   <mat-icon style="font-size: 1rem; width: auto; height: auto; color: #64748b;">engineering</mat-icon>
                   <span>{{ row.mechanicName || 'Belum ditugaskan' }}</span>
                 </div>
@@ -272,19 +285,7 @@
               </td>
             </ng-container>
 
-            <!-- Column: Progress -->
-            <ng-container matColumnDef="progress">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 100px;">Progress</th>
-              <td mat-cell *matCellDef="let row" style="padding: 1rem;">
-                <div style="display: flex; flex-direction: column; gap: 4px; width: 100px;">
-                  <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #64748b;">
-                    <span>Proses</span>
-                    <span>{{ getWOProgress(row.workStatus) }}%</span>
-                  </div>
-                  <mat-progress-bar mode="determinate" [value]="getWOProgress(row.workStatus)" [style.--mdc-linear-progress-active-indicator-color]="getStatusDetails(row.workStatus).color" style="height: 6px; border-radius: 3px;"></mat-progress-bar>
-                </div>
-              </td>
-            </ng-container>
+
 
             <tr mat-header-row *matHeaderRowDef="woColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
             <tr mat-row *matRowDef="let row; columns: woColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>

@@ -4,8 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { CustomerService } from '../customers.service';
-import { Customer } from '../models/object';
+import { Customer, Vehicle } from '../models/object';
 import { CustomerDialogComponent } from './customer-dialog.component';
+import { VehicleDialogComponent } from './vehicle-dialog.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -17,13 +18,9 @@ export class CustomersComponent implements OnInit {
   loading = false;
 
   selectedCustomer: Customer | null = null;
+  vehicles: Vehicle[] = [];
 
-  // Mock Detail Data
-  vehicles = [
-    { plate: 'B 1234 ABC', brand: 'Toyota Kijang Innova', year: 2018, color: 'Hitam', transmission: 'Automatic (AT)', km: '65,200' },
-    { plate: 'D 5678 DEF', brand: 'Honda Brio Satya', year: 2021, color: 'Kuning', transmission: 'Manual (MT)', km: '22,100' }
-  ];
-
+  // Mock Transactions for Service History
   transactions = [
     { date: '12 Okt 2023', plate: 'B 1234 ABC', notes: 'Ganti Oli & Filter, Cek Rem', status: 'Selesai' },
     { date: '05 Jan 2023', plate: 'B 1234 ABC', notes: 'Servis Berkala 60.000 KM', status: 'Selesai' }
@@ -49,8 +46,16 @@ export class CustomersComponent implements OnInit {
     this.customerService.getCustomers().subscribe({
       next: (data: Customer[]) => {
         this.customers = data || [];
-        if (this.customers.length > 0 && !this.selectedCustomer) {
-          this.selectedCustomer = this.customers[0];
+        if (this.customers.length > 0) {
+          if (!this.selectedCustomer) {
+            this.selectedCustomer = this.customers[0];
+          }
+          if (this.selectedCustomer.id) {
+            this.loadVehicles(this.selectedCustomer.id);
+          }
+        } else {
+          this.selectedCustomer = null;
+          this.vehicles = [];
         }
         this.loading = false;
         this.cdr.detectChanges();
@@ -66,6 +71,24 @@ export class CustomersComponent implements OnInit {
 
   selectCustomer(customer: Customer): void {
     this.selectedCustomer = customer;
+    if (customer && customer.id) {
+      this.loadVehicles(customer.id);
+    } else {
+      this.vehicles = [];
+    }
+  }
+
+  loadVehicles(customerId: number): void {
+    this.customerService.getVehiclesByCustomer(customerId).subscribe({
+      next: (data: Vehicle[]) => {
+        this.vehicles = data || [];
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error loading vehicles:', err);
+        this.snackBar.open('Gagal memuat data kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+      }
+    });
   }
 
   getInitials(name: string): string {
@@ -142,6 +165,77 @@ export class CustomersComponent implements OnInit {
           },
           error: () => {
             this.snackBar.open('Gagal menghapus pelanggan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  // Vehicle CRUD operations
+  openAddVehicleDialog(): void {
+    if (!this.selectedCustomer?.id) return;
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '620px',
+      data: { mode: 'add', customerId: this.selectedCustomer.id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.createVehicle(result).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil ditambahkan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.selectedCustomer?.id) {
+              this.loadVehicles(this.selectedCustomer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal menambahkan kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  openEditVehicleDialog(vehicle: Vehicle): void {
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '620px',
+      data: { mode: 'edit', vehicle }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.updateVehicle(vehicle.id!, result).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil diperbarui!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.selectedCustomer?.id) {
+              this.loadVehicles(this.selectedCustomer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal memperbarui kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  deleteVehicle(id: number): void {
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '400px',
+      data: { mode: 'confirm', message: 'Hapus kendaraan dari daftar aset pelanggan?' }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.customerService.deleteVehicle(id).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil dihapus', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.selectedCustomer?.id) {
+              this.loadVehicles(this.selectedCustomer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal menghapus kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
           }
         });
       }

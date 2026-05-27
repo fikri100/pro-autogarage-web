@@ -4,7 +4,7 @@
     <h2 class="page-title">Data Pelanggan</h2>
     <p class="page-subtitle">Kelola informasi pelanggan, aset kendaraan, dan riwayat servis.</p>
   </div>
-  <div style="display: flex; gap: 0.75rem;">
+  <div class="page-header-actions">
     <button mat-stroked-button class="btn-filter">
       <mat-icon>filter_list</mat-icon>
       Filter
@@ -52,8 +52,8 @@
           <span class="customer-id-badge">CST-{{ customer.id | number:'4.0-0' }}</span>
 
           <div style="text-align: right;">
-            <div style="font-weight: 600; color: #334155; font-size: 0.875rem;">{{ customer.name }}</div>
-            <div style="color: #64748b; font-size: 0.75rem; font-family: monospace; margin-top: 0.125rem;">{{ customer.phone }}</div>
+            <div style="font-weight: 600; color: #334155;" class="customer-name-text">{{ customer.name }}</div>
+            <div style="color: #64748b; font-family: monospace; margin-top: 0.125rem;" class="customer-phone-text">{{ customer.phone }}</div>
           </div>
         </div>
       </div>
@@ -78,15 +78,20 @@
             </div>
           </div>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <button mat-stroked-button class="btn-secondary" (click)="showEditModal(selectedCustomer)">
-            <mat-icon>edit</mat-icon>
-            Edit Profil
+        <div>
+          <button mat-icon-button [matMenuTriggerFor]="customerMenu" aria-label="Customer actions menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteCustomer(selectedCustomer)"
-            matTooltip="Hapus Pelanggan">
-            <mat-icon>delete_outline</mat-icon>
-          </button>
+          <mat-menu #customerMenu="matMenu">
+            <button mat-menu-item (click)="showEditModal(selectedCustomer)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit Profil</span>
+            </button>
+            <button mat-menu-item (click)="deleteCustomer(selectedCustomer)">
+              <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
+              <span style="color: #ef4444;">Hapus Pelanggan</span>
+            </button>
+          </mat-menu>
         </div>
       </div>
 
@@ -103,26 +108,41 @@
           <div class="tab-content">
             <div class="tab-content-header">
               <h3>Daftar Aset Kendaraan</h3>
-              <button mat-stroked-button color="primary" style="font-size: 0.8rem;">
+              <button mat-stroked-button color="primary" (click)="openAddVehicleDialog()">
                 <mat-icon>add_circle_outline</mat-icon>
                 Tambah Mobil
               </button>
             </div>
 
-            <div class="vehicle-grid">
+            <!-- Empty State for Vehicles -->
+            <div *ngIf="vehicles.length === 0" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
+              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; margin-bottom: 0.5rem;">minor_crash</mat-icon>
+              <p style="margin: 0; font-size: 0.95rem; font-weight: 500;">Belum ada kendaraan terdaftar untuk pelanggan ini.</p>
+            </div>
+
+            <div class="vehicle-grid" *ngIf="vehicles.length > 0">
               <div class="car-card" *ngFor="let car of vehicles">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                  <div class="plate-badge">{{ car.plate }}</div>
-                  <button mat-icon-button style="width: 2rem; height: 2rem; line-height: 2rem;">
+                  <div class="plate-badge">{{ car.licensePlate }}</div>
+                  
+                  <button mat-icon-button [matMenuTriggerFor]="vehicleMenu" style="width: 2rem; height: 2rem; line-height: 2rem;">
                     <mat-icon style="font-size: 1.1rem; color: #94a3b8;">more_vert</mat-icon>
                   </button>
+                  <mat-menu #vehicleMenu="matMenu">
+                    <button mat-menu-item (click)="openEditVehicleDialog(car)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit Kendaraan</span>
+                    </button>
+                    <button mat-menu-item (click)="deleteVehicle(car.id!)">
+                      <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
+                      <span style="color: #ef4444;">Hapus Kendaraan</span>
+                    </button>
+                  </mat-menu>
                 </div>
-                <h4 class="car-brand">{{ car.brand }}</h4>
+                <h4 class="car-brand">{{ car.brand }} {{ car.model }}</h4>
                 <div class="car-details-grid">
-                  <div>Tahun: <span class="car-value">{{ car.year }}</span></div>
-                  <div>Warna: <span class="car-value">{{ car.color }}</span></div>
-                  <div>Transmisi: <span class="car-value">{{ car.transmission }}</span></div>
-                  <div>KM: <span class="car-value">{{ car.km }}</span></div>
+                  <div>Tahun: <span class="car-value">{{ car.yearMade || '-' }}</span></div>
+                  <div>Transmisi: <span class="car-value">{{ car.transmission || '-' }}</span></div>
                 </div>
               </div>
             </div>

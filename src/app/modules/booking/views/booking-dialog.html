@@ -74,7 +74,9 @@
         <div class="two-col-grid">
           <mat-form-field appearance="outline">
             <mat-label>Tanggal Servis <span class="required">*</span></mat-label>
-            <input matInput type="date" formControlName="bookingDate" />
+            <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
             <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">
               Tanggal reservasi wajib diisi
             </mat-error>
@@ -82,14 +84,23 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Jam Servis <span class="required">*</span></mat-label>
-            <input matInput type="time" formControlName="bookingTime" />
+            <mat-select formControlName="bookingTime" placeholder="Pilih Jam">
+              <mat-option value="08:00">08:00 WIB</mat-option>
+              <mat-option value="09:00">09:00 WIB</mat-option>
+              <mat-option value="10:00">10:00 WIB</mat-option>
+              <mat-option value="11:00">11:00 WIB</mat-option>
+              <mat-option value="13:00">13:00 WIB</mat-option>
+              <mat-option value="14:00">14:00 WIB</mat-option>
+              <mat-option value="15:00">15:00 WIB</mat-option>
+              <mat-option value="16:00">16:00 WIB</mat-option>
+            </mat-select>
             <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
               Jam reservasi wajib diisi
             </mat-error>
           </mat-form-field>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.5rem;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Keluhan / Catatan Awal</mat-label>
           <textarea matInput formControlName="complaints" rows="3" 
                     placeholder="Contoh: Bunyi berdecit di rem depan, AC kurang dingin"></textarea>

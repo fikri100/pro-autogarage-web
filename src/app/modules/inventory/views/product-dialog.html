@@ -55,7 +55,7 @@
           </mat-form-field>
         </div>
 
-        <div class="two-col-grid" style="margin-top: 0.5rem;">
+        <div class="two-col-grid">
           <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
             <mat-label>Nama Item / Jasa <span class="required">*</span></mat-label>
             <input matInput formControlName="name" placeholder="e.g. Shell Helix HX7 1L / Spooring Balancing" />
@@ -66,7 +66,7 @@
           </mat-form-field>
         </div>
 
-        <div class="two-col-grid" style="margin-top: 0.5rem;">
+        <div class="two-col-grid">
           <mat-form-field appearance="outline">
             <mat-label>Kategori <span class="required">*</span></mat-label>
             <mat-select formControlName="category">
@@ -119,7 +119,7 @@
         </div>
 
         <!-- Stok & Minimum Limit (Hanya untuk Sparepart) -->
-        <div class="two-col-grid" style="margin-top: 0.5rem;" *ngIf="productForm.get('itemType')?.value === 'SPR'">
+        <div class="two-col-grid" *ngIf="productForm.get('itemType')?.value === 'SPR'">
           <mat-form-field appearance="outline">
             <mat-label>Stok Awal <span class="required">*</span></mat-label>
             <input matInput type="number" formControlName="stockQuantity" min="0" placeholder="0" />

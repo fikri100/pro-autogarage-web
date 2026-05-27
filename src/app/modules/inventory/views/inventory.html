@@ -4,9 +4,9 @@
     <h2 class="page-title">Manajemen Stok & Inventaris</h2>
     <p class="page-subtitle">Kelola stok sparepart fisik, master data jasa, harga beli/HPP, dan sistem kontrol minimum stok.</p>
   </div>
-  <div style="display: flex; gap: 0.75rem; align-items: center;">
+  <div class="page-header-actions">
     <!-- Search Field -->
-    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: -1.25rem;">
+    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: 0;">
       <mat-label>Cari Kode / Nama...</mat-label>
       <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
       <mat-icon matSuffix>search</mat-icon>
@@ -140,19 +140,25 @@
             </div>
           </div>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <button mat-stroked-button class="btn-secondary" (click)="showEditModal(selectedProduct)">
-            <mat-icon>edit</mat-icon>
-            Edit Item
+        <div>
+          <button mat-icon-button [matMenuTriggerFor]="productMenu" aria-label="Product actions menu">
+            <mat-icon>more_vert</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteProduct(selectedProduct)" matTooltip="Hapus Item">
-            <mat-icon>delete_outline</mat-icon>
-          </button>
+          <mat-menu #productMenu="matMenu">
+            <button mat-menu-item (click)="showEditModal(selectedProduct)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit Item</span>
+            </button>
+            <button mat-menu-item (click)="deleteProduct(selectedProduct)">
+              <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
+              <span style="color: #ef4444;">Hapus Item</span>
+            </button>
+          </mat-menu>
         </div>
       </div>
 
       <!-- Detail Body Grid -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+      <div class="responsive-details-grid">
         
         <!-- Panel Stok Kontrol (Hanya Sparepart) -->
         <div class="card-panel" *ngIf="selectedProduct.itemType === 'SPR'" 
@@ -167,7 +173,7 @@
             </span>
             <span style="font-weight: 600; color: #64748b; font-size: 1rem;">Pcs</span>
             
-            <div style="margin-left: auto;">
+            <div style="margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
               <span *ngIf="getStockStatus(selectedProduct) === 'danger'" class="status-badge-inactive" style="font-size: 0.7rem; padding: 0.25rem 0.75rem;">
                 HABIS / RE-STOCK WAJIB
               </span>
@@ -178,6 +184,12 @@
               <span *ngIf="getStockStatus(selectedProduct) === 'success'" class="status-badge-active" style="font-size: 0.7rem; padding: 0.25rem 0.75rem;">
                 STOK AMAN
               </span>
+              <button mat-flat-button color="primary" 
+                      (click)="showRestockModal(selectedProduct)" 
+                      style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; font-weight: 600; height: 30px; border-radius: 6px; padding: 0 0.75rem; background-color: #3b82f6; letter-spacing: 0.02em; display: flex; align-items: center; gap: 0.25rem; line-height: 1;">
+                <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; margin-right: 0;">add_box</mat-icon>
+                <span>RESTOCK</span>
+              </button>
             </div>
           </div>
 
@@ -255,6 +267,69 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Riwayat Alur Stok (Hanya Sparepart) -->
+      <div class="card-panel" *ngIf="selectedProduct.itemType === 'SPR'" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; border-color: #f1f5f9;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 0;">
+          <h3 class="text-xs-caps" style="color: #475569; margin: 0; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; letter-spacing: 0.04em;">
+            <mat-icon style="color: #3b82f6; font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">history</mat-icon>
+            Riwayat Alur Stok (Log Mutasi)
+          </h3>
+          <span class="role-badge" style="background-color: #f8fafc; color: #64748b; font-size: 0.65rem; font-weight: 600; text-transform: none; letter-spacing: normal;">
+            {{ stockLogs.length }} Catatan
+          </span>
+        </div>
+
+        <!-- Spinner Loading Logs -->
+        <div *ngIf="logsLoading" style="padding: 2rem; display: flex; align-items: center; justify-content: center;">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+
+        <!-- Empty Logs State -->
+        <div *ngIf="!logsLoading && stockLogs.length === 0" style="padding: 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;">
+          <mat-icon style="font-size: 2rem; width: 2rem; height: 2rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem;">analytics</mat-icon>
+          <span style="font-size: 0.85rem; font-weight: 500;">Belum ada riwayat mutasi stok untuk barang ini</span>
+        </div>
+
+        <!-- Stock Logs Table -->
+        <div *ngIf="!logsLoading && stockLogs.length > 0" style="overflow-x: auto; max-height: 250px;">
+          <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 0.8rem; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;">
+                <th style="padding: 0.65rem 0.85rem; font-weight: 700; color: #475569; font-family: 'Plus Jakarta Sans', sans-serif;">Tanggal</th>
+                <th style="padding: 0.65rem 0.85rem; font-weight: 700; color: #475569; font-family: 'Plus Jakarta Sans', sans-serif;">Tipe Mutasi</th>
+                <th style="padding: 0.65rem 0.85rem; font-weight: 700; color: #475569; font-family: 'Plus Jakarta Sans', sans-serif;">Jumlah</th>
+                <th style="padding: 0.65rem 0.85rem; font-weight: 700; color: #475569; font-family: 'Plus Jakarta Sans', sans-serif;">No. Referensi (PO/Invoice)</th>
+                <th style="padding: 0.65rem 0.85rem; font-weight: 700; color: #475569; font-family: 'Plus Jakarta Sans', sans-serif;">Operator</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of stockLogs" style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding: 0.65rem 0.85rem; color: #475569;">
+                  {{ log.createdAt | date:'dd MMM yyyy, HH:mm':'':'id-ID' }}
+                </td>
+                <td style="padding: 0.65rem 0.85rem;">
+                  <span *ngIf="log.logType === 'IN'" style="background-color: #d1fae5; color: #065f46; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.65rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    MASUK (IN)
+                  </span>
+                  <span *ngIf="log.logType === 'OUT'" style="background-color: #ffe4e6; color: #9f1239; padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.65rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    KELUAR (OUT)
+                  </span>
+                </td>
+                <td style="padding: 0.65rem 0.85rem; font-weight: 700; font-family: 'JetBrains Mono', monospace;" [style.color]="log.logType === 'IN' ? '#047857' : '#be123c'">
+                  {{ log.logType === 'IN' ? '+' : '-' }}{{ log.quantity }} Pcs
+                </td>
+                <td style="padding: 0.65rem 0.85rem; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #2563eb;">
+                  {{ log.referenceId }}
+                </td>
+                <td style="padding: 0.65rem 0.85rem; color: #64748b; font-weight: 500;">
+                  {{ log.createdBy || 'system' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Audit Trails Info Card -->

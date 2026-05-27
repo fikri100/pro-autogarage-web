@@ -40,7 +40,10 @@ export class WorkOrderComponent implements OnInit {
 
   loadMechanics(): void {
     this.woService.getMechanics().subscribe(data => {
-      this.mechanics = data || [];
+      this.mechanics = (data || []).filter((m: any) => 
+        m.position?.toLowerCase().includes('mechanic') || 
+        m.position?.toLowerCase().includes('mekanik')
+      );
     });
   }
 

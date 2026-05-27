@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">person_add</mat-icon>
+  Tambah Pengguna Baru
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="userForm">
+    <div class="dialog-section">
+      <div class="dialog-section-header">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Detail Akun Sistem</span>
+      </div>
+
+      <!-- Karyawan (Nama - Posisi) Dropdown -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Karyawan <span class="required">*</span></mat-label>
+        <mat-select formControlName="employeeId">
+          <mat-option *ngFor="let emp of data.employees" [value]="emp.id">
+            {{ emp.name }} - {{ emp.position }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error *ngIf="userForm.get('employeeId')?.hasError('required')">
+          Karyawan wajib dipilih
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Username -->
+      <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.5rem;">
+        <mat-label>Username <span class="required">*</span></mat-label>
+        <input matInput formControlName="username" placeholder="e.g. joni.bengkel" />
+        <mat-icon matSuffix>alternate_email</mat-icon>
+        <mat-error *ngIf="userForm.get('username')?.hasError('required')">
+          Username wajib diisi
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.5rem;">
+        <mat-label>Password <span class="required">*</span></mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Min 6 karakter" />
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+          Password wajib diisi
+        </mat-error>
+        <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">
+          Password minimal 6 karakter
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Role Select -->
+      <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.5rem;">
+        <mat-label>Role Hak Akses <span class="required">*</span></mat-label>
+        <mat-select formControlName="roleId">
+          <mat-option *ngFor="let role of data.roles" [value]="role.id">
+            {{ role.roleName }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matSuffix>admin_panel_settings</mat-icon>
+        <mat-error *ngIf="userForm.get('roleId')?.hasError('required')">
+          Role wajib dipilih
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="userForm.invalid || isSaving" class="btn-save btn-primary-custom">
+    <mat-icon>save</mat-icon>
+    {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN USER' }}
+  </button>
+</mat-dialog-actions>

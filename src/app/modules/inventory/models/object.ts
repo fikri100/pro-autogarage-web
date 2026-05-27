@@ -14,3 +14,17 @@ export interface Product {
   updatedBy?: string;
   updatedAt?: string;
 }
+
+export interface StockLog {
+  id?: number;
+  productId: number;
+  logType: 'IN' | 'OUT';
+  quantity: number;
+  referenceId: string;
+  status?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedBy?: string;
+  updatedAt?: string;
+}
+

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { UserAccessComponent } from './components/user-access.component';
+import { UserDialogComponent } from './components/user-dialog.component';
 import { routes } from './user-access.routes';
 
 // Angular Material
@@ -19,14 +20,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSortModule } from '@angular/material/sort';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
-    UserAccessComponent
+    UserAccessComponent,
+    UserDialogComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     MatTableModule,
     MatButtonModule,
@@ -39,7 +43,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatChipsModule,
-    MatSortModule
+    MatSortModule,
+    MatDialogModule
   ]
 })
 export class UserAccessModule { }

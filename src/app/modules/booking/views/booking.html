@@ -4,9 +4,9 @@
     <h2 class="page-title">Reservasi & Booking Pelanggan</h2>
     <p class="page-subtitle">Kelola daftar pemesanan servis mandiri (WhatsApp/Web) dan buat antrean mekanik aktif.</p>
   </div>
-  <div style="display: flex; gap: 0.75rem; align-items: center;">
+  <div class="page-header-actions">
     <!-- Search Field -->
-    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: -1.25rem;">
+    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: 0;">
       <mat-label>Cari Nama / Plat Mobil...</mat-label>
       <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
       <mat-icon matSuffix>search</mat-icon>
@@ -28,37 +28,22 @@
 <!-- Main Content Grid -->
 <div *ngIf="!loading">
 
-  <!-- Filter Pills -->
-  <div class="card-panel" style="padding: 0.75rem 1.25rem; display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem;">
-    <span class="text-xs-caps" style="margin-right: 1rem;">Status Antrean:</span>
-    <button mat-stroked-button class="btn-filter"
-            [style.background-color]="selectedStatus === 'ALL' ? '#eff6ff' : 'white'"
-            [style.color]="selectedStatus === 'ALL' ? '#1e40af' : '#475569'"
-            [style.border-color]="selectedStatus === 'ALL' ? '#1e40af' : '#e2e8f0'"
-            (click)="filterByStatus('ALL')">
-      Semua Antrean
-    </button>
-    <button mat-stroked-button class="btn-filter"
-            [style.background-color]="selectedStatus === 'PENDING' ? '#fffbeb' : 'white'"
-            [style.color]="selectedStatus === 'PENDING' ? '#d97706' : '#475569'"
-            [style.border-color]="selectedStatus === 'PENDING' ? '#f59e0b' : '#e2e8f0'"
-            (click)="filterByStatus('PENDING')">
-      Menunggu (PENDING)
-    </button>
-    <button mat-stroked-button class="btn-filter"
-            [style.background-color]="selectedStatus === 'CONFIRMED' ? '#ecfdf5' : 'white'"
-            [style.color]="selectedStatus === 'CONFIRMED' ? '#047857' : '#475569'"
-            [style.border-color]="selectedStatus === 'CONFIRMED' ? '#10b981' : '#e2e8f0'"
-            (click)="filterByStatus('CONFIRMED')">
-      Dikonfirmasi (CONFIRMED)
-    </button>
-    <button mat-stroked-button class="btn-filter"
-            [style.background-color]="selectedStatus === 'CANCELLED' ? '#fef2f2' : 'white'"
-            [style.color]="selectedStatus === 'CANCELLED' ? '#b91c1c' : '#475569'"
-            [style.border-color]="selectedStatus === 'CANCELLED' ? '#ef4444' : '#e2e8f0'"
-            (click)="filterByStatus('CANCELLED')">
-      Dibatalkan (CANCELLED)
-    </button>
+  <!-- Filter Dropdown (Responsive) -->
+  <div class="card-panel" style="padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <mat-icon style="color: #1e3a8a;">filter_alt</mat-icon>
+        <span style="font-family: var(--font-heading); font-weight: 600; color: #475569; font-size: var(--text-sm);">Filter Status Booking:</span>
+      </div>
+      <mat-form-field appearance="outline" style="min-width: 240px; margin-bottom: 0;" class="search-field">
+        <mat-select [value]="selectedStatus" (selectionChange)="filterByStatus($event.value)">
+          <mat-option value="ALL">Semua Antrean</mat-option>
+          <mat-option value="PENDING">Menunggu (PENDING)</mat-option>
+          <mat-option value="CONFIRMED">Dikonfirmasi (CONFIRMED)</mat-option>
+          <mat-option value="CANCELLED">Dibatalkan (CANCELLED)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
 
   <!-- Bookings List Cards -->
@@ -67,7 +52,7 @@
     <p style="font-size: 1.1rem; font-weight: 500;">Tidak ditemukan adanya reservasi untuk filter ini.</p>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem;">
+  <div class="responsive-cards-grid">
     <div class="card-panel" *ngFor="let b of filteredBookings" 
          style="display: flex; flex-direction: column; gap: 1rem; border-top: 4px solid"
          [style.border-top-color]="b.operationalStatus === 'PENDING' ? '#f59e0b' : (b.operationalStatus === 'CONFIRMED' ? '#10b981' : '#ef4444')">

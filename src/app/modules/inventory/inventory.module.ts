@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { InventoryComponent } from './components/inventory.component';
 import { ProductDialogComponent } from './components/product-dialog.component';
+import { RestockDialogComponent } from './components/restock-dialog.component';
 import { routes } from './inventory.routes';
 
 // Angular Material
@@ -19,11 +20,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
     InventoryComponent,
-    ProductDialogComponent
+    ProductDialogComponent,
+    RestockDialogComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +44,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatProgressSpinnerModule,
     MatChipsModule,
     MatTooltipModule,
-    MatSelectModule
+    MatSelectModule,
+    MatMenuModule,
+    MatCheckboxModule
   ]
 })
 export class InventoryModule { }

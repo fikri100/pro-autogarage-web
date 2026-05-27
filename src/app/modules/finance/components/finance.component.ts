@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 import { FinanceService } from '../services/finance.service';
 import { ExpenseDialogComponent } from './expense-dialog.component';
@@ -82,11 +83,21 @@ export class FinanceComponent implements OnInit {
     this.loading = true;
     this.cdr.detectChanges();
 
+    const formatFilterDate = (val: any) => {
+      if (val instanceof Date) {
+        const year = val.getFullYear();
+        const month = String(val.getMonth() + 1).padStart(2, '0');
+        const day = String(val.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      return val;
+    };
+
     const filters = {
       type: this.filterType || undefined,
       category: this.filterCategory || undefined,
-      startDate: this.filterStartDate || undefined,
-      endDate: this.filterEndDate || undefined
+      startDate: formatFilterDate(this.filterStartDate) || undefined,
+      endDate: formatFilterDate(this.filterEndDate) || undefined
     };
 
     this.financeService.getCashflows(filters).subscribe({
@@ -183,19 +194,32 @@ export class FinanceComponent implements OnInit {
       return;
     }
 
-    if (confirm(`Apakah Anda yakin ingin menghapus pencatatan kas ${this.getCategoryLabel(cf.category)} sebesar Rp ${cf.amount.toLocaleString('id-ID')}?`)) {
-      this.financeService.deleteCashflow(cf.id!).subscribe({
-        next: () => {
-          this.snackBar.open('Pencatatan kas berhasil dihapus', 'OK', { duration: 3000, panelClass: 'snack-success' });
-          this.loadAllData();
-        },
-        error: (err) => {
-          console.error('Failed to delete cashflow:', err);
-          const msg = err.error || 'Gagal menghapus transaksi';
-          this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Pencatatan Kas',
+        message: `Apakah Anda yakin ingin menghapus pencatatan kas ${this.getCategoryLabel(cf.category)} sebesar Rp ${cf.amount.toLocaleString('id-ID')}?`,
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.financeService.deleteCashflow(cf.id!).subscribe({
+          next: () => {
+            this.snackBar.open('Pencatatan kas berhasil dihapus', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadAllData();
+          },
+          error: (err) => {
+            console.error('Failed to delete cashflow:', err);
+            const msg = err.error || 'Gagal menghapus transaksi';
+            this.snackBar.open(msg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
   }
 
   // Visual helper functions for SVG Chart

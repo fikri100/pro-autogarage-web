@@ -1,3 +1,59 @@
+<style>
+  .mechanic-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 3fr auto;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  @media (max-width: 768px) {
+    .detail-header {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 1rem !important;
+    }
+    .detail-header div[style*="display: flex; gap: 0.5rem;"] {
+      width: 100% !important;
+    }
+    .detail-header button {
+      width: 100% !important;
+    }
+    .mechanic-grid {
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+    }
+    .mechanic-grid mat-form-field {
+      margin-bottom: 0 !important;
+    }
+    .mechanic-grid button {
+      height: 3.25rem !important;
+      width: 100% !important;
+    }
+    .estimation-header {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 0.75rem !important;
+    }
+    .estimation-header button {
+      width: 100% !important;
+    }
+    .total-panel {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 1rem !important;
+    }
+    .total-panel div {
+      text-align: left !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .detail-profile {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 0.75rem !important;
+    }
+  }
+</style>
+
 <!-- Page Header -->
 <div class="page-header">
   <div>
@@ -73,7 +129,7 @@
             <mat-icon style="font-size: 1.75rem; width: 1.75rem; height: 1.75rem;">build</mat-icon>
           </div>
           <div>
-            <h2 class="detail-name" style="display: flex; align-items: center; gap: 0.75rem;">
+            <h2 class="detail-name" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
               <span class="plate-badge" style="font-size: 1.25rem; font-weight: 800; padding: 0.2rem 0.625rem;">{{ selectedWO.licensePlate }}</span>
               <span style="font-size: 1.15rem; color: #475569;">{{ selectedWO.vehicleBrand }} {{ selectedWO.vehicleModel }}</span>
             </h2>
@@ -102,7 +158,7 @@
           Tunjuk Mekanik & Diagnosa Masalah
         </h3>
 
-        <div style="display: grid; grid-template-columns: 1.5fr 3fr auto; gap: 1rem; align-items: flex-start;">
+        <div class="mechanic-grid">
           
           <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
             <mat-label>Pilih Mekanik <span class="required">*</span></mat-label>
@@ -131,7 +187,7 @@
 
       <!-- Estimation Pricing Details Table -->
       <div style="flex: 1; display: flex; flex-direction: column;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+        <div class="estimation-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.75rem;">
           <h3 class="text-xs-caps" style="color: #475569; display: flex; align-items: center; gap: 0.35rem;">
             <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #10b981;">receipt_long</mat-icon>
             Rincian Estimasi Biaya Servis
@@ -206,7 +262,7 @@
         </div>
 
         <!-- Total Panel -->
-        <div style="background-color: #f1f5f9; padding: 1rem 1.5rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border: 1px solid #cbd5e1;">
+        <div class="total-panel" style="background-color: #f1f5f9; padding: 1rem 1.5rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border: 1px solid #cbd5e1; flex-wrap: wrap; gap: 1rem;">
           <div>
             <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Total Estimasi Sementara:</span>
             <div style="font-size: 1.5rem; font-weight: 800; color: #1e3a8a; margin-top: 0.15rem;">

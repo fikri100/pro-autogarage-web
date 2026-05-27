@@ -1,0 +1,59 @@
+<div style="min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; padding: 2rem; font-family: 'Inter', sans-serif;">
+  <div style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 440px; overflow: hidden; border: 1px solid #e2e8f0;">
+    
+    <!-- Header (Admin Portal Context) -->
+    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2.5rem 2rem; text-align: center; color: #ffffff; position: relative;">
+      <div style="background-color: #1e3a8a; color: #ffffff; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.35);">
+        <mat-icon style="font-size: 1.5rem; width: auto; height: auto;">engineering</mat-icon>
+      </div>
+      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1.5rem; margin: 0; letter-spacing: -0.02em;">Portal Admin</h2>
+      <p style="color: #94a3b8; font-size: 0.85rem; margin: 0.35rem 0 0 0;">Pro Auto Garage — Sistem Manajemen Bengkel</p>
+    </div>
+
+    <!-- Form Container -->
+    <div style="padding: 2.5rem 2rem;">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        
+        <!-- Input: Username -->
+        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Username</label>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">person</mat-icon>
+            <input matInput formControlName="username" placeholder="Masukkan username Anda" autocomplete="username" style="font-family: 'Inter', sans-serif;">
+            <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+              Username wajib diisi
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Input: Password -->
+        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Kata Sandi</label>
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">lock</mat-icon>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Masukkan password Anda" autocomplete="current-password" style="font-family: 'Inter', sans-serif;">
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Toggle password visibility'">
+              <mat-icon style="color: #64748b;">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              Password wajib diisi
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Action Button -->
+        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; background-color: #1e3a8a; color: #ffffff; width: 100%; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
+          <span>{{ loading ? 'MASUK...' : 'MASUK KE PORTAL ADMIN' }}</span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div style="border-top: 1px solid #f1f5f9; padding: 1.25rem 2rem; text-align: center; font-size: 0.75rem; color: #94a3b8; background-color: #fafafa;">
+      <p style="margin: 0;">&copy; 2026 Pro Auto Garage. All rights reserved.</p>
+    </div>
+
+  </div>
+</div>

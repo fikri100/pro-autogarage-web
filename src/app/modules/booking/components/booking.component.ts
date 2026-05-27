@@ -37,7 +37,16 @@ export class BookingComponent implements OnInit {
     const apiStatus = this.selectedStatus === 'ALL' ? '' : this.selectedStatus;
     this.bookingService.getBookings(apiStatus).subscribe({
       next: (data: Booking[]) => {
-        this.bookings = data || [];
+        this.bookings = (data || []).sort((a, b) => {
+          const statusA = (a.status || '').toUpperCase();
+          const statusB = (b.status || '').toUpperCase();
+          if (statusA === 'PENDING' && statusB !== 'PENDING') return -1;
+          if (statusA !== 'PENDING' && statusB === 'PENDING') return 1;
+          
+          const idA = a.id || 0;
+          const idB = b.id || 0;
+          return idB - idA;
+        });
         this.applyFilter();
         this.loading = false;
         this.cdr.detectChanges();

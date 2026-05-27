@@ -27,12 +27,23 @@ export class UserAccessService {
     return this.http.get<Role[]>('/api/roles');
   }
 
-  updateRolePermissions(id: number, permissions: string): Observable<void> {
-    return this.http.put<void>(`/api/roles/${id}/permissions`, { permissions });
-  }
+
 
   // Employees
   getEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>('/api/employees');
+  }
+
+  // Menus
+  getSystemMenus(): Observable<any[]> {
+    return this.http.get<any[]>('/api/menus');
+  }
+
+  getRoleMenus(roleId: number): Observable<number[]> {
+    return this.http.get<number[]>(`/api/roles/${roleId}/menus`);
+  }
+
+  updateRoleMenus(roleId: number, menuIds: number[]): Observable<any> {
+    return this.http.put<any>(`/api/roles/${roleId}/menus`, { menuIds });
   }
 }

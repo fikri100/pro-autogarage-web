@@ -5,8 +5,9 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { InventoryService } from '../inventory.service';
-import { Product } from '../models/object';
+import { Product, StockLog } from '../models/object';
 import { ProductDialogComponent } from './product-dialog.component';
+import { RestockDialogComponent } from './restock-dialog.component';
 
 @Component({
   selector: 'app-inventory-list',
@@ -17,6 +18,8 @@ export class InventoryComponent implements OnInit {
   products: Product[] = [];
   loading = false;
   selectedProduct: Product | null = null;
+  stockLogs: StockLog[] = [];
+  logsLoading = false;
 
   // Filters State
   searchQuery = '';
@@ -61,7 +64,6 @@ export class InventoryComponent implements OnInit {
     this.lowStockOnly = !this.lowStockOnly;
     this.loadProducts();
   }
-
   loadProducts(): void {
     this.loading = true;
     this.cdr.detectChanges();
@@ -75,8 +77,14 @@ export class InventoryComponent implements OnInit {
           // If we had a selection, keep it if it's still in the list, otherwise select the first item
           const exists = this.products.find(p => p.id === this.selectedProduct?.id);
           this.selectedProduct = exists || this.products[0];
+          if (this.selectedProduct && this.selectedProduct.itemType === 'SPR') {
+            this.loadStockLogs(this.selectedProduct.id!);
+          } else {
+            this.stockLogs = [];
+          }
         } else {
           this.selectedProduct = null;
+          this.stockLogs = [];
         }
 
         this.loading = false;
@@ -93,8 +101,52 @@ export class InventoryComponent implements OnInit {
 
   selectProduct(product: Product): void {
     this.selectedProduct = product;
+    if (product && product.itemType === 'SPR') {
+      this.loadStockLogs(product.id!);
+    } else {
+      this.stockLogs = [];
+    }
   }
 
+  loadStockLogs(productId: number): void {
+    this.logsLoading = true;
+    this.inventoryService.getProductStockLogs(productId).subscribe({
+      next: (data: StockLog[]) => {
+        this.stockLogs = data || [];
+        this.logsLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error loading stock logs:', err);
+        this.logsLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  showRestockModal(product: Product): void {
+    const dialogRef = this.dialog.open(RestockDialogComponent, {
+      width: '520px',
+      disableClose: false,
+      data: { product }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.inventoryService.restockProduct(result).subscribe({
+          next: () => {
+            this.snackBar.open('Proses restock barang berhasil diproses!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadProducts();
+          },
+          error: (err: any) => {
+            console.error('Error in restocking:', err);
+            const errMsg = err.error || 'Gagal memproses restock barang';
+            this.snackBar.open(errMsg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
   getInitials(name: string): string {
     if (!name) return 'P';
     const parts = name.split(' ');

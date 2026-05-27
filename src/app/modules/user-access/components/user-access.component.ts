@@ -1,8 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 import { UserAccessService } from '../user-access.service';
 import { User, Role, Employee } from '../models/object';
+import { UserDialogComponent } from './user-dialog.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-access',
@@ -18,10 +21,11 @@ export class UserAccessComponent implements OnInit {
   selectedUser: User | null = null;
   selectedRole: Role | null = null;
 
-  permissions: any[] = [];
+  systemMenus: any[] = [];
+  roleMenuIds: number[] = [];
 
   loading = false;
-  isSavingPermissions = false;
+  isSavingMenus = false;
   filterValue = '';
 
   displayedColumns: string[] = ['employeeName', 'role', 'status', 'actions'];
@@ -29,7 +33,9 @@ export class UserAccessComponent implements OnInit {
   constructor(
     private api: UserAccessService,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +45,11 @@ export class UserAccessComponent implements OnInit {
   loadData(): void {
     this.loading = true;
     this.cdr.detectChanges();
+
+    this.api.getSystemMenus().subscribe((menus) => {
+      this.systemMenus = menus || [];
+      this.cdr.detectChanges();
+    });
 
     this.api.getRoles().subscribe((roles: Role[]) => {
       this.roles = roles;
@@ -81,7 +92,9 @@ export class UserAccessComponent implements OnInit {
   selectUser(user: any): void {
     this.selectedUser = user as User;
     this.selectedRole = this.roles.find(r => r.id === this.selectedUser!.roleId) || null;
-    this.parsePermissions();
+    if (this.selectedUser && this.selectedUser.roleId) {
+      this.loadRoleMenus(this.selectedUser.roleId);
+    }
   }
 
   onRoleChange(roleId: number): void {
@@ -92,61 +105,118 @@ export class UserAccessComponent implements OnInit {
         next: () => this.snackBar.open('Role pengguna berhasil diperbarui!', 'OK', { duration: 3000, panelClass: 'snack-success' }),
         error: () => this.snackBar.open('Gagal memperbarui role pengguna', 'Tutup', { duration: 3000, panelClass: 'snack-error' })
       });
+      this.loadRoleMenus(roleId);
     }
-    this.parsePermissions();
   }
 
-  parsePermissions(): void {
-    if (!this.selectedRole) return;
 
-    let parsed: any = {};
-    try {
-      parsed = JSON.parse(this.selectedRole.permissions);
-    } catch (e) {}
+  openAddUserDialog(): void {
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      width: '520px',
+      data: {
+        roles: this.roles,
+        employees: this.employees
+      }
+    });
 
-    this.permissions = [
-      { key: 'dashboard', module: 'Dashboard', create: false, read: false, update: false, delete: false },
-      { key: 'master', module: 'Master Data', create: false, read: false, update: false, delete: false },
-      { key: 'inventory', module: 'Inventory', create: false, read: false, update: false, delete: false },
-      { key: 'cashier', module: 'Cashier', create: false, read: false, update: false, delete: false },
-      { key: 'reports', module: 'Reports', create: false, read: false, update: false, delete: false }
-    ];
-
-    this.permissions.forEach(p => {
-      if (parsed[p.key]) {
-        p.create = parsed[p.key].create === 'Y';
-        p.read = parsed[p.key].read === 'Y';
-        p.update = parsed[p.key].update === 'Y';
-        p.delete = parsed[p.key].delete === 'Y';
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.api.createUser(result).subscribe({
+          next: () => {
+            this.snackBar.open('Pengguna baru berhasil ditambahkan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadData();
+          },
+          error: () => {
+            this.snackBar.open('Gagal menambahkan pengguna baru', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
       }
     });
   }
 
-  savePermissions(): void {
+  loadRoleMenus(roleId: number): void {
+    this.api.getRoleMenus(roleId).subscribe({
+      next: (ids) => {
+        this.roleMenuIds = ids || [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isMenuChecked(menuId: number): boolean {
+    return this.roleMenuIds.includes(menuId);
+  }
+
+  toggleMenu(menuId: number): void {
+    const idx = this.roleMenuIds.indexOf(menuId);
+    if (idx > -1) {
+      this.roleMenuIds.splice(idx, 1);
+    } else {
+      this.roleMenuIds.push(menuId);
+    }
+    this.cdr.detectChanges();
+  }
+
+  saveMenuPermissions(): void {
     if (!this.selectedRole) return;
 
-    this.isSavingPermissions = true;
-    const toSave: any = {};
+    this.isSavingMenus = true;
+    this.cdr.detectChanges();
 
-    this.permissions.forEach(p => {
-      toSave[p.key] = {
-        create: p.create ? 'Y' : 'N',
-        read: p.read ? 'Y' : 'N',
-        update: p.update ? 'Y' : 'N',
-        delete: p.delete ? 'Y' : 'N',
+    this.api.updateRoleMenus(this.selectedRole.id, this.roleMenuIds).subscribe({
+      next: () => {
+        this.snackBar.open(`Hak akses menu untuk ${this.selectedRole!.roleName} berhasil disimpan!`, 'OK', { duration: 3000, panelClass: 'snack-success' });
+        this.isSavingMenus = false;
+        
+        // Dynamic reactive sidebar session update via BehaviorSubject
+        const currentUser = this.authService.currentUser;
+        if (currentUser && currentUser.roleId === this.selectedRole!.id) {
+          const newMenus = this.buildMenuTree(this.systemMenus, this.roleMenuIds);
+          currentUser.menus = newMenus;
+          localStorage.setItem('pro_auto_garage_session', JSON.stringify(currentUser));
+          // Push into the reactive stream so App component updates sidebar immediately
+          this.authService.updateMenus(newMenus);
+        }
+        
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.snackBar.open('Gagal menyimpan hak akses menu', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+        this.isSavingMenus = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private buildMenuTree(flatMenus: any[], activeIds: number[]): any[] {
+    const filtered = flatMenus.filter(m => activeIds.includes(m.id));
+    const map: { [key: number]: any } = {};
+    const roots: any[] = [];
+
+    filtered.forEach(m => {
+      map[m.id] = { 
+        id: m.id,
+        label: m.label,
+        icon: m.icon,
+        routerLink: m.routerLink,
+        parentId: m.parentId,
+        children: [],
+        isOpen: false
       };
     });
 
-    this.api.updateRolePermissions(this.selectedRole.id, JSON.stringify(toSave)).subscribe({
-      next: () => {
-        this.snackBar.open(`Hak akses untuk ${this.selectedRole!.roleName} berhasil disimpan!`, 'OK', { duration: 3000, panelClass: 'snack-success' });
-        this.selectedRole!.permissions = JSON.stringify(toSave);
-        this.isSavingPermissions = false;
-      },
-      error: () => {
-        this.snackBar.open('Gagal menyimpan hak akses', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
-        this.isSavingPermissions = false;
+    filtered.forEach(m => {
+      const item = map[m.id];
+      if (!m.parentId) {
+        roots.push(item);
+      } else {
+        const parent = map[m.parentId];
+        if (parent) {
+          parent.children.push(item);
+        }
       }
     });
+
+    return roots;
   }
 }

@@ -1,4 +1,4 @@
-<div class="page-container" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+<div class="page-container">
 
   <!-- Header -->
   <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -225,13 +225,17 @@
       <!-- Start Date -->
       <mat-form-field appearance="outline" style="width: 100%;">
         <mat-label>Dari Tanggal</mat-label>
-        <input matInput type="date" [(ngModel)]="filterStartDate" (change)="onFilterChange()" />
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="filterStartDate" (dateChange)="onFilterChange()" placeholder="Pilih tanggal" />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
 
       <!-- End Date -->
       <mat-form-field appearance="outline" style="width: 100%;">
         <mat-label>Sampai Tanggal</mat-label>
-        <input matInput type="date" [(ngModel)]="filterEndDate" (change)="onFilterChange()" />
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="filterEndDate" (dateChange)="onFilterChange()" placeholder="Pilih tanggal" />
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
       </mat-form-field>
 
     </div>

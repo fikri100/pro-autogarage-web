@@ -4,10 +4,12 @@
     <h2 class="page-title">User Access Management</h2>
     <p class="page-subtitle">Kelola role, hak akses, dan pemetaan karyawan sistem.</p>
   </div>
-  <button mat-flat-button color="primary" class="btn-primary">
-    <mat-icon>person_add</mat-icon>
-    TAMBAH USER
-  </button>
+  <div class="page-header-actions">
+    <button mat-flat-button color="primary" class="btn-primary" (click)="openAddUserDialog()">
+      <mat-icon>person_add</mat-icon>
+      TAMBAH USER
+    </button>
+  </div>
 </div>
 
 <!-- Loading -->
@@ -22,8 +24,8 @@
   <div class="col-60">
     <div class="card-panel h-100">
 
-      <div class="flex-space-between mb-3">
-        <h3 class="section-title">System Users</h3>
+      <div class="flex-header-stack mb-3">
+        <h3 class="section-title" style="margin-bottom: 0;">System Users</h3>
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Cari pengguna...</mat-label>
           <input matInput (input)="applyFilter($event)" />
@@ -31,62 +33,64 @@
         </mat-form-field>
       </div>
 
-      <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z0 w-full-table user-table">
+      <div class="table-responsive" style="overflow-x: auto; width: 100%;">
+        <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z0 w-full-table user-table">
 
-        <!-- Name / Username Column -->
-        <ng-container matColumnDef="employeeName">
-          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Nama / Username</th>
-          <td mat-cell *matCellDef="let user">
-            <div class="user-name-cell">
-              <div class="user-avatar-sm">{{ user.employeeName?.charAt(0) ?? 'U' }}</div>
-              <div>
-                <div class="user-full-name">{{ user.employeeName }}</div>
-                <div class="user-username">{{ user.username }}</div>
+          <!-- Name / Username Column -->
+          <ng-container matColumnDef="employeeName">
+            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Nama / Username</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-name-cell">
+                <div class="user-avatar-sm">{{ user.employeeName?.charAt(0) ?? 'U' }}</div>
+                <div>
+                  <div class="user-full-name">{{ user.employeeName }}</div>
+                  <div class="user-username">{{ user.username }}</div>
+                </div>
               </div>
-            </div>
-          </td>
-        </ng-container>
+            </td>
+          </ng-container>
 
-        <!-- Role Column -->
-        <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Role</th>
-          <td mat-cell *matCellDef="let user">
-            <span class="role-badge">{{ user.roleName }}</span>
-          </td>
-        </ng-container>
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Role</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="role-badge">{{ user.roleName }}</span>
+            </td>
+          </ng-container>
 
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Status</th>
-          <td mat-cell *matCellDef="let user">
-            <div class="gap-2">
-              <div class="status-dot" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'"></div>
-              <span class="status-text" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'">
-                {{ user.status === 'Y' ? 'Active' : 'Inactive' }}
-              </span>
-            </div>
-          </td>
-        </ng-container>
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Status</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="gap-2">
+                <div class="status-dot" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'"></div>
+                <span class="status-text" [ngClass]="user.status === 'Y' ? 'active' : 'inactive'">
+                  {{ user.status === 'Y' ? 'Active' : 'Inactive' }}
+                </span>
+              </div>
+            </td>
+          </ng-container>
 
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="text-align:center;">Aksi</th>
-          <td mat-cell *matCellDef="let user" style="text-align:center;">
-            <button mat-icon-button matTooltip="Edit User" class="action-btn"
-              (click)="selectUser(user)">
-              <mat-icon>edit</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="text-align:center;">Aksi</th>
+            <td mat-cell *matCellDef="let user" style="text-align:center;">
+              <button mat-icon-button matTooltip="Edit User" class="action-btn"
+                (click)="selectUser(user)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-          class="table-row-hover"
-          [class.selected-row]="selectedUser!.id === row.id"
-          (click)="selectUser(row)"
-          style="cursor: pointer;">
-        </tr>
-      </table>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="table-row-hover"
+            [class.selected-row]="selectedUser!.id === row.id"
+            (click)="selectUser(row)"
+            style="cursor: pointer;">
+          </tr>
+        </table>
+      </div>
 
       <div *ngIf="filteredUsers.length === 0 && !loading" class="empty-state">
         <mat-icon>manage_accounts</mat-icon>
@@ -141,74 +145,47 @@
       </div>
     </div>
 
-    <!-- Permission Matrix Card -->
-    <div class="card-panel">
-      <h3 class="section-title">Permission Matrix</h3>
-      <p class="page-subtitle" *ngIf="selectedRole" style="margin-bottom: 1rem;">
-        Konfigurasi hak akses untuk role
-        <strong style="color: #1e3a8a;">{{ selectedRole.roleName }}</strong>
+
+
+    <!-- Dynamic Menu Access Card -->
+    <div class="card-panel" style="margin-top: 1.5rem;" *ngIf="selectedRole">
+      <h3 class="section-title">Menu Access Mapping</h3>
+      <p class="page-subtitle" style="margin-bottom: 1rem;">
+        Pilih menu navigasi yang dapat diakses oleh role 
+        <strong style="color: #047857;">{{ selectedRole.roleName }}</strong>
       </p>
 
-      <table mat-table [dataSource]="permissions" class="mat-elevation-z0 w-full-table permission-table">
+      <div style="max-height: 350px; overflow-y: auto; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; border: 1px solid #f1f5f9; border-radius: 8px; background-color: #fafafa;">
+        <div *ngFor="let m of systemMenus" style="display: flex; flex-direction: column; gap: 0.25rem;">
+          
+          <!-- Parent Menu Option -->
+          <div *ngIf="!m.parentId" style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background-color: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0; font-weight: 600;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <i [class]="m.icon" style="color: #64748b; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.875rem; color: #1e293b;">{{ m.label }}</span>
+            </div>
+            <mat-checkbox [checked]="isMenuChecked(m.id)" (change)="toggleMenu(m.id)" color="primary"></mat-checkbox>
+          </div>
 
-        <!-- Module Column -->
-        <ng-container matColumnDef="module">
-          <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Modul</th>
-          <td mat-cell *matCellDef="let perm" style="font-weight: 500; font-size: 0.875rem;">
-            {{ perm.module }}
-          </td>
-        </ng-container>
+          <!-- Child Menu Option -->
+          <div *ngIf="m.parentId" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.75rem 0.4rem 2.25rem; background-color: #f8fafc; border-radius: 6px; border-left: 3px solid #cbd5e1; font-weight: 500;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i [class]="m.icon" style="color: #94a3b8; font-size: 0.95rem;"></i>
+              <span style="font-size: 0.8rem; color: #334155;">{{ m.label }}</span>
+              <span style="font-family: var(--font-monospace); font-size: 0.65rem; color: #94a3b8; margin-left: 0.5rem;">({{ m.routerLink }})</span>
+            </div>
+            <mat-checkbox [checked]="isMenuChecked(m.id)" (change)="toggleMenu(m.id)" color="primary"></mat-checkbox>
+          </div>
 
-        <!-- Create Column -->
-        <ng-container matColumnDef="create">
-          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
-            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Create">add_circle_outline</mat-icon>
-          </th>
-          <td mat-cell *matCellDef="let perm" style="text-align:center;">
-            <mat-checkbox [(ngModel)]="perm.create" color="primary"></mat-checkbox>
-          </td>
-        </ng-container>
+        </div>
+      </div>
 
-        <!-- Read Column -->
-        <ng-container matColumnDef="read">
-          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
-            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Read">visibility</mat-icon>
-          </th>
-          <td mat-cell *matCellDef="let perm" style="text-align:center;">
-            <mat-checkbox [(ngModel)]="perm.read" color="primary"></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Update Column -->
-        <ng-container matColumnDef="update">
-          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
-            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Update">edit</mat-icon>
-          </th>
-          <td mat-cell *matCellDef="let perm" style="text-align:center;">
-            <mat-checkbox [(ngModel)]="perm.update" color="primary"></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Delete Column -->
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef style="text-align:center;">
-            <mat-icon style="font-size: 1rem; color: #64748b;" matTooltip="Delete">delete_outline</mat-icon>
-          </th>
-          <td mat-cell *matCellDef="let perm" style="text-align:center;">
-            <mat-checkbox [(ngModel)]="perm.delete" color="warn"></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="['module','create','read','update','delete']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['module','create','read','update','delete'];"></tr>
-      </table>
-
-      <div class="permission-actions">
-        <button mat-stroked-button class="btn-cancel">BATAL</button>
+      <div class="permission-actions" style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button mat-stroked-button class="btn-cancel" (click)="loadRoleMenus(selectedRole.id)">BATAL</button>
         <button mat-flat-button color="primary" class="btn-primary"
-          [disabled]="isSavingPermissions" (click)="savePermissions()">
+          [disabled]="isSavingMenus" (click)="saveMenuPermissions()">
           <mat-icon>save</mat-icon>
-          {{ isSavingPermissions ? 'MENYIMPAN...' : 'SIMPAN PERMISSIONS' }}
+          {{ isSavingMenus ? 'MENYIMPAN...' : 'SIMPAN MENU' }}
         </button>
       </div>
     </div>

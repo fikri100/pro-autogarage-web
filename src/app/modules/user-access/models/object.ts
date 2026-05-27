@@ -7,6 +7,7 @@ export interface User {
   employeeName?: string;
   status?: string;
   password?: string;
+  menus?: any[];
 }
 
 export interface Role {
