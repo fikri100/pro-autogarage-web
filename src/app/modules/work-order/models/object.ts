@@ -11,6 +11,8 @@ export interface WorkOrder {
   mechanicName?: string;
   startTime?: string;
   endTime?: string;
+  estimatedMinutes?: number;
+  estimatedCompletion?: string;
   workStatus: 'IN_PROGRESS' | 'COMPLETED' | 'PAID';
   notes?: string;
   status?: string;

@@ -24,6 +24,11 @@ export class WorkOrderComponent implements OnInit {
   selectedMechanicId: number | null = null;
   woNotes = '';
 
+  // Fields for work duration estimation
+  estimatedHours: number = 0;
+  estimatedMins: number = 0;
+  computedCompletion: string = '';
+
   detailsColumns: string[] = ['code', 'name', 'type', 'qty', 'price', 'subtotal', 'actions'];
 
   constructor(
@@ -82,6 +87,16 @@ export class WorkOrderComponent implements OnInit {
     this.woNotes = wo.notes || '';
     this.estimationDetails = [];
     this.estimationTotal = 0;
+
+    // Populate duration estimation fields from saved data
+    if (wo.estimatedMinutes) {
+      this.estimatedHours = Math.floor(wo.estimatedMinutes / 60);
+      this.estimatedMins = wo.estimatedMinutes % 60;
+    } else {
+      this.estimatedHours = 0;
+      this.estimatedMins = 0;
+    }
+    this.computeEstimatedCompletion(wo);
     
     this.loadEstimationDetails(wo.id!);
   }
@@ -111,23 +126,39 @@ export class WorkOrderComponent implements OnInit {
     this.estimationTotal = this.estimationDetails.reduce((sum, item) => sum + (item.quantity * item.priceAtTransaction), 0);
   }
 
-  saveMechanicAssignment(): void {
+  saveAssignmentAndEstimation(): void {
     if (!this.selectedWO || !this.selectedMechanicId) return;
 
+    // Step 1: Save mechanic assignment
     this.woService.assignMechanic(this.selectedWO.id!, this.selectedMechanicId, this.woNotes).subscribe({
       next: () => {
-        this.snackBar.open('Mekanik & catatan berhasil disimpan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
-        
-        // Update local object
+        // Update local object for mechanic
         this.selectedWO!.mechanicId = this.selectedMechanicId!;
         const mech = this.mechanics.find(m => m.id === this.selectedMechanicId);
-        if (mech) {
-          this.selectedWO!.mechanicName = mech.name;
-        }
+        if (mech) this.selectedWO!.mechanicName = mech.name;
         this.selectedWO!.notes = this.woNotes;
+
+        // Step 2: Save estimation duration (only if > 0)
+        const totalMinutes = (this.estimatedHours * 60) + this.estimatedMins;
+        if (totalMinutes > 0) {
+          this.woService.updateEstimation(this.selectedWO!.id!, totalMinutes).subscribe({
+            next: () => {
+              this.selectedWO!.estimatedMinutes = totalMinutes;
+              this.computeEstimatedCompletion(this.selectedWO!);
+              this.snackBar.open('Mekanik, catatan & estimasi waktu berhasil disimpan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+              this.cdr.detectChanges();
+            },
+            error: (err: any) => {
+              this.snackBar.open('Mekanik disimpan, tapi estimasi waktu gagal: ' + (err.error || ''), 'Tutup', { duration: 4000, panelClass: 'snack-error' });
+            }
+          });
+        } else {
+          this.snackBar.open('Mekanik & catatan berhasil disimpan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+          this.cdr.detectChanges();
+        }
       },
       error: () => {
-        this.snackBar.open('Gagal menyimpan mekanik', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+        this.snackBar.open('Gagal menyimpan penugasan mekanik', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
       }
     });
   }
@@ -181,6 +212,48 @@ export class WorkOrderComponent implements OnInit {
         this.snackBar.open(errMsg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
         // Reload details to reset back to actual state
         this.loadEstimationDetails(this.selectedWO!.id!);
+      }
+    });
+  }
+
+  onDurationChange(): void {
+    if (this.selectedWO) {
+      this.computeEstimatedCompletion(this.selectedWO);
+    }
+  }
+
+  computeEstimatedCompletion(wo: WorkOrder): void {
+    const totalMinutes = (this.estimatedHours * 60) + this.estimatedMins;
+    if (!totalMinutes || !wo.startTime) {
+      this.computedCompletion = '';
+      return;
+    }
+    const start = new Date(wo.startTime);
+    start.setMinutes(start.getMinutes() + totalMinutes);
+    this.computedCompletion = start.toLocaleString('id-ID', {
+      weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    }) + ' WIB';
+  }
+
+  saveWorkDurationEstimation(): void {
+    if (!this.selectedWO) return;
+    const totalMinutes = (this.estimatedHours * 60) + this.estimatedMins;
+    if (totalMinutes <= 0) {
+      this.snackBar.open('Durasi estimasi harus lebih dari 0 menit', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+      return;
+    }
+
+    this.woService.updateEstimation(this.selectedWO.id!, totalMinutes).subscribe({
+      next: () => {
+        this.snackBar.open('Estimasi waktu berhasil disimpan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+        this.selectedWO!.estimatedMinutes = totalMinutes;
+        // Recalculate display from saved startTime
+        this.computeEstimatedCompletion(this.selectedWO!);
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.snackBar.open(err.error || 'Gagal menyimpan estimasi waktu', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
       }
     });
   }

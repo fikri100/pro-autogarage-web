@@ -151,13 +151,14 @@
         </div>
       </div>
 
-      <!-- Mechanic Assignment Panel -->
+      <!-- Mechanic Assignment + Estimation Panel (Merged) -->
       <div class="card-panel" style="background-color: #f8fafc; padding: 1.25rem; border-color: #e2e8f0;">
         <h3 class="text-xs-caps" style="margin-bottom: 1rem; color: #475569; display: flex; align-items: center; gap: 0.35rem;">
           <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #3b82f6;">engineering</mat-icon>
-          Tunjuk Mekanik & Diagnosa Masalah
+          Tunjuk Mekanik, Diagnosa &amp; Estimasi Waktu
         </h3>
 
+        <!-- Row 1: Mekanik + Catatan + Simpan -->
         <div class="mechanic-grid">
           
           <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
@@ -170,18 +171,58 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
-            <mat-label>Diagnosa Keluhan & Catatan Servis</mat-label>
+            <mat-label>Diagnosa Keluhan &amp; Catatan Servis</mat-label>
             <textarea matInput [(ngModel)]="woNotes" rows="1" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'"
                       placeholder="e.g. Kampas rem tipis perlu ganti, oli mesin hitam pekat"></textarea>
           </mat-form-field>
 
-          <button mat-flat-button class="btn-secondary" style="height: 3.25rem; border-color: #cbd5e1;" 
+          <button mat-flat-button class="btn-secondary" style="height: 3.25rem; border-color: #cbd5e1;"
                   *ngIf="selectedWO.workStatus === 'IN_PROGRESS'"
                   [disabled]="!selectedMechanicId"
-                  (click)="saveMechanicAssignment()">
+                  (click)="saveAssignmentAndEstimation()">
             <mat-icon>save</mat-icon>
             Simpan
           </button>
+        </div>
+
+        <!-- Row 2: Estimasi Waktu (2 input, no button) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+
+          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            <mat-label>Estimasi Durasi (Jam)</mat-label>
+            <input matInput type="number" min="0" max="23"
+                   [(ngModel)]="estimatedHours"
+                   (ngModelChange)="onDurationChange()"
+                   [disabled]="selectedWO!.workStatus !== 'IN_PROGRESS'"
+                   placeholder="0">
+            <span matSuffix style="font-size: 0.75rem; color: #64748b; margin-right: 0.25rem;">jam</span>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            <mat-label>Estimasi Durasi (Menit)</mat-label>
+            <input matInput type="number" min="0" max="59"
+                   [(ngModel)]="estimatedMins"
+                   (ngModelChange)="onDurationChange()"
+                   [disabled]="selectedWO!.workStatus !== 'IN_PROGRESS'"
+                   placeholder="0">
+            <span matSuffix style="font-size: 0.75rem; color: #64748b; margin-right: 0.25rem;">mnt</span>
+          </mat-form-field>
+        </div>
+
+        <!-- Estimated Completion Preview -->
+        <div *ngIf="computedCompletion" style="margin-top: 1rem; background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #f59e0b40; border-radius: 0.5rem; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+          <mat-icon style="color: #d97706; font-size: 1.25rem; width: 1.25rem; height: 1.25rem; flex-shrink: 0;">alarm_on</mat-icon>
+          <div>
+            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #92400e;">Preview Estimasi Selesai</span>
+            <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #78350f; font-size: 0.9rem; margin-top: 0.1rem;">
+              {{ computedCompletion }}
+            </div>
+          </div>
+        </div>
+
+        <!-- No estimate set label -->
+        <div *ngIf="!computedCompletion && selectedWO!.workStatus === 'COMPLETED'" style="margin-top: 0.75rem; font-size: 0.75rem; color: #94a3b8; font-style: italic;">
+          Estimasi waktu tidak diisi sebelum pengerjaan selesai.
         </div>
       </div>
 

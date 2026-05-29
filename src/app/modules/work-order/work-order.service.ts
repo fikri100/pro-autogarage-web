@@ -34,6 +34,10 @@ export class WorkOrderService {
     return this.http.put<void>(`${this.woUrl}/${id}/estimate`, details);
   }
 
+  updateEstimation(id: number, estimatedMinutes: number): Observable<void> {
+    return this.http.put<void>(`${this.woUrl}/${id}/estimation`, { estimatedMinutes });
+  }
+
   completeWorkOrder(id: number): Observable<void> {
     return this.http.put<void>(`${this.woUrl}/${id}/complete`, {});
   }
