@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MasterService } from '../master.service';
 import { Employee, Role } from '../models/master.model';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { startWith, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-employee-crud',
@@ -13,7 +14,6 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class EmployeeCrudComponent implements OnInit {
   employees: Employee[] = [];
-  filteredEmployees: Employee[] = [];
   roles: Role[] = [];
   filteredRoles$!: Observable<Role[]>;
   employeeForm!: FormGroup;
@@ -22,6 +22,13 @@ export class EmployeeCrudComponent implements OnInit {
   isEditMode = false;
   editingEmployeeId: number | null = null;
   displayedColumns: string[] = ['name', 'position', 'phone', 'address', 'actions'];
+
+  // Pagination & Search States
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  searchSubject = new Subject<string>();
+  searchQuery = '';
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +41,16 @@ export class EmployeeCrudComponent implements OnInit {
     this.initForm();
     this.loadEmployees();
     this.loadRoles();
+
+    // Debounce search input for 1 second
+    this.searchSubject.pipe(
+      debounceTime(1000),
+      distinctUntilChanged()
+    ).subscribe(value => {
+      this.searchQuery = value;
+      this.currentPage = 1; // reset to first page on new search
+      this.loadEmployees();
+    });
   }
 
   private initForm(): void {
@@ -69,10 +86,10 @@ export class EmployeeCrudComponent implements OnInit {
   loadEmployees(): void {
     this.loading = true;
     this.cdr.detectChanges();
-    this.api.getEmployees().subscribe({
-      next: (data) => {
-        this.employees = data || [];
-        this.filteredEmployees = [...this.employees];
+    this.api.getEmployees(this.searchQuery, this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.employees = response.data || [];
+        this.totalData = response.pageResponse?.total || 0;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -82,6 +99,12 @@ export class EmployeeCrudComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadEmployees();
   }
 
   selectForEdit(employee: Employee): void {
@@ -161,11 +184,7 @@ export class EmployeeCrudComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredEmployees = this.employees.filter(e => 
-      e.name.toLowerCase().includes(filterValue) || 
-      e.position.toLowerCase().includes(filterValue) ||
-      e.phone.toLowerCase().includes(filterValue)
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
   }
 }

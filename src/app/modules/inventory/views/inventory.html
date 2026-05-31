@@ -1,5 +1,4 @@
 <!-- Page Header -->
-<!-- Page Header -->
 <div class="page-header">
   <div>
     <h2 class="page-title">Manajemen Stok & Inventaris</h2>
@@ -41,7 +40,7 @@
                 [style.background-color]="selectedType === 'ALL' ? '#eff6ff' : 'transparent'"
                 [style.color]="selectedType === 'ALL' ? '#1e40af' : '#64748b'"
                 (click)="filterByType('ALL')">
-          SEMUA ({{ products.length }})
+          SEMUA ({{ totalData }})
         </button>
         <button mat-button style="flex: 1; font-size: 0.75rem; font-weight: 600; min-width: 0; padding: 0;"
                 [style.background-color]="selectedType === 'SPR' ? '#eff6ff' : 'transparent'"
@@ -60,7 +59,7 @@
       <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 style="margin: 0;">Daftar Inventaris</h3>
-          <span class="count-badge" [class.warn]="lowStockOnly">{{ products.length }} Item</span>
+          <span class="count-badge" [class.warn]="lowStockOnly">{{ totalData }} Item</span>
         </div>
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
           <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
@@ -110,6 +109,14 @@
           </div>
         </div>
       </div>
+
+      <mat-paginator [length]="totalData" 
+                     [pageSize]="pageSize" 
+                     [pageSizeOptions]="[10, 25, 50]"
+                     (page)="onPageChange($event)"
+                     style="background: transparent;">
+      </mat-paginator>
+
     </div>
   </div>
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Customer, Vehicle } from './models/object';
+import { PaginatedResponse } from '../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,16 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
-  getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(this.apiUrl);
+  getCustomers(search: string = '', page: number = 1, limit: number = 10): Observable<PaginatedResponse<Customer>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    return this.http.get<PaginatedResponse<Customer>>(this.apiUrl, { params });
   }
 
   getCustomer(id: number): Observable<Customer> {

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -20,6 +21,10 @@ export class InventoryComponent implements OnInit {
   selectedProduct: Product | null = null;
   stockLogs: StockLog[] = [];
   logsLoading = false;
+
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
 
   // Filters State
   searchQuery = '';
@@ -52,25 +57,30 @@ export class InventoryComponent implements OnInit {
 
   onSearchChange(event: Event): void {
     const inputVal = (event.target as HTMLInputElement).value;
+    this.currentPage = 1;
     this.searchSubject.next(inputVal);
   }
 
   filterByType(type: 'ALL' | 'SPR' | 'SRV'): void {
     this.selectedType = type;
+    this.currentPage = 1;
     this.loadProducts();
   }
 
   toggleLowStock(): void {
     this.lowStockOnly = !this.lowStockOnly;
+    this.currentPage = 1;
     this.loadProducts();
   }
   loadProducts(): void {
     this.loading = true;
     this.cdr.detectChanges();
 
-    this.inventoryService.getProducts(this.searchQuery, this.selectedType, this.lowStockOnly).subscribe({
-      next: (data: Product[]) => {
-        this.products = data || [];
+    this.inventoryService.getProducts(this.searchQuery, this.selectedType, this.lowStockOnly, this.currentPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.products = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
+        
         
         // Reset or adjust selected product details
         if (this.products.length > 0) {
@@ -237,5 +247,11 @@ export class InventoryComponent implements OnInit {
         });
       }
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadProducts();
   }
 }

@@ -13,6 +13,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { RoleCrudComponent } from './components/role-crud.component';
 import { CategoryCrudComponent } from './components/category-crud.component';
@@ -40,6 +41,7 @@ import { SharedModule } from '../shared.module';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatAutocompleteModule,
+    MatPaginatorModule,
     SharedModule
   ]
 })

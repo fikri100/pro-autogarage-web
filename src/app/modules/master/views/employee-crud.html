@@ -25,14 +25,14 @@
           <mat-spinner diameter="40"></mat-spinner>
         </div>
 
-        <div *ngIf="!loading && filteredEmployees.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
+        <div *ngIf="!loading && employees.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
           <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">badge</mat-icon>
           <div style="font-weight: 600; color: #475569;">Tidak ada karyawan aktif</div>
         </div>
 
         <!-- Table Container with horizontal scrolling and no wrap -->
-        <div *ngIf="!loading && filteredEmployees.length > 0" style="overflow-x: auto; width: 100%;">
-          <table mat-table [dataSource]="filteredEmployees" style="width: 100%; border-collapse: collapse; min-width: 600px;">
+        <div *ngIf="!loading && employees.length > 0" style="overflow-x: auto; width: 100%;">
+          <table mat-table [dataSource]="employees" style="width: 100%; border-collapse: collapse; min-width: 600px;">
             
             <!-- Column: Nama Karyawan -->
             <ng-container matColumnDef="name">
@@ -87,6 +87,14 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
           </table>
         </div>
+        <mat-paginator 
+          *ngIf="!loading && employees.length > 0" 
+          [length]="totalData" 
+          [pageSize]="pageSize" 
+          [pageSizeOptions]="[5, 10, 25, 50]" 
+          (page)="onPageChange($event)" 
+          style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
+        </mat-paginator>
       </div>
     </div>
 

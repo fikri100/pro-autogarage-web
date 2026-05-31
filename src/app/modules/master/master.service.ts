@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Role, Category, Employee } from './models/master.model';
+import { PaginatedResponse } from '../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,12 @@ export class MasterService {
   }
 
   // Employee CRUD Operations
-  getEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>('/api/employees');
+  getEmployees(search: string = '', page: number = 1, limit: number = 10): Observable<PaginatedResponse<Employee>> {
+    const params = new HttpParams()
+      .set('search', search)
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    return this.http.get<PaginatedResponse<Employee>>('/api/employees', { params });
   }
 
   createEmployee(employee: Employee): Observable<any> {

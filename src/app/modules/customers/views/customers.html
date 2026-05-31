@@ -30,7 +30,7 @@
       <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 style="margin: 0;">Daftar Pelanggan</h3>
-          <span class="count-badge">{{ filteredCustomers.length }} Total</span>
+          <span class="count-badge">{{ totalData }} Total</span>
         </div>
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
           <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
@@ -44,12 +44,12 @@
       </div>
 
       <div class="customer-list-scroll">
-        <div *ngIf="filteredCustomers.length === 0" class="empty-state">
+        <div *ngIf="customers.length === 0" class="empty-state">
           <mat-icon>people_outline</mat-icon>
           <p>Tidak ada pelanggan.</p>
         </div>
 
-        <div *ngFor="let customer of filteredCustomers"
+        <div *ngFor="let customer of customers"
              class="list-item-hover"
              [class.list-item-active]="selectedCustomer?.id === customer.id"
              (click)="selectCustomer(customer)"
@@ -63,6 +63,13 @@
           </div>
         </div>
       </div>
+
+      <mat-paginator [length]="totalData" 
+                     [pageSize]="pageSize" 
+                     [pageSizeOptions]="[10, 25, 50]"
+                     (page)="onPageChange($event)"
+                     style="background: transparent;">
+      </mat-paginator>
     </div>
   </div>
 

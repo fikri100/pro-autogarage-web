@@ -1,7 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { CustomerService } from '../customers.service';
 import { Customer, Vehicle } from '../models/object';
@@ -13,10 +16,16 @@ import { VehicleDialogComponent } from './vehicle-dialog.component';
   templateUrl: '../views/customers.html',
   standalone: false
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent implements OnInit, OnDestroy {
   customers: Customer[] = [];
-  filteredCustomers: Customer[] = [];
   loading = false;
+
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   selectedCustomer: Customer | null = null;
   vehicles: Vehicle[] = [];
@@ -37,17 +46,31 @@ export class CustomersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(1000)
+    ).subscribe(searchValue => {
+      this.searchQuery = searchValue;
+      this.currentPage = 1;
+      this.loadCustomers();
+    });
     this.loadCustomers();
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   loadCustomers(): void {
     this.loading = true;
     this.cdr.detectChanges();
 
-    this.customerService.getCustomers().subscribe({
-      next: (data: Customer[]) => {
-        this.customers = data || [];
-        this.filteredCustomers = [...this.customers];
+    this.customerService.getCustomers(this.searchQuery, this.currentPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.customers = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
+        
         if (this.customers.length > 0) {
           if (!this.selectedCustomer) {
             this.selectedCustomer = this.customers[0];
@@ -244,12 +267,14 @@ export class CustomersComponent implements OnInit {
     });
   }
 
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadCustomers();
+  }
+
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredCustomers = this.customers.filter(c => 
-      c.name.toLowerCase().includes(filterValue) || 
-      (c.phone && c.phone.toLowerCase().includes(filterValue)) ||
-      (c.id && c.id.toString().includes(filterValue))
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
   }
 }
