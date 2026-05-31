@@ -2,7 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MasterService } from '../master.service';
-import { Employee } from '../models/master.model';
+import { Employee, Role } from '../models/master.model';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee-crud',
@@ -11,6 +13,8 @@ import { Employee } from '../models/master.model';
 })
 export class EmployeeCrudComponent implements OnInit {
   employees: Employee[] = [];
+  roles: Role[] = [];
+  filteredRoles$!: Observable<Role[]>;
   employeeForm!: FormGroup;
   loading = false;
   isSaving = false;
@@ -28,6 +32,7 @@ export class EmployeeCrudComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadEmployees();
+    this.loadRoles();
   }
 
   private initForm(): void {
@@ -36,6 +41,27 @@ export class EmployeeCrudComponent implements OnInit {
       phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s()]+$/)]],
       position: ['', [Validators.required]],
       address: ['', []]
+    });
+
+    this.filteredRoles$ = this.employeeForm.get('position')!.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterRoles(value || ''))
+    );
+  }
+
+  private _filterRoles(value: string): Role[] {
+    const filterValue = value.toLowerCase();
+    return this.roles.filter(role => role.roleName.toLowerCase().includes(filterValue));
+  }
+
+  loadRoles(): void {
+    this.api.getRoles().subscribe({
+      next: (data) => {
+        this.roles = data || [];
+      },
+      error: () => {
+        this.snackBar.open('Gagal memuat data role/jabatan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+      }
     });
   }
 

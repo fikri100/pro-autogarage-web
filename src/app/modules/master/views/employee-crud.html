@@ -110,7 +110,12 @@
           <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Jabatan / Posisi <span class="required">*</span></label>
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
-            <input matInput formControlName="position" placeholder="Contoh: Lead Mechanic, Cashier, Admin" style="font-family: 'Inter', sans-serif;">
+            <input type="text" matInput formControlName="position" [matAutocomplete]="autoPosition" placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;">
+            <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
+              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName" style="font-family: 'Inter', sans-serif;">
+                {{ role.roleName }}
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="employeeForm.get('position')?.hasError('required')">Jabatan/posisi wajib diisi</mat-error>
           </mat-form-field>
         </div>
