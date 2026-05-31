@@ -22,8 +22,10 @@
 
       <div class="two-col-grid">
         <!-- Nominal / Amount -->
-        <mat-form-field appearance="outline">
-          <mat-label>Nominal Rupiah (Rp) <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Nominal Rupiah (Rp) <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput type="number" formControlName="amount" placeholder="e.g. 500000" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
           <mat-icon matSuffix>payments</mat-icon>
           <mat-error *ngIf="expenseForm.get('amount')?.hasError('required')">
@@ -33,10 +35,13 @@
             Nominal harus lebih dari 0
           </mat-error>
         </mat-form-field>
+        </div>
 
         <!-- Kategori -->
-        <mat-form-field appearance="outline">
-          <mat-label>Kategori <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Kategori <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <mat-select formControlName="category">
             <mat-option *ngFor="let cat of categories" [value]="cat.value">
               {{ cat.label }}
@@ -46,12 +51,15 @@
             Kategori wajib diisi
           </mat-error>
         </mat-form-field>
+        </div>
       </div>
 
       <div class="two-col-grid">
         <!-- Tanggal -->
-        <mat-form-field appearance="outline">
-          <mat-label>Tanggal Transaksi <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Tanggal Transaksi <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput [matDatepicker]="picker" formControlName="flowDate">
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -60,14 +68,18 @@
             Tanggal wajib diisi
           </mat-error>
         </mat-form-field>
+        </div>
       </div>
 
       <!-- Keterangan -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Keterangan / Catatan</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Keterangan / Catatan</label>
+        <mat-form-field appearance="outline" class="full-width">
+        
         <textarea matInput formControlName="description" rows="3" placeholder="Contoh: Bayar tagihan listrik bulan Mei 2026 atau Gaji mekanik A"></textarea>
         <mat-icon matSuffix>description</mat-icon>
       </mat-form-field>
+      </div>
 
     </div>
   </form>

@@ -26,8 +26,10 @@
       </div>
 
       <!-- Plat Nomor -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Plat Nomor (Nomor Polisi) <span class="required">*</span></mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Plat Nomor (Nomor Polisi) <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+        
         <input matInput formControlName="licensePlate" (input)="onPlateInput($event)" placeholder="Contoh: B 1234 ABC" 
                style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;" />
         <mat-icon matSuffix style="color: #64748b;">badge</mat-icon>
@@ -39,11 +41,14 @@
           Format salah. Contoh yang benar: B 1234 ABC (Wajib spasi pemisah)
         </mat-error>
       </mat-form-field>
+      </div>
 
       <div class="responsive-dialog-grid" style="margin-top: 1.5rem;">
         <!-- Brand -->
-        <mat-form-field appearance="outline">
-          <mat-label>Merek Mobil <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Merek Mobil <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <mat-select formControlName="brand" placeholder="Pilih Merek">
             <mat-option value="Honda">Honda</mat-option>
             <mat-option value="Toyota">Toyota</mat-option>
@@ -60,22 +65,28 @@
             Merek mobil wajib dipilih
           </mat-error>
         </mat-form-field>
+        </div>
 
         <!-- Model -->
-        <mat-form-field appearance="outline">
-          <mat-label>Tipe / Model Mobil <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Tipe / Model Mobil <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput formControlName="model" placeholder="Contoh: Jazz GE8, Avanza Veloz" />
           <mat-icon matSuffix style="color: #64748b;">minor_crash</mat-icon>
           <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
             Model wajib diisi
           </mat-error>
         </mat-form-field>
+        </div>
       </div>
 
       <div class="responsive-dialog-grid" style="margin-top: 1rem;">
         <!-- Year Made -->
-        <mat-form-field appearance="outline">
-          <mat-label>Tahun Pembuatan <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Tahun Pembuatan <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput type="number" formControlName="yearMade" placeholder="Contoh: 2015" />
           <mat-icon matSuffix style="color: #64748b;">calendar_today</mat-icon>
           <mat-error *ngIf="vehicleForm.get('yearMade')?.hasError('required')">
@@ -85,10 +96,13 @@
             Tahun minimal 1980
           </mat-error>
         </mat-form-field>
+        </div>
 
         <!-- Transmission -->
-        <mat-form-field appearance="outline">
-          <mat-label>Transmisi <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Transmisi <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <mat-select formControlName="transmission">
             <mat-option value="AUTOMATIC">Automatic (AT)</mat-option>
             <mat-option value="MANUAL">Manual (MT)</mat-option>
@@ -97,6 +111,7 @@
             Transmisi wajib dipilih
           </mat-error>
         </mat-form-field>
+        </div>
       </div>
     </div>
   </form>

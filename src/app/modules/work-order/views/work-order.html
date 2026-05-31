@@ -161,20 +161,26 @@
         <!-- Row 1: Mekanik + Catatan + Simpan -->
         <div class="mechanic-grid">
           
-          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
-            <mat-label>Pilih Mekanik <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Pilih Mekanik <span class="required">*</span></label>
+            <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            
             <mat-select [(ngModel)]="selectedMechanicId" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'">
               <mat-option *ngFor="let m of mechanics" [value]="m.id">
                 {{ m.name }} ({{ m.position }})
               </mat-option>
             </mat-select>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
-            <mat-label>Diagnosa Keluhan &amp; Catatan Servis</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Diagnosa Keluhan &amp; Catatan Servis</label>
+            <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            
             <textarea matInput [(ngModel)]="woNotes" rows="1" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'"
                       placeholder="e.g. Kampas rem tipis perlu ganti, oli mesin hitam pekat"></textarea>
           </mat-form-field>
+          </div>
 
           <button mat-flat-button class="btn-secondary" style="height: 3.25rem; border-color: #cbd5e1;"
                   *ngIf="selectedWO.workStatus === 'IN_PROGRESS'"
@@ -188,8 +194,10 @@
         <!-- Row 2: Estimasi Waktu (2 input, no button) -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
 
-          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
-            <mat-label>Estimasi Durasi (Jam)</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Estimasi Durasi (Jam)</label>
+            <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            
             <input matInput type="number" min="0" max="23"
                    [(ngModel)]="estimatedHours"
                    (ngModelChange)="onDurationChange()"
@@ -197,9 +205,12 @@
                    placeholder="0">
             <span matSuffix style="font-size: 0.75rem; color: #64748b; margin-right: 0.25rem;">jam</span>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
-            <mat-label>Estimasi Durasi (Menit)</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Estimasi Durasi (Menit)</label>
+            <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
+            
             <input matInput type="number" min="0" max="59"
                    [(ngModel)]="estimatedMins"
                    (ngModelChange)="onDurationChange()"
@@ -207,6 +218,7 @@
                    placeholder="0">
             <span matSuffix style="font-size: 0.75rem; color: #64748b; margin-right: 0.25rem;">mnt</span>
           </mat-form-field>
+          </div>
         </div>
 
         <!-- Estimated Completion Preview -->

@@ -37,8 +37,10 @@
 
       <div class="two-col-grid">
         <!-- Jumlah Restock -->
-        <mat-form-field appearance="outline">
-          <mat-label>Jumlah Barang Masuk (Pcs) <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Jumlah Barang Masuk (Pcs) <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput type="number" formControlName="quantity" placeholder="e.g. 10" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
           <mat-icon matSuffix>add_shopping_cart</mat-icon>
           <mat-error *ngIf="restockForm.get('quantity')?.hasError('required')">
@@ -48,10 +50,13 @@
             Jumlah barang masuk minimal 1 Pcs
           </mat-error>
         </mat-form-field>
+        </div>
 
         <!-- Harga Beli Baru per Pcs -->
-        <mat-form-field appearance="outline">
-          <mat-label>Harga Beli Baru per Pcs (Rp) <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Harga Beli Baru per Pcs (Rp) <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput type="number" formControlName="purchasePrice" placeholder="e.g. 75000" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
           <mat-icon matSuffix>payments</mat-icon>
           <mat-error *ngIf="restockForm.get('purchasePrice')?.hasError('required')">
@@ -61,11 +66,14 @@
             Harga beli harus lebih dari 0
           </mat-error>
         </mat-form-field>
+        </div>
       </div>
 
       <!-- No Referensi / PO Number -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nomor Referensi / PO <span class="required">*</span></mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Nomor Referensi / PO <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+        
         <input matInput formControlName="referenceId" placeholder="e.g. PO-20260527-01" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
         <mat-icon matSuffix>tag</mat-icon>
         <mat-error *ngIf="restockForm.get('referenceId')?.hasError('required')">
@@ -75,6 +83,7 @@
           Nomor referensi terlalu panjang (maks. 50 karakter)
         </mat-error>
       </mat-form-field>
+      </div>
 
       <!-- Keuangan Checkbox Integrasi -->
       <div style="background-color: #fafafa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.5rem;">

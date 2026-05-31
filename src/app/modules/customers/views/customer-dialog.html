@@ -31,42 +31,49 @@
           <span>Profil Pelanggan</span>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nama Lengkap <span class="required">*</span></mat-label>
-          <input matInput formControlName="name" placeholder="e.g. Budi Santoso" />
-          <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
-            Nama wajib diisi
-          </mat-error>
-        </mat-form-field>
-
-        <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Nomor WhatsApp <span class="required">*</span></mat-label>
-            <span matTextPrefix class="phone-prefix">+62&nbsp;</span>
-            <input matInput formControlName="phone" placeholder="812-3456-7890" />
-            <mat-icon matSuffix>phone</mat-icon>
-            <mat-error *ngIf="customerForm.get('phone')?.hasError('required')">
-              Nomor WhatsApp wajib diisi
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Email (Opsional)</mat-label>
-            <input matInput type="email" formControlName="email" placeholder="budi@example.com" />
-            <mat-icon matSuffix>email</mat-icon>
-            <mat-error *ngIf="customerForm.get('email')?.hasError('email')">
-              Format email tidak valid
+        <div class="form-col-wrapper mb-3">
+          <label class="form-label-static">Nama Lengkap <span class="text-danger">*</span></label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="name" placeholder="e.g. Budi Santoso" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
+              Nama wajib diisi
             </mat-error>
           </mat-form-field>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Alamat</mat-label>
-          <textarea matInput formControlName="address" rows="2"
-            placeholder="Masukkan alamat lengkap"></textarea>
-          <mat-icon matSuffix>location_on</mat-icon>
-        </mat-form-field>
+        <div class="two-col-grid mb-3">
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Nomor WhatsApp <span class="text-danger">*</span></label>
+            <mat-form-field appearance="outline" class="full-width">
+              <span matTextPrefix class="phone-prefix">+62&nbsp;</span>
+              <input matInput formControlName="phone" placeholder="812-3456-7890" />
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="customerForm.get('phone')?.hasError('required')">
+                Nomor WhatsApp wajib diisi
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Email (Opsional)</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput type="email" formControlName="email" placeholder="budi@example.com" />
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="customerForm.get('email')?.hasError('email')">
+                Format email tidak valid
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-col-wrapper mb-2">
+          <label class="form-label-static">Alamat</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <textarea matInput formControlName="address" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
+            <mat-icon matSuffix>location_on</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
 
       <!-- Section: Data Kendaraan (hanya saat tambah baru) -->
@@ -78,21 +85,27 @@
         </div>
 
         <div class="three-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Plat Nomor</mat-label>
-            <input matInput formControlName="plate" placeholder="B 1234 ABC"
-              style="font-family: monospace; font-weight: 600;" />
-          </mat-form-field>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Plat Nomor</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="plate" placeholder="B 1234 ABC"
+                style="font-family: monospace; font-weight: 600;" />
+            </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Brand / Model</mat-label>
-            <input matInput formControlName="brand" placeholder="e.g. Toyota Avanza" />
-          </mat-form-field>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Brand / Model</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="brand" placeholder="e.g. Toyota Avanza" />
+            </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Tahun</mat-label>
-            <input matInput formControlName="year" placeholder="2020" type="number" />
-          </mat-form-field>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Tahun</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput formControlName="year" placeholder="2020" type="number" />
+            </mat-form-field>
+          </div>
         </div>
       </div>
 

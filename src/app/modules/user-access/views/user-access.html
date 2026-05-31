@@ -26,11 +26,14 @@
 
       <div class="flex-header-stack mb-3">
         <h3 class="section-title" style="margin-bottom: 0;">System Users</h3>
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Cari pengguna...</mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Cari pengguna...</label>
+          <mat-form-field appearance="outline" class="search-field">
+          
           <input matInput (input)="applyFilter($event)" />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
+        </div>
       </div>
 
       <div class="table-responsive" style="overflow-x: auto; width: 100%;">
@@ -120,27 +123,33 @@
         <!-- Role Select -->
         <div>
           <label class="text-xs-caps" style="display: block; margin-bottom: 0.5rem;">Assigned Role</label>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Pilih Role</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Pilih Role</label>
+            <mat-form-field appearance="outline" class="full-width">
+            
             <mat-select [(ngModel)]="selectedUser.roleId" (ngModelChange)="onRoleChange($event)">
               <mat-option *ngFor="let role of roles" [value]="role.id">
                 {{ role.roleName }}
               </mat-option>
             </mat-select>
           </mat-form-field>
+          </div>
         </div>
 
         <!-- Employee Mapping -->
         <div>
           <label class="text-xs-caps" style="display: block; margin-bottom: 0.5rem;">Employee Mapping</label>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Karyawan Terhubung</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Karyawan Terhubung</label>
+            <mat-form-field appearance="outline" class="full-width">
+            
             <input matInput
               [value]="'EMP-00' + selectedUser.employeeId + ' — ' + selectedUser.employeeName"
               disabled />
             <mat-icon matPrefix>badge</mat-icon>
             <mat-icon matSuffix>link</mat-icon>
           </mat-form-field>
+          </div>
         </div>
       </div>
     </div>

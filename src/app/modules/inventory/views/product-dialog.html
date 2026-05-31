@@ -32,16 +32,21 @@
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Tipe Item <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Tipe Item <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="itemType">
               <mat-option value="SPR">Sparepart (Barang Fisik)</mat-option>
               <mat-option value="SRV">Jasa (Layanan Service)</mat-option>
             </mat-select>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Kode Unik <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Kode Unik <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput formControlName="code" placeholder="e.g. OLI-HX7" 
                    style="font-family: monospace; font-weight: 600;" 
                    [readonly]="data.mode === 'edit'" />
@@ -53,28 +58,35 @@
               Format kode salah (gunakan huruf, angka, -, _)
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
-            <mat-label>Nama Item / Jasa <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Nama Item / Jasa <span class="required">*</span></label>
+            <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
+            
             <input matInput formControlName="name" placeholder="e.g. Shell Helix HX7 1L / Spooring Balancing" />
             <mat-icon matSuffix>inventory_2</mat-icon>
             <mat-error *ngIf="productForm.get('name')?.hasError('required')">
               Nama item wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Kategori <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Kategori <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="category">
               <mat-option *ngFor="let cat of currentCategories" [value]="cat">
                 {{ cat }}
               </mat-option>
             </mat-select>
           </mat-form-field>
+          </div>
         </div>
       </div>
 
@@ -87,56 +99,71 @@
 
         <!-- Tampilkan input ini hanya untuk Sparepart (SPR) -->
         <div class="two-col-grid" *ngIf="productForm.get('itemType')?.value === 'SPR'">
-          <mat-form-field appearance="outline">
-            <mat-label>Harga Beli (HPP) <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Harga Beli (HPP) <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <span matTextPrefix>Rp&nbsp;</span>
             <input matInput type="number" formControlName="purchasePrice" min="0" placeholder="0" />
             <mat-error *ngIf="productForm.get('purchasePrice')?.hasError('required')">
               Harga beli wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Harga Jual <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Harga Jual <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <span matTextPrefix>Rp&nbsp;</span>
             <input matInput type="number" formControlName="salePrice" min="0" placeholder="0" />
             <mat-error *ngIf="productForm.get('salePrice')?.hasError('required')">
               Harga jual wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
         <!-- Tampilkan hanya Harga Jual jika bertipe Jasa (SRV) -->
         <div class="two-col-grid" *ngIf="productForm.get('itemType')?.value === 'SRV'">
-          <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
-            <mat-label>Harga Jasa <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Harga Jasa <span class="required">*</span></label>
+            <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
+            
             <span matTextPrefix>Rp&nbsp;</span>
             <input matInput type="number" formControlName="salePrice" min="0" placeholder="0" />
             <mat-error *ngIf="productForm.get('salePrice')?.hasError('required')">
               Harga jasa wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
         <!-- Stok & Minimum Limit (Hanya untuk Sparepart) -->
         <div class="two-col-grid" *ngIf="productForm.get('itemType')?.value === 'SPR'">
-          <mat-form-field appearance="outline">
-            <mat-label>Stok Awal <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Stok Awal <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput type="number" formControlName="stockQuantity" min="0" placeholder="0" />
             <mat-icon matSuffix>tag</mat-icon>
             <mat-error *ngIf="productForm.get('stockQuantity')?.hasError('required')">
               Jumlah stok wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Batas Stok Minimum <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Batas Stok Minimum <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput type="number" formControlName="minStockLimit" min="0" placeholder="5" />
             <mat-icon matSuffix>error_outline</mat-icon>
             <mat-error *ngIf="productForm.get('minStockLimit')?.hasError('required')">
               Batas minimum wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
       </div>
 

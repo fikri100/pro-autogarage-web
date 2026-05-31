@@ -29,8 +29,10 @@
           <span>Detail Kendaraan</span>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Plat Nomor <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Plat Nomor <span class="required">*</span></label>
+          <mat-form-field appearance="outline" class="full-width">
+          
           <input matInput formControlName="licensePlate" placeholder="e.g. B 1234 ABC" 
                  style="font-family: monospace; font-weight: 600; text-transform: uppercase;" />
           <mat-icon matSuffix>badge</mat-icon>
@@ -38,41 +40,54 @@
             Plat nomor wajib diisi
           </mat-error>
         </mat-form-field>
+        </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Brand / Merk <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Brand / Merk <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput formControlName="brand" placeholder="e.g. Honda" />
             <mat-icon matSuffix>directions_car</mat-icon>
             <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
               Brand wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Model / Seri <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Model / Seri <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput formControlName="model" placeholder="e.g. Jazz GE8" />
             <mat-icon matSuffix>minor_crash</mat-icon>
             <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
               Model wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Tahun Pembuatan</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Tahun Pembuatan</label>
+            <mat-form-field appearance="outline">
+            
             <input matInput type="number" formControlName="yearMade" placeholder="e.g. 2013" min="1900" max="2100" />
             <mat-icon matSuffix>calendar_today</mat-icon>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Transmisi</mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Transmisi</label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="transmission">
               <mat-option value="Manual (MT)">Manual (MT)</mat-option>
               <mat-option value="Automatic (AT)">Automatic (AT)</mat-option>
             </mat-select>
           </mat-form-field>
+          </div>
         </div>
       </div>
     </form>

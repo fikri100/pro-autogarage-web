@@ -14,14 +14,19 @@
       </div>
 
       <!-- Filter text input to search products quickly -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Ketik untuk menyaring item...</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Ketik untuk menyaring item...</label>
+        <mat-form-field appearance="outline" class="full-width">
+        
         <input matInput (keyup)="filterProducts($event)" placeholder="Contoh: Oli / Rem" />
         <mat-icon matSuffix>filter_alt</mat-icon>
       </mat-form-field>
+      </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Pilih Sparepart / Jasa <span class="required">*</span></mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Pilih Sparepart / Jasa <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+        
         <mat-select formControlName="productId">
           <mat-option *ngFor="let p of filteredProducts" [value]="p.id">
             [{{ p.code }}] {{ p.name }} - {{ p.salePrice | currency:'IDR':'Rp ':'1.0-0' }} 
@@ -33,6 +38,7 @@
           Item wajib dipilih
         </mat-error>
       </mat-form-field>
+      </div>
     </div>
 
     <!-- Section: Jumlah Quantity -->
@@ -54,8 +60,10 @@
       </div>
 
       <div class="two-col-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Quantity <span class="required">*</span></mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Quantity <span class="required">*</span></label>
+          <mat-form-field appearance="outline">
+          
           <input matInput type="number" formControlName="quantity" min="1" />
           <mat-error *ngIf="itemForm.get('quantity')?.hasError('required')">
             Quantity wajib diisi
@@ -67,6 +75,7 @@
             Stok tidak cukup! Maksimal {{ selectedProduct.stockQuantity }} Pcs
           </mat-error>
         </mat-form-field>
+        </div>
 
         <div style="display: flex; flex-direction: column; justify-content: center; padding-left: 0.5rem;">
           <span class="text-xs-caps" style="font-size: 0.65rem; color: #94a3b8;">Total Biaya Item:</span>

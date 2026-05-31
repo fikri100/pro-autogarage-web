@@ -6,11 +6,14 @@
   </div>
   <div class="page-header-actions">
     <!-- Search Field -->
-    <mat-form-field appearance="outline" class="search-field" style="margin-bottom: 0;">
-      <mat-label>Cari Nama / Plat Mobil...</mat-label>
+    <div class="form-col-wrapper">
+      <label class="form-label-static">Cari Nama / Plat Mobil...</label>
+      <mat-form-field appearance="outline" class="search-field" style="margin-bottom: 0;">
+      
       <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
+    </div>
 
     <button mat-flat-button color="primary" class="btn-primary" (click)="showAddModal()">
       <mat-icon>add</mat-icon>

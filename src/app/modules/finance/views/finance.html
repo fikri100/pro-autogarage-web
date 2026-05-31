@@ -199,18 +199,23 @@
     <div style="padding: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; border-bottom: 1px solid #f1f5f9;">
       
       <!-- Type Filter -->
-      <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>Tipe Arus Kas</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Tipe Arus Kas</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+        
         <mat-select [(ngModel)]="filterType" (selectionChange)="onFilterChange()">
           <mat-option value="">Semua Tipe</mat-option>
           <mat-option value="INC">Pemasukan (Kas Masuk)</mat-option>
           <mat-option value="EXP">Pengeluaran (Kas Keluar)</mat-option>
         </mat-select>
       </mat-form-field>
+      </div>
 
       <!-- Category Filter -->
-      <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>Kategori</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Kategori</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+        
         <mat-select [(ngModel)]="filterCategory" (selectionChange)="onFilterChange()">
           <mat-option value="">Semua Kategori</mat-option>
           <mat-option value="SERVICE">Pemasukan Jasa Servis</mat-option>
@@ -221,22 +226,29 @@
           <mat-option value="OTHER">Lain-lain</mat-option>
         </mat-select>
       </mat-form-field>
+      </div>
 
       <!-- Start Date -->
-      <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>Dari Tanggal</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Dari Tanggal</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+        
         <input matInput [matDatepicker]="startPicker" [(ngModel)]="filterStartDate" (dateChange)="onFilterChange()" placeholder="Pilih tanggal" />
         <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
+      </div>
 
       <!-- End Date -->
-      <mat-form-field appearance="outline" style="width: 100%;">
-        <mat-label>Sampai Tanggal</mat-label>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Sampai Tanggal</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+        
         <input matInput [matDatepicker]="endPicker" [(ngModel)]="filterEndDate" (dateChange)="onFilterChange()" placeholder="Pilih tanggal" />
         <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
         <mat-datepicker #endPicker></mat-datepicker>
       </mat-form-field>
+      </div>
 
     </div>
 

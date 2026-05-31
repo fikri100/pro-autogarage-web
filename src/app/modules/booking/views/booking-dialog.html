@@ -38,8 +38,10 @@
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Pelanggan <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Pelanggan <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="customerId">
               <mat-option *ngFor="let c of customers" [value]="c.id">
                 {{ c.name }} ({{ c.phone }})
@@ -49,9 +51,12 @@
               Pelanggan wajib dipilih
             </mat-error>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Kendaraan Terdaftar <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Kendaraan Terdaftar <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="vehicleId" [disabled]="!bookingForm.get('customerId')?.value">
               <mat-option *ngFor="let v of filteredVehicles" [value]="v.id">
                 {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
@@ -61,6 +66,7 @@
               Kendaraan wajib dipilih
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
       </div>
 
@@ -72,8 +78,10 @@
         </div>
 
         <div class="two-col-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Tanggal Servis <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Tanggal Servis <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
             <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
             <mat-datepicker #datePicker></mat-datepicker>
@@ -81,9 +89,12 @@
               Tanggal reservasi wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Jam Servis <span class="required">*</span></mat-label>
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Jam Servis <span class="required">*</span></label>
+            <mat-form-field appearance="outline">
+            
             <mat-select formControlName="bookingTime" placeholder="Pilih Jam">
               <mat-option value="08:00">08:00 WIB</mat-option>
               <mat-option value="09:00">09:00 WIB</mat-option>
@@ -98,14 +109,18 @@
               Jam reservasi wajib diisi
             </mat-error>
           </mat-form-field>
+          </div>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Keluhan / Catatan Awal</mat-label>
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Keluhan / Catatan Awal</label>
+          <mat-form-field appearance="outline" class="full-width">
+          
           <textarea matInput formControlName="complaints" rows="3" 
                     placeholder="Contoh: Bunyi berdecit di rem depan, AC kurang dingin"></textarea>
           <mat-icon matSuffix>notes</mat-icon>
         </mat-form-field>
+        </div>
       </div>
 
     </form>
