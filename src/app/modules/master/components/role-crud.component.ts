@@ -11,6 +11,7 @@ import { Role } from '../models/master.model';
 })
 export class RoleCrudComponent implements OnInit {
   roles: Role[] = [];
+  filteredRoles: Role[] = [];
   roleForm!: FormGroup;
   loading = false;
   isSaving = false;
@@ -42,6 +43,7 @@ export class RoleCrudComponent implements OnInit {
     this.api.getRoles().subscribe({
       next: (data) => {
         this.roles = data || [];
+        this.filteredRoles = [...this.roles];
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -121,5 +123,13 @@ export class RoleCrudComponent implements OnInit {
         }
       });
     }
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredRoles = this.roles.filter(r => 
+      r.roleName.toLowerCase().includes(filterValue) ||
+      (r.id && r.id.toString().includes(filterValue))
+    );
   }
 }

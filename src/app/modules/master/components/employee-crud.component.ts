@@ -13,6 +13,7 @@ import { startWith, map } from 'rxjs/operators';
 })
 export class EmployeeCrudComponent implements OnInit {
   employees: Employee[] = [];
+  filteredEmployees: Employee[] = [];
   roles: Role[] = [];
   filteredRoles$!: Observable<Role[]>;
   employeeForm!: FormGroup;
@@ -71,6 +72,7 @@ export class EmployeeCrudComponent implements OnInit {
     this.api.getEmployees().subscribe({
       next: (data) => {
         this.employees = data || [];
+        this.filteredEmployees = [...this.employees];
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -156,5 +158,14 @@ export class EmployeeCrudComponent implements OnInit {
         }
       });
     }
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredEmployees = this.employees.filter(e => 
+      e.name.toLowerCase().includes(filterValue) || 
+      e.position.toLowerCase().includes(filterValue) ||
+      e.phone.toLowerCase().includes(filterValue)
+    );
   }
 }

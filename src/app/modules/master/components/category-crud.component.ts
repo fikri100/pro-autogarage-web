@@ -11,6 +11,7 @@ import { Category } from '../models/master.model';
 })
 export class CategoryCrudComponent implements OnInit {
   categories: Category[] = [];
+  filteredCategories: Category[] = [];
   categoryForm!: FormGroup;
   loading = false;
   isSaving = false;
@@ -42,6 +43,7 @@ export class CategoryCrudComponent implements OnInit {
     this.api.getCategories().subscribe({
       next: (data) => {
         this.categories = data || [];
+        this.filteredCategories = [...this.categories];
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -121,5 +123,13 @@ export class CategoryCrudComponent implements OnInit {
         }
       });
     }
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredCategories = this.categories.filter(c => 
+      c.name.toLowerCase().includes(filterValue) ||
+      (c.id && c.id.toString().includes(filterValue))
+    );
   }
 }

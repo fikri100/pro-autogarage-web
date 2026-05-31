@@ -12,6 +12,7 @@ import { InvoicePrintDialogComponent } from './invoice-print-dialog.component';
 })
 export class CashierComponent implements OnInit {
   readyWOs: any[] = [];
+  filteredReadyWOs: any[] = [];
   selectedWO: any = null;
   transaction: any = null;
   loading = false;
@@ -48,6 +49,7 @@ export class CashierComponent implements OnInit {
     this.cashierService.getReadyWorkOrders().subscribe({
       next: (data: any[]) => {
         this.readyWOs = data || [];
+        this.filteredReadyWOs = [...this.readyWOs];
         if (this.readyWOs.length > 0) {
           const exists = this.readyWOs.find(w => w.id === this.selectedWO?.id);
           this.selectWorkOrder(exists || this.readyWOs[0]);
@@ -232,5 +234,14 @@ export class CashierComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredReadyWOs = this.readyWOs.filter(wo => 
+      (wo.licensePlate && wo.licensePlate.toLowerCase().includes(filterValue)) ||
+      (wo.customerName && wo.customerName.toLowerCase().includes(filterValue)) ||
+      (wo.mechanicName && wo.mechanicName.toLowerCase().includes(filterValue))
+    );
   }
 }

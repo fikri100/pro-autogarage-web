@@ -15,6 +15,7 @@ import { VehicleDialogComponent } from './vehicle-dialog.component';
 })
 export class CustomersComponent implements OnInit {
   customers: Customer[] = [];
+  filteredCustomers: Customer[] = [];
   loading = false;
 
   selectedCustomer: Customer | null = null;
@@ -46,6 +47,7 @@ export class CustomersComponent implements OnInit {
     this.customerService.getCustomers().subscribe({
       next: (data: Customer[]) => {
         this.customers = data || [];
+        this.filteredCustomers = [...this.customers];
         if (this.customers.length > 0) {
           if (!this.selectedCustomer) {
             this.selectedCustomer = this.customers[0];
@@ -240,5 +242,14 @@ export class CustomersComponent implements OnInit {
         });
       }
     });
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredCustomers = this.customers.filter(c => 
+      c.name.toLowerCase().includes(filterValue) || 
+      (c.phone && c.phone.toLowerCase().includes(filterValue)) ||
+      (c.id && c.id.toString().includes(filterValue))
+    );
   }
 }

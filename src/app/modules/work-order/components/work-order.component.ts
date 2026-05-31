@@ -16,6 +16,7 @@ import { EstimateDialogComponent } from './estimate-dialog.component';
 })
 export class WorkOrderComponent implements OnInit {
   workOrders: WorkOrder[] = [];
+  filteredWorkOrders: WorkOrder[] = [];
   loading = false;
   selectedWO: WorkOrder | null = null;
 
@@ -100,6 +101,7 @@ export class WorkOrderComponent implements OnInit {
     this.woService.getWorkOrders().subscribe({
       next: (data: WorkOrder[]) => {
         this.workOrders = data || [];
+        this.filteredWorkOrders = [...this.workOrders];
         
         if (this.workOrders.length > 0) {
           const exists = this.workOrders.find(w => w.id === this.selectedWO?.id);
@@ -312,5 +314,14 @@ export class WorkOrderComponent implements OnInit {
         this.snackBar.open('Gagal memproses status selesai', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
       }
     });
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredWorkOrders = this.workOrders.filter(wo => 
+      (wo.licensePlate && wo.licensePlate.toLowerCase().includes(filterValue)) ||
+      (wo.customerName && wo.customerName.toLowerCase().includes(filterValue)) ||
+      (wo.mechanicName && wo.mechanicName.toLowerCase().includes(filterValue))
+    );
   }
 }

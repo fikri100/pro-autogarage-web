@@ -1,20 +1,11 @@
 <!-- Page Header -->
+<!-- Page Header -->
 <div class="page-header">
   <div>
     <h2 class="page-title">Manajemen Stok & Inventaris</h2>
     <p class="page-subtitle">Kelola stok sparepart fisik, master data jasa, harga beli/HPP, dan sistem kontrol minimum stok.</p>
   </div>
   <div class="page-header-actions">
-    <!-- Search Field -->
-    <div class="form-col-wrapper">
-      <label class="form-label-static">Cari Kode / Nama...</label>
-      <mat-form-field appearance="outline" class="search-field" style="margin-bottom: 0;">
-      
-      <input matInput (keyup)="onSearchChange($event)" placeholder="Cari..." />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-    </div>
-
     <!-- Low Stock Quick Toggle -->
     <button mat-stroked-button class="btn-filter" 
             [style.border-color]="lowStockOnly ? '#ef4444' : '#e2e8f0'"
@@ -66,9 +57,15 @@
         </button>
       </div>
 
-      <div class="list-header">
-        <h3>Daftar Inventaris</h3>
-        <span class="count-badge" [class.warn]="lowStockOnly">{{ products.length }} Item</span>
+      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Daftar Inventaris</h3>
+          <span class="count-badge" [class.warn]="lowStockOnly">{{ products.length }} Item</span>
+        </div>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+          <input matInput placeholder="Cari Kode / Nama..." (keyup)="onSearchChange($event)" />
+        </mat-form-field>
       </div>
 
       <div class="list-column-labels">

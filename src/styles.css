@@ -546,6 +546,36 @@ body {
   width: 14rem;
 }
 
+/* Dense Filter Input for Table Headers */
+.dense-search-input .mat-mdc-text-field-wrapper {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 2.25rem !important; /* 36px */
+}
+
+.dense-search-input .mat-mdc-form-field-flex {
+  align-items: center !important;
+  height: 2.25rem !important;
+}
+
+.dense-search-input .mat-mdc-form-field-infix {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  min-height: auto !important;
+}
+
+.dense-search-input input {
+  font-size: 0.85rem !important;
+  margin-top: -0.25rem !important;
+}
+
+.dense-search-input .mat-icon {
+  font-size: 1.1rem !important;
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+  margin-top: -0.1rem !important;
+}
+
 .mat-mdc-form-field-subscript-wrapper {
   display: none;
 }

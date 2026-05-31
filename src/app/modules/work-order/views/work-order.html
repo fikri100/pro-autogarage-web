@@ -73,9 +73,15 @@
   <!-- Left Column: Active list -->
   <div class="col-30">
     <div class="card-panel h-100" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <div class="list-header">
-        <h3>Antrean Servis Aktif</h3>
-        <span class="count-badge">{{ workOrders.length }} Unit</span>
+      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Antrean Servis Aktif</h3>
+          <span class="count-badge">{{ filteredWorkOrders.length }} Unit</span>
+        </div>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+          <input matInput placeholder="Cari WO..." (keyup)="applyFilter($event)">
+        </mat-form-field>
       </div>
 
       <div class="list-column-labels">
@@ -84,12 +90,12 @@
       </div>
 
       <div class="customer-list-scroll" style="flex: 1; overflow-y: auto; max-height: 580px;">
-        <div *ngIf="workOrders.length === 0" class="empty-state">
+        <div *ngIf="filteredWorkOrders.length === 0" class="empty-state">
           <mat-icon>build_circle</mat-icon>
           <p>Tidak ada mobil di area servis.</p>
         </div>
 
-        <div *ngFor="let wo of workOrders"
+        <div *ngFor="let wo of filteredWorkOrders"
              class="list-item-hover"
              [class.list-item-active]="selectedWO?.id === wo.id"
              (click)="selectWorkOrder(wo)"

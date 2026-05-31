@@ -27,9 +27,15 @@
   <!-- Left Column: Master List -->
   <div class="col-30">
     <div class="card-panel h-100" style="padding: 0; overflow: hidden;">
-      <div class="list-header">
-        <h3>Daftar Pelanggan</h3>
-        <span class="count-badge">{{ customers.length }} Total</span>
+      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Daftar Pelanggan</h3>
+          <span class="count-badge">{{ filteredCustomers.length }} Total</span>
+        </div>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+          <input matInput placeholder="Cari pelanggan..." (keyup)="applyFilter($event)">
+        </mat-form-field>
       </div>
 
       <div class="list-column-labels">
@@ -38,12 +44,12 @@
       </div>
 
       <div class="customer-list-scroll">
-        <div *ngIf="customers.length === 0" class="empty-state">
+        <div *ngIf="filteredCustomers.length === 0" class="empty-state">
           <mat-icon>people_outline</mat-icon>
           <p>Tidak ada pelanggan.</p>
         </div>
 
-        <div *ngFor="let customer of customers"
+        <div *ngFor="let customer of filteredCustomers"
              class="list-item-hover"
              [class.list-item-active]="selectedCustomer?.id === customer.id"
              (click)="selectCustomer(customer)"

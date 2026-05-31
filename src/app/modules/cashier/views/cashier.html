@@ -17,9 +17,15 @@
   <!-- Left Column: COMPLETED Work Orders waiting to pay -->
   <div class="col-30">
     <div class="card-panel h-100" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <div class="list-header">
-        <h3>Menunggu Pembayaran</h3>
-        <span class="count-badge warn">{{ readyWOs.length }} Unit</span>
+      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Menunggu Pembayaran</h3>
+          <span class="count-badge warn">{{ filteredReadyWOs.length }} Unit</span>
+        </div>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+          <input matInput placeholder="Cari WO / tagihan..." (keyup)="applyFilter($event)">
+        </mat-form-field>
       </div>
 
       <div class="list-column-labels">
@@ -28,12 +34,12 @@
       </div>
 
       <div class="customer-list-scroll" style="flex: 1; overflow-y: auto; max-height: 580px;">
-        <div *ngIf="readyWOs.length === 0" class="empty-state" style="padding: 4rem 2rem;">
+        <div *ngIf="filteredReadyWOs.length === 0" class="empty-state" style="padding: 4rem 2rem;">
           <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem; color: #cbd5e1;">credit_card_off</mat-icon>
           <p style="margin-top: 0.5rem;">Tidak ada tagihan yang menunggu pembayaran.</p>
         </div>
 
-        <div *ngFor="let wo of readyWOs"
+        <div *ngFor="let wo of filteredReadyWOs"
              class="list-item-hover"
              [class.list-item-active]="selectedWO?.id === wo.id"
              (click)="selectWorkOrder(wo)"
