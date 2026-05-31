@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { UserAccessService } from '../user-access.service';
 import { User, Role, Employee } from '../models/object';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { UserDialogComponent } from './user-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 
@@ -21,7 +24,11 @@ export class UserAccessComponent implements OnInit {
   selectedUser: User | null = null;
   selectedRole: Role | null = null;
 
+  roleControl = new FormControl();
+  filteredRoles$!: Observable<Role[]>;
+
   systemMenus: any[] = [];
+  fullMenuTree: any[] = [];
   roleMenuIds: number[] = [];
 
   loading = false;
@@ -40,6 +47,38 @@ export class UserAccessComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.setupAutocomplete();
+  }
+
+  private setupAutocomplete(): void {
+    this.filteredRoles$ = this.roleControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getRoleName(value) || '');
+        return name ? this._filterRoles(name) : this.roles.slice();
+      })
+    );
+
+    this.roleControl.valueChanges.subscribe(value => {
+      if (typeof value === 'number') {
+        this.onRoleChange(value);
+      }
+    });
+  }
+
+  private _filterRoles(name: string): Role[] {
+    const filterValue = name.toLowerCase();
+    return this.roles.filter(role => role.roleName.toLowerCase().includes(filterValue));
+  }
+
+  getRoleName(id: number | null): string {
+    if (!id) return '';
+    const role = this.roles.find(r => r.id === id);
+    return role ? role.roleName : '';
+  }
+
+  displayRole = (id: number): string => {
+    return this.getRoleName(id);
   }
 
   loadData(): void {
@@ -48,6 +87,7 @@ export class UserAccessComponent implements OnInit {
 
     this.api.getSystemMenus().subscribe((menus) => {
       this.systemMenus = menus || [];
+      this.buildFullMenuTree();
       this.cdr.detectChanges();
     });
 
@@ -79,6 +119,28 @@ export class UserAccessComponent implements OnInit {
     });
   }
 
+  buildFullMenuTree(): void {
+    const map: { [key: number]: any } = {};
+    const roots: any[] = [];
+    this.systemMenus.forEach(m => {
+      map[m.id] = { ...m, children: [], isOpen: false };
+    });
+    this.systemMenus.forEach(m => {
+      if (!m.parentId) {
+        roots.push(map[m.id]);
+      } else {
+        if (map[m.parentId]) {
+          map[m.parentId].children.push(map[m.id]);
+        }
+      }
+    });
+    this.fullMenuTree = roots;
+  }
+
+  toggleMenuAccordion(menu: any): void {
+    menu.isOpen = !menu.isOpen;
+  }
+
   applyFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value.toLowerCase();
     this.filterValue = value;
@@ -93,7 +155,10 @@ export class UserAccessComponent implements OnInit {
     this.selectedUser = user as User;
     this.selectedRole = this.roles.find(r => r.id === this.selectedUser!.roleId) || null;
     if (this.selectedUser && this.selectedUser.roleId) {
+      this.roleControl.setValue(this.selectedUser.roleId, { emitEvent: false });
       this.loadRoleMenus(this.selectedUser.roleId);
+    } else {
+      this.roleControl.setValue(null, { emitEvent: false });
     }
   }
 

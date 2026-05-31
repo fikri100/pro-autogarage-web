@@ -127,11 +127,12 @@
             <label class="form-label-static">Pilih Role</label>
             <mat-form-field appearance="outline" class="full-width">
             
-            <mat-select [(ngModel)]="selectedUser.roleId" (ngModelChange)="onRoleChange($event)">
-              <mat-option *ngFor="let role of roles" [value]="role.id">
+            <input type="text" matInput [formControl]="roleControl" [matAutocomplete]="roleAccessAuto" placeholder="Ketik nama role..." />
+            <mat-autocomplete #roleAccessAuto="matAutocomplete" [displayWith]="displayRole">
+              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.id">
                 {{ role.roleName }}
               </mat-option>
-            </mat-select>
+            </mat-autocomplete>
           </mat-form-field>
           </div>
         </div>
@@ -165,26 +166,32 @@
       </p>
 
       <div style="max-height: 350px; overflow-y: auto; padding: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; border: 1px solid #f1f5f9; border-radius: 8px; background-color: #fafafa;">
-        <div *ngFor="let m of systemMenus" style="display: flex; flex-direction: column; gap: 0.25rem;">
+        <div *ngFor="let parent of fullMenuTree" style="display: flex; flex-direction: column; gap: 0.25rem;">
           
           <!-- Parent Menu Option -->
-          <div *ngIf="!m.parentId" style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background-color: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0; font-weight: 600;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <i [class]="m.icon" style="color: #64748b; font-size: 1.1rem;"></i>
-              <span style="font-size: 0.875rem; color: #1e293b;">{{ m.label }}</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background-color: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0; font-weight: 600;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; flex-grow: 1;" (click)="toggleMenuAccordion(parent)">
+              <mat-icon style="color: #64748b; font-size: 1.25rem; height: 1.25rem; width: 1.25rem; display: flex; align-items: center; justify-content: center; margin-right: -0.25rem;" *ngIf="parent.children && parent.children.length > 0">
+                {{ parent.isOpen ? 'expand_more' : 'chevron_right' }}
+              </mat-icon>
+              <div *ngIf="!parent.children || parent.children.length === 0" style="width: 1rem;"></div>
+              <i [class]="parent.icon" style="color: #64748b; font-size: 1.1rem;"></i>
+              <span style="font-size: 0.875rem; color: #1e293b;">{{ parent.label }}</span>
             </div>
-            <mat-checkbox [checked]="isMenuChecked(m.id)" (change)="toggleMenu(m.id)" color="primary"></mat-checkbox>
+            <mat-checkbox [checked]="isMenuChecked(parent.id)" (change)="toggleMenu(parent.id)" color="primary"></mat-checkbox>
           </div>
 
-          <!-- Child Menu Option -->
-          <div *ngIf="m.parentId" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.75rem 0.4rem 2.25rem; background-color: #f8fafc; border-radius: 6px; border-left: 3px solid #cbd5e1; font-weight: 500;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <i [class]="m.icon" style="color: #94a3b8; font-size: 0.95rem;"></i>
-              <span style="font-size: 0.8rem; color: #334155;">{{ m.label }}</span>
-              <span style="font-family: var(--font-monospace); font-size: 0.65rem; color: #94a3b8; margin-left: 0.5rem;">({{ m.routerLink }})</span>
+          <!-- Child Menu Options -->
+          <ng-container *ngIf="parent.isOpen">
+            <div *ngFor="let child of parent.children" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.75rem 0.4rem 1rem; margin-left: 3.5rem; background-color: #f8fafc; border-radius: 6px; border-left: 3px solid #cbd5e1; font-weight: 500;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i [class]="child.icon" style="color: #94a3b8; font-size: 0.95rem;"></i>
+                <span style="font-size: 0.8rem; color: #334155;">{{ child.label }}</span>
+                <span style="font-family: var(--font-monospace); font-size: 0.65rem; color: #94a3b8; margin-left: 0.5rem;">({{ child.routerLink }})</span>
+              </div>
+              <mat-checkbox [checked]="isMenuChecked(child.id)" (change)="toggleMenu(child.id)" color="primary"></mat-checkbox>
             </div>
-            <mat-checkbox [checked]="isMenuChecked(m.id)" (change)="toggleMenu(m.id)" color="primary"></mat-checkbox>
-          </div>
+          </ng-container>
 
         </div>
       </div>

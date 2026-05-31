@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { PortalService } from '../services/portal.service';
 
 @Component({
@@ -16,6 +18,17 @@ export class PortalBookingComponent implements OnInit {
   customerName = '';
   vehicles: any[] = [];
   selectedVehicle: any = null;
+
+  filteredVehicles$!: Observable<any[]>;
+
+  brands = ['Honda', 'Toyota', 'Daihatsu', 'Suzuki', 'Mitsubishi', 'Nissan', 'Mazda', 'Hyundai', 'Wuling', 'Lainnya'];
+  filteredBrands$!: Observable<string[]>;
+
+  transmissions = [{id: 'AUTOMATIC', label: 'Automatic (AT)'}, {id: 'MANUAL', label: 'Manual (MT)'}];
+  filteredTransmissions$!: Observable<any[]>;
+
+  bookingTimes = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
+  filteredTimes$!: Observable<string[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +64,69 @@ export class PortalBookingComponent implements OnInit {
       bookingTime: ['09:00', [Validators.required]],
       complaints: ['', []]
     });
+
+    this.setupAutocomplete();
+  }
+
+  setupAutocomplete(): void {
+    this.filteredVehicles$ = this.bookingForm.get('vehicleId')!.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getVehicleName(value) || '');
+        return name ? this._filterVehicles(name) : this.vehicles.slice();
+      })
+    );
+
+    this.filteredBrands$ = this.bookingForm.get('brand')!.valueChanges.pipe(
+      startWith(''),
+      map(value => value ? this._filterStringArray(value, this.brands) : this.brands.slice())
+    );
+
+    this.filteredTransmissions$ = this.bookingForm.get('transmission')!.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getTransmissionLabel(value) || '');
+        return name ? this.transmissions.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.transmissions.slice();
+      })
+    );
+
+    this.filteredTimes$ = this.bookingForm.get('bookingTime')!.valueChanges.pipe(
+      startWith(''),
+      map(value => value ? this._filterStringArray(value, this.bookingTimes) : this.bookingTimes.slice())
+    );
+  }
+
+  private _filterVehicles(name: string): any[] {
+    const filterValue = name.toLowerCase();
+    return this.vehicles.filter(v => 
+      (v.licensePlate && v.licensePlate.toLowerCase().includes(filterValue)) || 
+      (v.brand && v.brand.toLowerCase().includes(filterValue)) || 
+      (v.model && v.model.toLowerCase().includes(filterValue))
+    );
+  }
+
+  private _filterStringArray(value: string, arr: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return arr.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  getVehicleName(id: any): string {
+    if (id === 'new') return '-- Kendaraan Baru (Input Manual) --';
+    const v = this.vehicles.find(x => x.id === id);
+    return v ? `[${v.licensePlate}] ${v.brand} ${v.model}` : '';
+  }
+
+  displayVehicle = (id: any): string => {
+    return this.getVehicleName(id);
+  }
+
+  getTransmissionLabel(id: string): string {
+    const t = this.transmissions.find(x => x.id === id);
+    return t ? t.label : id;
+  }
+
+  displayTransmission = (id: string): string => {
+    return this.getTransmissionLabel(id);
   }
 
   loadVehicles(): void {
@@ -60,6 +136,7 @@ export class PortalBookingComponent implements OnInit {
       next: (data) => {
         this.vehicles = data || [];
         this.loadingVehicles = false;
+        this.bookingForm.get('vehicleId')?.updateValueAndValidity();
         this.cdr.detectChanges();
       },
       error: (err) => {

@@ -36,10 +36,10 @@
             <label class="form-label-static">Tipe Item <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="itemType">
-              <mat-option value="SPR">Sparepart (Barang Fisik)</mat-option>
-              <mat-option value="SRV">Jasa (Layanan Service)</mat-option>
-            </mat-select>
+            <input type="text" matInput formControlName="itemType" [matAutocomplete]="typeAuto" placeholder="Ketik tipe item..." />
+            <mat-autocomplete #typeAuto="matAutocomplete" [displayWith]="displayItemType">
+              <mat-option *ngFor="let t of filteredItemTypes$ | async" [value]="t.value">{{ t.label }}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           </div>
 
@@ -80,11 +80,10 @@
             <label class="form-label-static">Kategori <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="category">
-              <mat-option *ngFor="let cat of currentCategories" [value]="cat">
-                {{ cat }}
-              </mat-option>
-            </mat-select>
+            <input type="text" matInput formControlName="category" [matAutocomplete]="catAuto" placeholder="Ketik kategori..." />
+            <mat-autocomplete #catAuto="matAutocomplete" [displayWith]="displayCategory">
+              <mat-option *ngFor="let cat of filteredCategories$ | async" [value]="cat">{{ cat }}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           </div>
         </div>

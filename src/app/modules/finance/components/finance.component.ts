@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 import { FinanceService } from '../services/finance.service';
@@ -36,6 +39,28 @@ export class FinanceComponent implements OnInit {
   filterEndDate = '';
   chartPeriod: 'daily' | 'monthly' = 'daily';
 
+  filterTypeControl = new FormControl('');
+  filterCategoryControl = new FormControl('');
+  
+  filteredTypeOptions$!: Observable<any[]>;
+  filteredCategoryOptions$!: Observable<any[]>;
+
+  typeOptions = [
+    { value: '', label: 'Semua Tipe' },
+    { value: 'INC', label: 'Pemasukan (Kas Masuk)' },
+    { value: 'EXP', label: 'Pengeluaran (Kas Keluar)' }
+  ];
+
+  categoryOptions = [
+    { value: '', label: 'Semua Kategori' },
+    { value: 'SERVICE', label: 'Pemasukan Jasa' },
+    { value: 'SALARY', label: 'Gaji Karyawan' },
+    { value: 'ELECTRICITY', label: 'Listrik & Air' },
+    { value: 'STOCK', label: 'Pembelian Stok' },
+    { value: 'RENT', label: 'Sewa Tempat' },
+    { value: 'OTHER', label: 'Lain-lain' }
+  ];
+
   displayedColumns = ['flowDate', 'cashflowType', 'category', 'amount', 'description', 'actions'];
 
   categoryMap: { [key: string]: string } = {
@@ -55,9 +80,58 @@ export class FinanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setupAutocomplete();
     setTimeout(() => {
       this.loadAllData();
     });
+  }
+
+  setupAutocomplete(): void {
+    this.filteredTypeOptions$ = this.filterTypeControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getTypeLabel(value || '') || '');
+        return name ? this.typeOptions.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.typeOptions.slice();
+      })
+    );
+
+    this.filteredCategoryOptions$ = this.filterCategoryControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getCategoryOptionLabel(value || '') || '');
+        return name ? this.categoryOptions.filter(c => c.label.toLowerCase().includes(name.toLowerCase())) : this.categoryOptions.slice();
+      })
+    );
+
+    this.filterTypeControl.valueChanges.subscribe(val => {
+       if (typeof val === 'string' && val.length > 0 && val !== 'INC' && val !== 'EXP') return;
+       this.filterType = val as any;
+       this.onFilterChange();
+    });
+
+    this.filterCategoryControl.valueChanges.subscribe(val => {
+       if (typeof val === 'string' && val.length > 0 && !this.categoryOptions.find(c => c.value === val)) return;
+       this.filterCategory = val || '';
+       this.onFilterChange();
+    });
+  }
+
+  getTypeLabel(value: string): string {
+    const t = this.typeOptions.find(o => o.value === value);
+    return t ? t.label : value;
+  }
+
+  displayType = (value: string): string => {
+    return this.getTypeLabel(value);
+  }
+
+  getCategoryOptionLabel(value: string): string {
+    const c = this.categoryOptions.find(o => o.value === value);
+    return c ? c.label : value;
+  }
+
+  displayCategory = (value: string): string => {
+    return this.getCategoryOptionLabel(value);
   }
 
   loadAllData(): void {
@@ -156,6 +230,8 @@ export class FinanceComponent implements OnInit {
     this.filterCategory = '';
     this.filterStartDate = '';
     this.filterEndDate = '';
+    this.filterTypeControl.setValue('', { emitEvent: false });
+    this.filterCategoryControl.setValue('', { emitEvent: false });
     this.loadCashflows();
   }
 

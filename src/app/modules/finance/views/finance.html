@@ -203,11 +203,10 @@
         <label class="form-label-static">Tipe Arus Kas</label>
         <mat-form-field appearance="outline" style="width: 100%;">
         
-        <mat-select [(ngModel)]="filterType" (selectionChange)="onFilterChange()">
-          <mat-option value="">Semua Tipe</mat-option>
-          <mat-option value="INC">Pemasukan (Kas Masuk)</mat-option>
-          <mat-option value="EXP">Pengeluaran (Kas Keluar)</mat-option>
-        </mat-select>
+        <input type="text" matInput [formControl]="filterTypeControl" [matAutocomplete]="typeAuto" placeholder="Semua Tipe" />
+        <mat-autocomplete #typeAuto="matAutocomplete" [displayWith]="displayType">
+          <mat-option *ngFor="let t of filteredTypeOptions$ | async" [value]="t.value">{{ t.label }}</mat-option>
+        </mat-autocomplete>
       </mat-form-field>
       </div>
 
@@ -216,15 +215,10 @@
         <label class="form-label-static">Kategori</label>
         <mat-form-field appearance="outline" style="width: 100%;">
         
-        <mat-select [(ngModel)]="filterCategory" (selectionChange)="onFilterChange()">
-          <mat-option value="">Semua Kategori</mat-option>
-          <mat-option value="SERVICE">Pemasukan Jasa Servis</mat-option>
-          <mat-option value="SALARY">Gaji Karyawan</mat-option>
-          <mat-option value="ELECTRICITY">Listrik & Air</mat-option>
-          <mat-option value="STOCK">Pembelian Stok</mat-option>
-          <mat-option value="RENT">Sewa Tempat</mat-option>
-          <mat-option value="OTHER">Lain-lain</mat-option>
-        </mat-select>
+        <input type="text" matInput [formControl]="filterCategoryControl" [matAutocomplete]="catAuto" placeholder="Semua Kategori" />
+        <mat-autocomplete #catAuto="matAutocomplete" [displayWith]="displayCategory">
+          <mat-option *ngFor="let c of filteredCategoryOptions$ | async" [value]="c.value">{{ c.label }}</mat-option>
+        </mat-autocomplete>
       </mat-form-field>
       </div>
 

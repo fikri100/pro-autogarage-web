@@ -33,6 +33,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SharedModule } from '../shared.module';
 
 @NgModule({
@@ -69,6 +70,7 @@ import { SharedModule } from '../shared.module';
     MatNativeDateModule,
     MatStepperModule,
     MatExpansionModule,
+    MatAutocompleteModule,
     SharedModule
   ]
 })

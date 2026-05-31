@@ -165,11 +165,12 @@
             <label class="form-label-static">Pilih Mekanik <span class="required">*</span></label>
             <mat-form-field appearance="outline" style="margin-bottom: -1.25rem;">
             
-            <mat-select [(ngModel)]="selectedMechanicId" [disabled]="selectedWO.workStatus !== 'IN_PROGRESS'">
-              <mat-option *ngFor="let m of mechanics" [value]="m.id">
+            <input type="text" matInput [formControl]="mechanicControl" [matAutocomplete]="mechAuto" placeholder="Ketik nama mekanik..." [readonly]="selectedWO.workStatus !== 'IN_PROGRESS'" />
+            <mat-autocomplete #mechAuto="matAutocomplete" [displayWith]="displayMechanic">
+              <mat-option *ngFor="let m of filteredMechanics$ | async" [value]="m.id">
                 {{ m.name }} ({{ m.position }})
               </mat-option>
-            </mat-select>
+            </mat-autocomplete>
           </mat-form-field>
           </div>
 

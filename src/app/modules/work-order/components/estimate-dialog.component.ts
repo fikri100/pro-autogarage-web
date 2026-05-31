@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { WorkOrderService } from '../work-order.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { WorkOrderService } from '../work-order.service';
 export class EstimateDialogComponent implements OnInit {
   itemForm!: FormGroup;
   products: any[] = [];
-  filteredProducts: any[] = [];
+  filteredProducts$!: Observable<any[]>;
   selectedProduct: any = null;
 
   constructor(
@@ -27,6 +29,14 @@ export class EstimateDialogComponent implements OnInit {
     });
 
     this.loadProducts();
+
+    this.filteredProducts$ = this.itemForm.get('productId')!.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getProductName(value) || '');
+        return name ? this._filterProducts(name) : this.products.slice();
+      })
+    );
 
     // Monitor product selection to show details (like stock, price)
     this.itemForm.get('productId')?.valueChanges.subscribe(prodId => {
@@ -46,19 +56,26 @@ export class EstimateDialogComponent implements OnInit {
   loadProducts(): void {
     this.woService.getProducts().subscribe(data => {
       this.products = data || [];
-      this.filteredProducts = this.products;
+      // Trigger value changes to update the filtered list
+      this.itemForm.get('productId')?.updateValueAndValidity();
     });
   }
 
-  filterProducts(event: Event): void {
-    const search = (event.target as HTMLInputElement).value.toLowerCase();
-    if (!search) {
-      this.filteredProducts = this.products;
-    } else {
-      this.filteredProducts = this.products.filter(p =>
-        p.name.toLowerCase().includes(search) || p.code.toLowerCase().includes(search)
-      );
-    }
+  private _filterProducts(name: string): any[] {
+    const filterValue = name.toLowerCase();
+    return this.products.filter(p =>
+      p.name.toLowerCase().includes(filterValue) || p.code.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getProductName(id: number | null): string {
+    if (!id) return '';
+    const prod = this.products.find(p => p.id === id);
+    return prod ? `[${prod.code}] ${prod.name}` : '';
+  }
+
+  displayProduct = (id: number): string => {
+    return this.getProductName(id);
   }
 
   onCancel(): void {

@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 import { WorkOrderService } from '../work-order.service';
 import { WorkOrder } from '../models/object';
@@ -22,6 +25,8 @@ export class WorkOrderComponent implements OnInit {
   
   // Fields for assigned mechanic inline
   selectedMechanicId: number | null = null;
+  mechanicControl = new FormControl();
+  filteredMechanics$!: Observable<any[]>;
   woNotes = '';
 
   // Fields for work duration estimation
@@ -41,6 +46,41 @@ export class WorkOrderComponent implements OnInit {
   ngOnInit(): void {
     this.loadWorkOrders();
     this.loadMechanics();
+    this.setupMechanicAutocomplete();
+  }
+
+  setupMechanicAutocomplete(): void {
+    this.filteredMechanics$ = this.mechanicControl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getMechanicName(value) || '');
+        return name ? this._filterMechanics(name) : this.mechanics.slice();
+      })
+    );
+
+    this.mechanicControl.valueChanges.subscribe(val => {
+      if (typeof val === 'number') {
+        this.selectedMechanicId = val;
+      }
+    });
+  }
+
+  private _filterMechanics(name: string): any[] {
+    const filterValue = name.toLowerCase();
+    return this.mechanics.filter(m => 
+      m.name.toLowerCase().includes(filterValue) || 
+      m.position.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getMechanicName(id: number | null): string {
+    if (!id) return '';
+    const m = this.mechanics.find(x => x.id === id);
+    return m ? `${m.name} (${m.position})` : '';
+  }
+
+  displayMechanic = (id: number): string => {
+    return this.getMechanicName(id);
   }
 
   loadMechanics(): void {
@@ -49,6 +89,7 @@ export class WorkOrderComponent implements OnInit {
         m.position?.toLowerCase().includes('mechanic') || 
         m.position?.toLowerCase().includes('mekanik')
       );
+      this.mechanicControl.updateValueAndValidity();
     });
   }
 
@@ -84,6 +125,7 @@ export class WorkOrderComponent implements OnInit {
   selectWorkOrder(wo: WorkOrder): void {
     this.selectedWO = wo;
     this.selectedMechanicId = wo.mechanicId || null;
+    this.mechanicControl.setValue(this.selectedMechanicId, { emitEvent: false });
     this.woNotes = wo.notes || '';
     this.estimationDetails = [];
     this.estimationTotal = 0;

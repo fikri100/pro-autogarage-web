@@ -82,10 +82,10 @@
             <label class="form-label-static">Transmisi</label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="transmission">
-              <mat-option value="Manual (MT)">Manual (MT)</mat-option>
-              <mat-option value="Automatic (AT)">Automatic (AT)</mat-option>
-            </mat-select>
+            <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto" placeholder="Ketik transmisi..." />
+            <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
+              <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.value">{{ t.label }}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           </div>
         </div>

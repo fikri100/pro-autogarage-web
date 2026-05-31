@@ -39,12 +39,10 @@
         <span style="font-family: var(--font-heading); font-weight: 600; color: #475569; font-size: var(--text-sm);">Filter Status Booking:</span>
       </div>
       <mat-form-field appearance="outline" style="min-width: 240px; margin-bottom: 0;" class="search-field">
-        <mat-select [value]="selectedStatus" (selectionChange)="filterByStatus($event.value)">
-          <mat-option value="ALL">Semua Antrean</mat-option>
-          <mat-option value="PENDING">Menunggu (PENDING)</mat-option>
-          <mat-option value="CONFIRMED">Dikonfirmasi (CONFIRMED)</mat-option>
-          <mat-option value="CANCELLED">Dibatalkan (CANCELLED)</mat-option>
-        </mat-select>
+        <input type="text" matInput [formControl]="statusControl" [matAutocomplete]="statusAuto" placeholder="Semua Antrean" />
+        <mat-autocomplete #statusAuto="matAutocomplete" [displayWith]="displayStatus">
+          <mat-option *ngFor="let s of filteredStatusOptions$ | async" [value]="s.value">{{ s.label }}</mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
   </div>

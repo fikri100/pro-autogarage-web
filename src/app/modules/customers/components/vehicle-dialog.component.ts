@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { Vehicle } from '../models/object';
 
 export interface VehicleDialogData {
@@ -19,6 +21,14 @@ export class VehicleDialogComponent implements OnInit {
   vehicleForm!: FormGroup;
   isSaving = false;
 
+  transmissions = [
+    { value: 'Manual (MT)', label: 'Manual (MT)' },
+    { value: 'Automatic (AT)', label: 'Automatic (AT)' },
+    { value: 'CVT', label: 'CVT' },
+    { value: 'Lainnya', label: 'Lainnya' }
+  ];
+  filteredTransmissions$!: Observable<any[]>;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<VehicleDialogComponent>,
@@ -28,7 +38,22 @@ export class VehicleDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.mode !== 'confirm') {
       this.initForm();
+      this.setupAutocomplete();
     }
+  }
+
+  setupAutocomplete() {
+    this.filteredTransmissions$ = this.vehicleForm.get('transmission')!.valueChanges.pipe(
+      startWith(this.vehicleForm.get('transmission')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value;
+        return name ? this.transmissions.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.transmissions.slice();
+      })
+    );
+  }
+
+  displayTransmission = (value: string): string => {
+    return value;
   }
 
   private initForm(): void {

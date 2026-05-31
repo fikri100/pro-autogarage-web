@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 export interface PortalVehicleDialogData {
   mode: 'add' | 'edit';
@@ -16,6 +18,12 @@ export class PortalVehicleDialogComponent implements OnInit {
   vehicleForm!: FormGroup;
   isSaving = false;
 
+  brands = ['Honda', 'Toyota', 'Daihatsu', 'Suzuki', 'Mitsubishi', 'Nissan', 'Mazda', 'Hyundai', 'Wuling', 'Lainnya'];
+  filteredBrands$!: Observable<string[]>;
+
+  transmissions = [{id: 'AUTOMATIC', label: 'Automatic (AT)'}, {id: 'MANUAL', label: 'Manual (MT)'}];
+  filteredTransmissions$!: Observable<any[]>;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<PortalVehicleDialogComponent>,
@@ -24,6 +32,36 @@ export class PortalVehicleDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.setupAutocomplete();
+  }
+
+  setupAutocomplete(): void {
+    this.filteredBrands$ = this.vehicleForm.get('brand')!.valueChanges.pipe(
+      startWith(this.vehicleForm.get('brand')!.value || ''),
+      map(value => value ? this._filterStringArray(value, this.brands) : this.brands.slice())
+    );
+
+    this.filteredTransmissions$ = this.vehicleForm.get('transmission')!.valueChanges.pipe(
+      startWith(this.vehicleForm.get('transmission')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getTransmissionLabel(value) || '');
+        return name ? this.transmissions.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.transmissions.slice();
+      })
+    );
+  }
+
+  private _filterStringArray(value: string, arr: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return arr.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  getTransmissionLabel(id: string): string {
+    const t = this.transmissions.find(x => x.id === id);
+    return t ? t.label : id;
+  }
+
+  displayTransmission = (id: string): string => {
+    return this.getTransmissionLabel(id);
   }
 
   private initForm(): void {

@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { Product } from '../models/object';
 
 export interface ProductDialogData {
@@ -17,6 +19,13 @@ export interface ProductDialogData {
 export class ProductDialogComponent implements OnInit {
   productForm!: FormGroup;
   isSaving = false;
+
+  itemTypes = [
+    { value: 'SPR', label: 'Sparepart' },
+    { value: 'SRV', label: 'Jasa / Servis' }
+  ];
+  filteredItemTypes$!: Observable<any[]>;
+  filteredCategories$!: Observable<any[]>;
 
   categories = {
     SPR: ['Oli', 'Filter', 'Busi', 'Aki', 'Rem', 'Ban', 'Suspensi', 'Lampu', 'Kelistrikan', 'Lainnya'],
@@ -48,10 +57,45 @@ export class ProductDialogComponent implements OnInit {
       this.updateFormValidation(p?.itemType ?? 'SPR');
       
       // Watch for changes in itemType to dynamically toggle fields and categories
-      this.productForm.get('itemType')?.valueChanges.subscribe((type: 'SPR' | 'SRV') => {
-        this.updateFormValidation(type);
+      this.productForm.get('itemType')?.valueChanges.subscribe((type: 'SPR' | 'SRV' | string) => {
+        if (type === 'SPR' || type === 'SRV') {
+          this.updateFormValidation(type as 'SPR' | 'SRV');
+        }
       });
+      
+      this.setupAutocomplete();
     }
+  }
+
+  setupAutocomplete() {
+    this.filteredItemTypes$ = this.productForm.get('itemType')!.valueChanges.pipe(
+      startWith(this.productForm.get('itemType')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getItemTypeLabel(value) || '');
+        return name ? this.itemTypes.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.itemTypes.slice();
+      })
+    );
+
+    this.filteredCategories$ = this.productForm.get('category')!.valueChanges.pipe(
+      startWith(this.productForm.get('category')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value;
+        return name ? this.currentCategories.filter(c => c.toLowerCase().includes(name.toLowerCase())) : this.currentCategories.slice();
+      })
+    );
+  }
+
+  getItemTypeLabel(value: string): string {
+    const t = this.itemTypes.find(o => o.value === value);
+    return t ? t.label : value;
+  }
+
+  displayItemType = (value: string): string => {
+    return this.getItemTypeLabel(value);
+  }
+
+  displayCategory = (value: string): string => {
+    return value;
   }
 
   updateFormValidation(type: 'SPR' | 'SRV'): void {

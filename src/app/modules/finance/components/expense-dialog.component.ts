@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 export interface ExpenseDialogData {
   mode: 'add';
@@ -14,6 +16,13 @@ export interface ExpenseDialogData {
 export class ExpenseDialogComponent implements OnInit {
   expenseForm!: FormGroup;
   isSaving = false;
+
+  cashflowTypes = [
+    { value: 'EXP', label: 'Pengeluaran (Expense)' },
+    { value: 'INC', label: 'Pemasukan (Income)' }
+  ];
+  filteredCashflowTypes$!: Observable<any[]>;
+  filteredCategories$!: Observable<any[]>;
 
   categories: { value: string; label: string }[] = [];
 
@@ -53,8 +62,49 @@ export class ExpenseDialogComponent implements OnInit {
 
     // Watch type change to update categories
     this.expenseForm.get('cashflowType')?.valueChanges.subscribe(type => {
-      this.updateCategories(type);
+      if (type === 'EXP' || type === 'INC') {
+        this.updateCategories(type);
+        this.expenseForm.get('category')?.updateValueAndValidity();
+      }
     });
+
+    this.setupAutocomplete();
+  }
+
+  setupAutocomplete(): void {
+    this.filteredCashflowTypes$ = this.expenseForm.get('cashflowType')!.valueChanges.pipe(
+      startWith(this.expenseForm.get('cashflowType')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getCashflowLabel(value) || '');
+        return name ? this.cashflowTypes.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.cashflowTypes.slice();
+      })
+    );
+
+    this.filteredCategories$ = this.expenseForm.get('category')!.valueChanges.pipe(
+      startWith(this.expenseForm.get('category')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getCategoryLabel(value) || '');
+        return name ? this.categories.filter(c => c.label.toLowerCase().includes(name.toLowerCase())) : this.categories.slice();
+      })
+    );
+  }
+
+  getCashflowLabel(value: string): string {
+    const type = this.cashflowTypes.find(t => t.value === value);
+    return type ? type.label : value;
+  }
+
+  displayCashflowType = (value: string): string => {
+    return this.getCashflowLabel(value);
+  }
+
+  getCategoryLabel(value: string): string {
+    const cat = this.categories.find(c => c.value === value);
+    return cat ? cat.label : value;
+  }
+
+  displayCategory = (value: string): string => {
+    return this.getCategoryLabel(value);
   }
 
   updateCategories(type: string): void {

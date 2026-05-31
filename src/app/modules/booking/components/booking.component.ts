@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 import { BookingService } from '../booking.service';
 import { Booking } from '../models/object';
@@ -19,6 +22,15 @@ export class BookingComponent implements OnInit {
   selectedStatus: 'ALL' | 'PENDING' | 'CONFIRMED' | 'CANCELLED' = 'ALL';
   searchQuery = '';
 
+  statusControl = new FormControl('ALL');
+  statusOptions = [
+    { value: 'ALL', label: 'Semua Status' },
+    { value: 'PENDING', label: 'Menunggu Konfirmasi' },
+    { value: 'CONFIRMED', label: 'Dikonfirmasi' },
+    { value: 'CANCELLED', label: 'Dibatalkan' }
+  ];
+  filteredStatusOptions$!: Observable<any[]>;
+
   constructor(
     private bookingService: BookingService,
     private dialog: MatDialog,
@@ -27,7 +39,32 @@ export class BookingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setupAutocomplete();
     this.loadBookings();
+  }
+
+  setupAutocomplete() {
+    this.filteredStatusOptions$ = this.statusControl.valueChanges.pipe(
+      startWith('ALL'),
+      map(value => {
+        const name = typeof value === 'string' ? value : (this.getStatusLabel(value || '') || '');
+        return name ? this.statusOptions.filter(s => s.label.toLowerCase().includes(name.toLowerCase())) : this.statusOptions.slice();
+      })
+    );
+
+    this.statusControl.valueChanges.subscribe(val => {
+       if (typeof val === 'string' && val.length > 0 && !this.statusOptions.find(o => o.value === val)) return;
+       this.filterByStatus(val as any);
+    });
+  }
+
+  getStatusLabel(value: string): string {
+    const s = this.statusOptions.find(o => o.value === value);
+    return s ? s.label : value;
+  }
+
+  displayStatus = (value: string): string => {
+    return this.getStatusLabel(value);
   }
 
   loadBookings(): void {

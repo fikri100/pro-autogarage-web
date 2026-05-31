@@ -13,27 +13,19 @@
         <span>Cari & Pilih Item</span>
       </div>
 
-      <!-- Filter text input to search products quickly -->
       <div class="form-col-wrapper">
-        <label class="form-label-static">Ketik untuk menyaring item...</label>
+        <label class="form-label-static">Cari & Pilih Sparepart / Jasa <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
         
-        <input matInput (keyup)="filterProducts($event)" placeholder="Contoh: Oli / Rem" />
-        <mat-icon matSuffix>filter_alt</mat-icon>
-      </mat-form-field>
-      </div>
-
-      <div class="form-col-wrapper">
-        <label class="form-label-static">Pilih Sparepart / Jasa <span class="required">*</span></label>
-        <mat-form-field appearance="outline" class="full-width">
-        
-        <mat-select formControlName="productId">
-          <mat-option *ngFor="let p of filteredProducts" [value]="p.id">
+        <input type="text" matInput formControlName="productId" [matAutocomplete]="prodAuto" placeholder="Ketik nama atau kode item..." />
+        <mat-autocomplete #prodAuto="matAutocomplete" [displayWith]="displayProduct">
+          <mat-option *ngFor="let p of filteredProducts$ | async" [value]="p.id">
             [{{ p.code }}] {{ p.name }} - {{ p.salePrice | currency:'IDR':'Rp ':'1.0-0' }} 
             <ng-container *ngIf="p.itemType === 'SPR'">(Stok: {{ p.stockQuantity }})</ng-container>
             <ng-container *ngIf="p.itemType === 'SRV'">(JASA)</ng-container>
           </mat-option>
-        </mat-select>
+        </mat-autocomplete>
+        <mat-icon matSuffix>search</mat-icon>
         <mat-error *ngIf="itemForm.get('productId')?.hasError('required')">
           Item wajib dipilih
         </mat-error>

@@ -49,18 +49,10 @@
           <label class="form-label-static">Merek Mobil <span class="required">*</span></label>
           <mat-form-field appearance="outline">
           
-          <mat-select formControlName="brand" placeholder="Pilih Merek">
-            <mat-option value="Honda">Honda</mat-option>
-            <mat-option value="Toyota">Toyota</mat-option>
-            <mat-option value="Daihatsu">Daihatsu</mat-option>
-            <mat-option value="Suzuki">Suzuki</mat-option>
-            <mat-option value="Mitsubishi">Mitsubishi</mat-option>
-            <mat-option value="Nissan">Nissan</mat-option>
-            <mat-option value="Mazda">Mazda</mat-option>
-            <mat-option value="Hyundai">Hyundai</mat-option>
-            <mat-option value="Wuling">Wuling</mat-option>
-            <mat-option value="Lainnya">Lainnya</mat-option>
-          </mat-select>
+          <input type="text" matInput formControlName="brand" [matAutocomplete]="brandAuto" placeholder="Ketik atau pilih merek..." />
+          <mat-autocomplete #brandAuto="matAutocomplete">
+            <mat-option *ngFor="let b of filteredBrands$ | async" [value]="b">{{ b }}</mat-option>
+          </mat-autocomplete>
           <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
             Merek mobil wajib dipilih
           </mat-error>
@@ -103,10 +95,10 @@
           <label class="form-label-static">Transmisi <span class="required">*</span></label>
           <mat-form-field appearance="outline">
           
-          <mat-select formControlName="transmission">
-            <mat-option value="AUTOMATIC">Automatic (AT)</mat-option>
-            <mat-option value="MANUAL">Manual (MT)</mat-option>
-          </mat-select>
+          <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto" placeholder="Ketik transmisi..." />
+          <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
+            <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.id">{{ t.label }}</mat-option>
+          </mat-autocomplete>
           <mat-error *ngIf="vehicleForm.get('transmission')?.hasError('required')">
             Transmisi wajib dipilih
           </mat-error>

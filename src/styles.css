@@ -681,17 +681,18 @@ body {
   border-radius: 0.5rem;
   padding: 1.25rem;
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.dialog-section>mat-form-field,
-.dialog-section>.two-col-grid,
-.dialog-section>.three-col-grid,
-.dialog-section>.form-group,
-.dialog-section>.full-width {
-  margin-bottom: 1.25rem !important;
+.dialog-section > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-.dialog-section>*:last-child {
+.form-col-wrapper > mat-form-field {
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -1416,7 +1417,5 @@ table td,
   font-size: 0.95rem !important;
   width: 1rem !important;
   margin-right: 0.25rem !important;
-}.form-label-static { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569; } .form-col-wrapper { display: flex; flex-direction: column; gap: 0.35rem; }
-
-.form-label-static { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569; }
+}.form-label-static { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569; }
 .form-col-wrapper { display: flex; flex-direction: column; gap: 0.35rem; }

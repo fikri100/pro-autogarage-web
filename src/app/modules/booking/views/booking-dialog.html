@@ -42,11 +42,12 @@
             <label class="form-label-static">Pelanggan <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="customerId">
-              <mat-option *ngFor="let c of customers" [value]="c.id">
+            <input type="text" matInput formControlName="customerId" [matAutocomplete]="custAuto" placeholder="Ketik pelanggan..." />
+            <mat-autocomplete #custAuto="matAutocomplete" [displayWith]="displayCustomer">
+              <mat-option *ngFor="let c of filteredCustomers$ | async" [value]="c.id">
                 {{ c.name }} ({{ c.phone }})
               </mat-option>
-            </mat-select>
+            </mat-autocomplete>
             <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">
               Pelanggan wajib dipilih
             </mat-error>
@@ -57,11 +58,12 @@
             <label class="form-label-static">Kendaraan Terdaftar <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="vehicleId" [disabled]="!bookingForm.get('customerId')?.value">
-              <mat-option *ngFor="let v of filteredVehicles" [value]="v.id">
+            <input type="text" matInput formControlName="vehicleId" [matAutocomplete]="vehAuto" placeholder="Ketik kendaraan..." />
+            <mat-autocomplete #vehAuto="matAutocomplete" [displayWith]="displayVehicle">
+              <mat-option *ngFor="let v of filteredVehicles$ | async" [value]="v.id">
                 {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
               </mat-option>
-            </mat-select>
+            </mat-autocomplete>
             <mat-error *ngIf="bookingForm.get('vehicleId')?.hasError('required')">
               Kendaraan wajib dipilih
             </mat-error>
@@ -95,16 +97,12 @@
             <label class="form-label-static">Jam Servis <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <mat-select formControlName="bookingTime" placeholder="Pilih Jam">
-              <mat-option value="08:00">08:00 WIB</mat-option>
-              <mat-option value="09:00">09:00 WIB</mat-option>
-              <mat-option value="10:00">10:00 WIB</mat-option>
-              <mat-option value="11:00">11:00 WIB</mat-option>
-              <mat-option value="13:00">13:00 WIB</mat-option>
-              <mat-option value="14:00">14:00 WIB</mat-option>
-              <mat-option value="15:00">15:00 WIB</mat-option>
-              <mat-option value="16:00">16:00 WIB</mat-option>
-            </mat-select>
+            <input type="text" matInput formControlName="bookingTime" [matAutocomplete]="timeAuto" placeholder="Pilih Jam" />
+            <mat-autocomplete #timeAuto="matAutocomplete" [displayWith]="displayTime">
+              <mat-option *ngFor="let t of filteredBookingTimes$ | async" [value]="t">
+                {{ t }} WIB
+              </mat-option>
+            </mat-autocomplete>
             <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
               Jam reservasi wajib diisi
             </mat-error>

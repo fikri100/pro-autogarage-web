@@ -11,13 +11,14 @@
         <span>Detail Transaksi</span>
       </div>
 
-      <!-- Cashflow Type -->
-      <div class="full-width">
-        <label class="form-label" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; color: #64748b; font-size: 0.85rem; display: block; margin-bottom: 0.5rem;">Tipe Arus Kas</label>
-        <mat-select formControlName="cashflowType" style="border: 1px solid #cbd5e1; padding: 0.75rem 1rem; border-radius: 6px; background-color: #f8fafc; font-family: 'Inter', sans-serif;">
-          <mat-option value="EXP">PENGELUARAN (Kas Keluar)</mat-option>
-          <mat-option value="INC">PEMASUKAN (Kas Masuk)</mat-option>
-        </mat-select>
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Tipe Arus Kas <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input type="text" matInput formControlName="cashflowType" [matAutocomplete]="cashflowAuto" placeholder="Ketik tipe arus kas..." />
+          <mat-autocomplete #cashflowAuto="matAutocomplete" [displayWith]="displayCashflowType">
+            <mat-option *ngFor="let t of filteredCashflowTypes$ | async" [value]="t.value">{{ t.label }}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </div>
 
       <div class="two-col-grid">
@@ -42,11 +43,10 @@
           <label class="form-label-static">Kategori <span class="required">*</span></label>
           <mat-form-field appearance="outline">
           
-          <mat-select formControlName="category">
-            <mat-option *ngFor="let cat of categories" [value]="cat.value">
-              {{ cat.label }}
-            </mat-option>
-          </mat-select>
+          <input type="text" matInput formControlName="category" [matAutocomplete]="catAuto" placeholder="Ketik kategori..." />
+          <mat-autocomplete #catAuto="matAutocomplete" [displayWith]="displayCategory">
+            <mat-option *ngFor="let cat of filteredCategories$ | async" [value]="cat.value">{{ cat.label }}</mat-option>
+          </mat-autocomplete>
           <mat-error *ngIf="expenseForm.get('category')?.hasError('required')">
             Kategori wajib diisi
           </mat-error>
