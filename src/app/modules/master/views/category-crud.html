@@ -66,7 +66,11 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                class="table-row-hover"
+                [class.selected-row]="isEditMode && editingCategoryId === row.id"
+                (click)="selectForEdit(row)"
+                style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
           </table>
         </div>
       </div>

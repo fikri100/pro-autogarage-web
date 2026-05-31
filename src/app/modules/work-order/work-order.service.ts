@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkOrder } from './models/object';
+import { PaginatedResponse } from '../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,13 @@ export class WorkOrderService {
 
   constructor(private http: HttpClient) {}
 
-  getWorkOrders(): Observable<WorkOrder[]> {
-    return this.http.get<WorkOrder[]>(this.woUrl);
+  getWorkOrders(search: string = '', page: number = 1, limit: number = 10): Observable<PaginatedResponse<WorkOrder>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('search', search);
+
+    return this.http.get<PaginatedResponse<WorkOrder>>(this.woUrl, { params });
   }
 
   getWorkOrder(id: number): Observable<WorkOrder> {
@@ -47,8 +53,10 @@ export class WorkOrderService {
   }
 
   getProducts(search?: string): Observable<any[]> {
-    return this.http.get<any[]>(this.productsUrl, {
-      params: search ? { q: search } : {}
-    });
+    let params: any = { limit: '10000' };
+    if (search) {
+      params.q = search;
+    }
+    return this.http.get<any[]>(this.productsUrl, { params });
   }
 }

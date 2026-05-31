@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cashflow, FinanceSummary, FinanceChartItem } from '../models/finance.model';
+import { PaginatedResponse } from '../../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class FinanceService {
 
   constructor(private http: HttpClient) {}
 
-  getCashflows(filters: { type?: string; category?: string; startDate?: string; endDate?: string } = {}): Observable<Cashflow[]> {
+  getCashflows(filters: { type?: string; category?: string; startDate?: string; endDate?: string; search?: string; page?: number; limit?: number } = {}): Observable<PaginatedResponse<Cashflow>> {
     let params = new HttpParams();
     if (filters.type) {
       params = params.set('type', filters.type);
@@ -26,7 +27,16 @@ export class FinanceService {
     if (filters.endDate) {
       params = params.set('endDate', filters.endDate);
     }
-    return this.http.get<Cashflow[]>(this.cashflowUrl, { params });
+    if (filters.search) {
+      params = params.set('search', filters.search);
+    }
+    if (filters.page) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters.limit) {
+      params = params.set('limit', filters.limit.toString());
+    }
+    return this.http.get<PaginatedResponse<Cashflow>>(this.cashflowUrl, { params });
   }
 
   createCashflow(payload: Cashflow): Observable<Cashflow> {

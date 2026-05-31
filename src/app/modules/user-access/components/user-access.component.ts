@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 import { UserAccessService } from '../user-access.service';
 import { User, Role, Employee } from '../models/object';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { UserDialogComponent } from './user-dialog.component';
 import { AuthService } from '../../../services/auth.service';
 
@@ -35,6 +36,12 @@ export class UserAccessComponent implements OnInit {
   isSavingMenus = false;
   filterValue = '';
 
+  // Pagination & Search
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  private searchSubject = new Subject<string>();
+
   displayedColumns: string[] = ['employeeName', 'role', 'status', 'actions'];
 
   constructor(
@@ -48,6 +55,15 @@ export class UserAccessComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.setupAutocomplete();
+
+    this.searchSubject.pipe(
+      debounceTime(1000),
+      distinctUntilChanged()
+    ).subscribe(val => {
+      this.filterValue = val;
+      this.currentPage = 1;
+      this.loadUsers();
+    });
   }
 
   private setupAutocomplete(): void {
@@ -96,17 +112,24 @@ export class UserAccessComponent implements OnInit {
       this.cdr.detectChanges();
     });
 
-    this.api.getEmployees().subscribe((emps: Employee[]) => {
-      this.employees = emps.map((e: Employee) => ({ ...e, label: `${e.name} (${e.position})` })) as any;
-      this.cdr.detectChanges();
-    });
+    this.loadUsers();
+  }
 
-    this.api.getUsers().subscribe({
-      next: (users: User[]) => {
-        this.users = users || [];
+  loadUsers(): void {
+    this.loading = true;
+    this.cdr.detectChanges();
+
+    this.api.getUsers(this.filterValue, this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.users = response.data || [];
         this.filteredUsers = [...this.users];
+        this.totalData = response.pageResponse?.total || 0;
         if (this.users.length > 0) {
           this.selectUser(this.users[0]);
+        } else {
+          this.selectedUser = null;
+          this.selectedRole = null;
+          this.roleControl.setValue(null, { emitEvent: false });
         }
         this.loading = false;
         this.cdr.detectChanges();
@@ -142,13 +165,14 @@ export class UserAccessComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filterValue = value;
-    this.filteredUsers = this.users.filter(u =>
-      u.username?.toLowerCase().includes(value) ||
-      (u as any).roleName?.toLowerCase().includes(value) ||
-      (u as any).employeeName?.toLowerCase().includes(value)
-    );
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadUsers();
   }
 
   selectUser(user: any): void {

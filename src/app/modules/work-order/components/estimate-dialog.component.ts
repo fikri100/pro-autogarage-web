@@ -54,8 +54,8 @@ export class EstimateDialogComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.woService.getProducts().subscribe(data => {
-      this.products = data || [];
+    this.woService.getProducts().subscribe((res: any) => {
+      this.products = res.data || res || [];
       // Trigger value changes to update the filtered list
       this.itemForm.get('productId')?.updateValueAndValidity();
     });

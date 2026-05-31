@@ -54,14 +54,14 @@ export class PortalBookingComponent implements OnInit {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     this.bookingForm = this.fb.group({
-      vehicleId: ['new', [Validators.required]],
+      vehicleId: [null, [Validators.required]],
       licensePlate: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]{1,3}\s[0-9]{1,4}\s[a-zA-Z]{1,3}$/)]],
-      brand: ['', [Validators.required]],
+      brand: [null, [Validators.required]],
       model: ['', [Validators.required]],
       yearMade: [new Date().getFullYear(), [Validators.required, Validators.min(1980), Validators.max(new Date().getFullYear() + 1)]],
-      transmission: ['AUTOMATIC', [Validators.required]],
+      transmission: [null, [Validators.required]],
       bookingDate: [tomorrow, [Validators.required]],
-      bookingTime: ['09:00', [Validators.required]],
+      bookingTime: [null, [Validators.required]],
       complaints: ['', []]
     });
 
@@ -111,6 +111,7 @@ export class PortalBookingComponent implements OnInit {
   }
 
   getVehicleName(id: any): string {
+    if (!id) return '';
     if (id === 'new') return '-- Kendaraan Baru (Input Manual) --';
     const v = this.vehicles.find(x => x.id === id);
     return v ? `[${v.licensePlate}] ${v.brand} ${v.model}` : '';
@@ -121,6 +122,7 @@ export class PortalBookingComponent implements OnInit {
   }
 
   getTransmissionLabel(id: string): string {
+    if (!id) return '';
     const t = this.transmissions.find(x => x.id === id);
     return t ? t.label : id;
   }
@@ -154,10 +156,10 @@ export class PortalBookingComponent implements OnInit {
       this.enableVehicleFields();
       this.bookingForm.patchValue({
         licensePlate: '',
-        brand: '',
+        brand: null,
         model: '',
         yearMade: new Date().getFullYear(),
-        transmission: 'AUTOMATIC'
+        transmission: null
       });
     } else {
       const v = this.vehicles.find(x => x.id === vehicleId);

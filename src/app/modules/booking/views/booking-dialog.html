@@ -42,7 +42,11 @@
             <label class="form-label-static">Pelanggan <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <input type="text" matInput formControlName="customerId" [matAutocomplete]="custAuto" placeholder="Ketik pelanggan..." />
+            <input type="text" matInput formControlName="customerId" 
+                   [matAutocomplete]="custAuto" 
+                   #custTrigger="matAutocompleteTrigger" 
+                   (focus)="custTrigger.openPanel()" 
+                   placeholder="Ketik pelanggan..." />
             <mat-autocomplete #custAuto="matAutocomplete" [displayWith]="displayCustomer">
               <mat-option *ngFor="let c of filteredCustomers$ | async" [value]="c.id">
                 {{ c.name }} ({{ c.phone }})
@@ -58,7 +62,11 @@
             <label class="form-label-static">Kendaraan Terdaftar <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <input type="text" matInput formControlName="vehicleId" [matAutocomplete]="vehAuto" placeholder="Ketik kendaraan..." />
+            <input type="text" matInput formControlName="vehicleId" 
+                   [matAutocomplete]="vehAuto" 
+                   #vehTrigger="matAutocompleteTrigger" 
+                   (focus)="vehTrigger.openPanel()" 
+                   placeholder="Ketik kendaraan..." />
             <mat-autocomplete #vehAuto="matAutocomplete" [displayWith]="displayVehicle">
               <mat-option *ngFor="let v of filteredVehicles$ | async" [value]="v.id">
                 {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
@@ -97,7 +105,11 @@
             <label class="form-label-static">Jam Servis <span class="required">*</span></label>
             <mat-form-field appearance="outline">
             
-            <input type="text" matInput formControlName="bookingTime" [matAutocomplete]="timeAuto" placeholder="Pilih Jam" />
+            <input type="text" matInput formControlName="bookingTime" 
+                   [matAutocomplete]="timeAuto" 
+                   #timeTrigger="matAutocompleteTrigger" 
+                   (focus)="timeTrigger.openPanel()" 
+                   placeholder="Pilih Jam" />
             <mat-autocomplete #timeAuto="matAutocomplete" [displayWith]="displayTime">
               <mat-option *ngFor="let t of filteredBookingTimes$ | async" [value]="t">
                 {{ t }} WIB

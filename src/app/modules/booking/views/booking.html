@@ -36,11 +36,11 @@
           <input matInput placeholder="Cari Nama / Plat Mobil..." (keyup)="onSearchChange($event)" />
         </mat-form-field>
         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="min-width: 240px;">
-          <input type="text" matInput [formControl]="statusControl" [matAutocomplete]="statusAuto" placeholder="Filter Antrean..." />
-          <mat-icon matSuffix style="color: #64748b; margin-right: 0.5rem;">arrow_drop_down</mat-icon>
-          <mat-autocomplete #statusAuto="matAutocomplete" [displayWith]="displayStatus">
-            <mat-option *ngFor="let s of filteredStatusOptions$ | async" [value]="s.value">{{ s.label }}</mat-option>
-          </mat-autocomplete>
+          <mat-select [formControl]="statusControl" placeholder="Filter Antrean...">
+            <mat-option *ngFor="let s of statusOptions" [value]="s.value">
+              {{ s.label }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
     </div>
@@ -120,5 +120,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Server-Side Paginator -->
+  <mat-paginator [length]="totalData" 
+                 [pageSize]="pageSize" 
+                 [pageSizeOptions]="[5, 10, 20]" 
+                 (page)="onPageChange($event)" 
+                 aria-label="Pilih halaman booking"
+                 style="margin-top: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05);">
+  </mat-paginator>
 
 </div>

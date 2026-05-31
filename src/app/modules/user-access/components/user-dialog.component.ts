@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { User, Role, Employee } from '../models/object';
+import { UserAccessService } from '../user-access.service';
 
 export interface UserDialogData {
   roles: Role[];
@@ -16,14 +18,20 @@ export interface UserDialogData {
   standalone: false
 })
 export class UserDialogComponent implements OnInit {
+  @ViewChild('empTrigger', { read: MatAutocompleteTrigger }) empTrigger!: MatAutocompleteTrigger;
+
   userForm!: FormGroup;
   isSaving = false;
+
+  employees: Employee[] = [];
+  employeesLoaded = false;
 
   filteredEmployees$!: Observable<Employee[]>;
   filteredRoles$!: Observable<Role[]>;
 
   constructor(
     private fb: FormBuilder,
+    private userAccessService: UserAccessService,
     public dialogRef: MatDialogRef<UserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserDialogData
   ) {}
@@ -42,12 +50,34 @@ export class UserDialogComponent implements OnInit {
     });
   }
 
+  onEmployeeFocus(): void {
+    if (!this.employeesLoaded) {
+      this.employeesLoaded = true;
+      this.userAccessService.getEmployees().subscribe((res: any) => {
+        const emps = res.data || res || [];
+        this.employees = emps;
+        // Trigger autocomplete filter refresh
+        this.userForm.get('employeeId')?.setValue(this.userForm.get('employeeId')?.value);
+        
+        setTimeout(() => {
+          if (this.empTrigger) {
+            this.empTrigger.openPanel();
+          }
+        }, 150);
+      });
+    } else {
+      if (this.empTrigger) {
+        this.empTrigger.openPanel();
+      }
+    }
+  }
+
   private setupAutocomplete(): void {
     this.filteredEmployees$ = this.userForm.get('employeeId')!.valueChanges.pipe(
       startWith(''),
       map(value => {
         const name = typeof value === 'string' ? value : (this.getEmployeeName(value) || '');
-        return name ? this._filterEmployees(name) : this.data.employees.slice();
+        return name ? this._filterEmployees(name) : this.employees.slice();
       })
     );
 
@@ -62,7 +92,7 @@ export class UserDialogComponent implements OnInit {
 
   private _filterEmployees(name: string): Employee[] {
     const filterValue = name.toLowerCase();
-    return this.data.employees.filter(emp => emp.name.toLowerCase().includes(filterValue) || emp.position.toLowerCase().includes(filterValue));
+    return this.employees.filter(emp => emp.name.toLowerCase().includes(filterValue) || emp.position.toLowerCase().includes(filterValue));
   }
 
   private _filterRoles(name: string): Role[] {
@@ -72,7 +102,7 @@ export class UserDialogComponent implements OnInit {
 
   getEmployeeName(id: number | null): string {
     if (!id) return '';
-    const emp = this.data.employees.find(e => e.id === id);
+    const emp = this.employees.find(e => e.id === id);
     return emp ? `${emp.name} - ${emp.position}` : '';
   }
 

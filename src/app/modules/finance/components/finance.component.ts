@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 import { FinanceService } from '../services/finance.service';
@@ -15,7 +16,7 @@ import { Cashflow, FinanceSummary, FinanceChartItem } from '../models/finance.mo
   templateUrl: '../views/finance.html',
   standalone: false
 })
-export class FinanceComponent implements OnInit {
+export class FinanceComponent implements OnInit, OnDestroy {
   summary: FinanceSummary = {
     totalIncome: 0,
     totalExpense: 0,
@@ -31,6 +32,13 @@ export class FinanceComponent implements OnInit {
   loading = false;
   chartLoading = false;
   maxChartVal = 100000;
+
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   // Filters
   filterType: '' | 'INC' | 'EXP' = '';
@@ -80,10 +88,23 @@ export class FinanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(1000)
+    ).subscribe(searchValue => {
+      this.searchQuery = searchValue;
+      this.currentPage = 1;
+      this.loadCashflows();
+    });
     this.setupAutocomplete();
     setTimeout(() => {
       this.loadAllData();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   setupAutocomplete(): void {
@@ -171,12 +192,16 @@ export class FinanceComponent implements OnInit {
       type: this.filterType || undefined,
       category: this.filterCategory || undefined,
       startDate: formatFilterDate(this.filterStartDate) || undefined,
-      endDate: formatFilterDate(this.filterEndDate) || undefined
+      endDate: formatFilterDate(this.filterEndDate) || undefined,
+      search: this.searchQuery || undefined,
+      page: this.currentPage,
+      limit: this.pageSize
     };
 
     this.financeService.getCashflows(filters).subscribe({
-      next: (data) => {
-        this.cashflows = data || [];
+      next: (res: any) => {
+        this.cashflows = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -222,6 +247,18 @@ export class FinanceComponent implements OnInit {
   }
 
   onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadCashflows();
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
     this.loadCashflows();
   }
 
@@ -230,6 +267,8 @@ export class FinanceComponent implements OnInit {
     this.filterCategory = '';
     this.filterStartDate = '';
     this.filterEndDate = '';
+    this.searchQuery = '';
+    this.currentPage = 1;
     this.filterTypeControl.setValue('', { emitEvent: false });
     this.filterCategoryControl.setValue('', { emitEvent: false });
     this.loadCashflows();

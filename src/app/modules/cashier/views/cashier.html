@@ -12,7 +12,7 @@
   <p>Memuat data kasir...</p>
 </div>
 
-<div class="flex-row-responsive" *ngIf="!loading">
+<div class="flex-row-responsive" style="align-items: stretch;" *ngIf="!loading">
 
   <!-- Left Column: COMPLETED Work Orders waiting to pay -->
   <div class="col-30">
@@ -62,31 +62,41 @@
           </div>
         </div>
       </div>
+
+      <mat-paginator [length]="totalData"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[5, 10, 20]"
+                     (page)="onPageChange($event)"
+                     aria-label="Pilih halaman cashier"
+                     style="border-top: 1px solid #e2e8f0;">
+      </mat-paginator>
     </div>
   </div>
 
   <!-- Right Column: Interactive Checkout Area -->
-  <div class="col-70 checkout-grid" *ngIf="transaction">
+  <div class="col-70 h-100" style="display: flex; flex-direction: column;" *ngIf="transaction">
+    <div class="checkout-grid" style="flex: 1;">
     
     <!-- Item details table (final edits) -->
-    <div class="card-panel" style="display: flex; flex-direction: column; gap: 1rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;">
+    <div class="card-panel" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <!-- Card Header -->
+      <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem;">
         <div>
-          <h3 class="text-xs-caps" style="color: #475569; font-size: 0.8rem; margin: 0;">Faktur Transaksi</h3>
-          <span style="font-family: monospace; font-weight: 700; font-size: 1rem; color: #1e3a8a;">
+          <h3 class="text-xs-caps" style="color: #475569; font-size: 0.75rem; margin: 0;">Faktur Transaksi</h3>
+          <span style="font-family: monospace; font-weight: 700; font-size: 0.82rem; color: #1e3a8a;">
             {{ transaction.invoiceNumber }}
           </span>
         </div>
         
         <div style="text-align: right;">
-          <span class="text-xs-caps" style="font-size: 0.6rem;">Mobil</span>
-          <div style="font-weight: 600; font-size: 0.85rem; color: #334155;">{{ selectedWO.vehicleBrand }} ({{ selectedWO.licensePlate }})</div>
+          <span class="text-xs-caps" style="font-size: 0.58rem;">Mobil</span>
+          <div style="font-weight: 600; font-size: 0.75rem; color: #334155;">{{ selectedWO.vehicleBrand }} ({{ selectedWO.licensePlate }})</div>
         </div>
       </div>
 
-      <!-- Items List -->
-      <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; background: white;">
-        <div *ngIf="transaction.details.length === 0" class="empty-state" style="padding: 4rem;">
+      <!-- Items List: scrollable body -->
+      <div class="invoice-table-container" style="flex: 1; overflow-y: auto; overflow-x: auto;">
+        <div *ngIf="transaction.details.length === 0" class="empty-state" style="padding: 3rem 2rem;">
           <mat-icon style="color: #cbd5e1; font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">remove_shopping_cart</mat-icon>
           <p style="margin-top: 0.5rem;">Tidak ada item di tagihan ini.</p>
         </div>
@@ -146,17 +156,22 @@
     </div>
 
     <!-- Calculations, discount, PPN, pay inputs -->
-    <div class="card-panel" style="display: flex; flex-direction: column; gap: 1.25rem;">
-      <h3 class="text-xs-caps" style="color: #475569; display: flex; align-items: center; gap: 0.35rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem; margin-bottom: 0;">
-        <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; color: #10b981;">payments</mat-icon>
-        Pembayaran
-      </h3>
+    <div class="card-panel" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+      <!-- Card Header -->
+      <div class="list-header" style="padding: 0.75rem 1rem;">
+        <h3 style="display: flex; align-items: center; gap: 0.35rem; margin: 0; font-size: var(--text-lg);">
+          <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; color: #10b981;">payments</mat-icon>
+          Pembayaran
+        </h3>
+      </div>
+      <!-- Scrollable payment body -->
+      <div style="flex: 1; overflow-y: auto; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
 
       <!-- Pricing Summary Grid -->
-      <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem; color: #475569;">
-        <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; color: #475569;">
+        <div class="payment-row">
           <span>Subtotal Item:</span>
-          <span style="font-weight: 600;">{{ subtotal | currency:'IDR':'Rp ':'1.0-0' }}</span>
+          <span class="value">{{ subtotal | currency:'IDR':'Rp ':'1.0-0' }}</span>
         </div>
 
         <!-- Input Diskon -->
@@ -166,14 +181,14 @@
           <input matInput type="number" [(ngModel)]="discount" min="0" [max]="subtotal" (input)="onDiscountChange()" />
         </mat-form-field>
 
-        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+        <div class="payment-row" style="margin-top: 1rem;">
           <span>PPN (11%):</span>
-          <span style="font-weight: 600;">{{ taxAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
+          <span class="value">{{ taxAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
         </div>
 
-        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; padding: 0.75rem; border-radius: 0.35rem; margin-top: 0.5rem;">
-          <span class="text-xs-caps" style="font-size: 0.65rem; color: #1e40af;">Total Tagihan Kasir:</span>
-          <div style="font-size: 1.4rem; font-weight: 800; color: #1e3a8a; margin-top: 0.15rem; line-height: 1;">
+        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem 0.75rem; border-radius: 0.35rem; margin-top: 0.25rem;">
+          <span class="text-xs-caps" style="font-size: 0.6rem; color: #1e40af;">Total Tagihan Kasir:</span>
+          <div style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; margin-top: 0.1rem; line-height: 1;">
             {{ grandTotal | currency:'IDR':'Rp ':'1.0-0' }}
           </div>
         </div>
@@ -182,7 +197,7 @@
       <!-- Payment Methods -->
       <div style="display: flex; flex-direction: column; gap: 0.35rem;">
         <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Metode Pembayaran:</span>
-        <div style="display: flex; gap: 0.25rem;">
+        <div class="payment-methods-container">
           <button mat-stroked-button style="flex: 1; font-size: 0.7rem; padding: 0; min-width: 0; font-weight: 600;"
                   [style.background-color]="paymentMethod === 'Tunai' ? '#ecfdf5' : 'white'"
                   [style.color]="paymentMethod === 'Tunai' ? '#047857' : '#475569'"
@@ -208,30 +223,32 @@
       </div>
 
       <!-- Cash Received (Only for Tunai method) -->
-      <div *ngIf="paymentMethod === 'Tunai'" style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px dashed #cbd5e1; padding-top: 1rem; margin-top: 0.25rem;">
+      <div *ngIf="paymentMethod === 'Tunai'" style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px dashed #cbd5e1; padding-top: 0.6rem; margin-top: 0;">
         <mat-form-field appearance="outline" class="full-width" style="margin-bottom: -1.25rem;">
           <mat-label>Uang Tunai Diterima <span class="required">*</span></mat-label>
           <span matTextPrefix>Rp&nbsp;</span>
           <input matInput type="number" [(ngModel)]="cashAmount" min="0" (input)="onCashAmountChange()" />
         </mat-form-field>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.5rem 0.75rem; border-radius: 0.35rem;">
-          <span class="text-xs-caps" style="font-size: 0.65rem; color: #047857;">Uang Kembalian:</span>
-          <span style="font-weight: 800; font-size: 1.15rem; color: #047857;">
+        <div class="change-amount-box">
+          <span class="text-xs-caps">Uang Kembalian:</span>
+          <span class="change-value">
             {{ changeAmount | currency:'IDR':'Rp ':'1.0-0' }}
           </span>
         </div>
       </div>
 
       <!-- Finalize checkout action -->
-      <button mat-flat-button color="primary" style="height: 3.5rem; margin-top: 0.5rem; font-weight: 700; letter-spacing: 0.05em;" 
+      <button mat-flat-button color="primary" style="height: 2.75rem; margin-top: 0.25rem; font-weight: 700; letter-spacing: 0.05em;" 
               [disabled]="submitting || (paymentMethod === 'Tunai' && cashAmount < grandTotal) || transaction.details.length === 0" 
               (click)="payAndPrint()">
         <mat-icon>print</mat-icon>
         {{ submitting ? 'MEMPROSES...' : 'BAYAR & CETAK STRUK' }}
       </button>
-    </div>
-  </div>
+      </div><!-- end scrollable body -->
+    </div><!-- end payment card -->
+    </div><!-- end checkout-grid -->
+  </div><!-- end col-70 -->
 
   <!-- Empty state for cashier when no active unit selected -->
   <div class="col-70" *ngIf="!transaction">

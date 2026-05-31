@@ -1,9 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 
 import { WorkOrderService } from '../work-order.service';
 import { WorkOrder } from '../models/object';
@@ -14,13 +16,23 @@ import { EstimateDialogComponent } from './estimate-dialog.component';
   templateUrl: '../views/work-order.html',
   standalone: false
 })
-export class WorkOrderComponent implements OnInit {
+export class WorkOrderComponent implements OnInit, OnDestroy {
+  @ViewChild('mechTrigger', { read: MatAutocompleteTrigger }) mechTrigger!: MatAutocompleteTrigger;
+
   workOrders: WorkOrder[] = [];
   filteredWorkOrders: WorkOrder[] = [];
   loading = false;
   selectedWO: WorkOrder | null = null;
 
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
+
   mechanics: any[] = [];
+  mechanicsLoaded = false;
   estimationDetails: any[] = [];
   estimationTotal = 0;
   
@@ -45,9 +57,21 @@ export class WorkOrderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(1000)
+    ).subscribe(searchValue => {
+      this.searchQuery = searchValue;
+      this.currentPage = 1;
+      this.loadWorkOrders();
+    });
     this.loadWorkOrders();
-    this.loadMechanics();
     this.setupMechanicAutocomplete();
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   setupMechanicAutocomplete(): void {
@@ -77,7 +101,11 @@ export class WorkOrderComponent implements OnInit {
   getMechanicName(id: number | null): string {
     if (!id) return '';
     const m = this.mechanics.find(x => x.id === id);
-    return m ? `${m.name} (${m.position})` : '';
+    if (m) return `${m.name} (${m.position})`;
+    if (this.selectedWO && this.selectedWO.mechanicId === id && this.selectedWO.mechanicName) {
+      return this.selectedWO.mechanicName;
+    }
+    return '';
   }
 
   displayMechanic = (id: number): string => {
@@ -85,22 +113,39 @@ export class WorkOrderComponent implements OnInit {
   }
 
   loadMechanics(): void {
-    this.woService.getMechanics().subscribe(data => {
-      this.mechanics = (data || []).filter((m: any) => 
+    this.woService.getMechanics().subscribe((res: any) => {
+      this.mechanicsLoaded = true;
+      const emps = res.data || res || [];
+      this.mechanics = emps.filter((m: any) => 
         m.position?.toLowerCase().includes('mechanic') || 
         m.position?.toLowerCase().includes('mekanik')
       );
       this.mechanicControl.updateValueAndValidity();
+      
+      // Auto open dropdown panel
+      setTimeout(() => {
+        if (this.mechTrigger) {
+          this.mechTrigger.openPanel();
+        }
+      }, 150);
     });
+  }
+
+  onMechanicFocus(): void {
+    if (this.selectedWO?.workStatus !== 'IN_PROGRESS') return;
+    if (!this.mechanicsLoaded) {
+      this.loadMechanics();
+    }
   }
 
   loadWorkOrders(): void {
     this.loading = true;
     this.cdr.detectChanges();
 
-    this.woService.getWorkOrders().subscribe({
-      next: (data: WorkOrder[]) => {
-        this.workOrders = data || [];
+    this.woService.getWorkOrders(this.searchQuery, this.currentPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.workOrders = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
         this.filteredWorkOrders = [...this.workOrders];
         
         if (this.workOrders.length > 0) {
@@ -317,11 +362,13 @@ export class WorkOrderComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredWorkOrders = this.workOrders.filter(wo => 
-      (wo.licensePlate && wo.licensePlate.toLowerCase().includes(filterValue)) ||
-      (wo.customerName && wo.customerName.toLowerCase().includes(filterValue)) ||
-      (wo.mechanicName && wo.mechanicName.toLowerCase().includes(filterValue))
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadWorkOrders();
   }
 }

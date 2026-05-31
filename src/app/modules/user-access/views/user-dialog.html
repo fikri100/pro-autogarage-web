@@ -16,7 +16,12 @@
         <label class="form-label-static">Karyawan <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
         
-        <input type="text" matInput formControlName="employeeId" [matAutocomplete]="empAuto" placeholder="Ketik nama karyawan..." />
+        <input type="text" matInput formControlName="employeeId" 
+               [matAutocomplete]="empAuto" 
+               #empTrigger="matAutocompleteTrigger"
+               (focus)="onEmployeeFocus()"
+               (click)="onEmployeeFocus()"
+               placeholder="Ketik nama karyawan..." />
         <mat-autocomplete #empAuto="matAutocomplete" [displayWith]="displayEmployee">
           <mat-option *ngFor="let emp of filteredEmployees$ | async" [value]="emp.id">
             {{ emp.name }} - {{ emp.position }}

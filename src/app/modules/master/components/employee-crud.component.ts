@@ -57,7 +57,7 @@ export class EmployeeCrudComponent implements OnInit {
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s()]+$/)]],
-      position: ['', [Validators.required]],
+      position: [null, [Validators.required]],
       address: ['', []]
     });
 
@@ -76,6 +76,9 @@ export class EmployeeCrudComponent implements OnInit {
     this.api.getRoles().subscribe({
       next: (data) => {
         this.roles = data || [];
+        // Force filteredRoles$ to emit with the loaded roles!
+        const currentVal = this.employeeForm.get('position')?.value;
+        this.employeeForm.get('position')?.setValue(currentVal, { emitEvent: true });
       },
       error: () => {
         this.snackBar.open('Gagal memuat data role/jabatan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });

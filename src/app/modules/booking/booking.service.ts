@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Booking } from './models/object';
+import { PaginatedResponse } from '../../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,16 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  getBookings(status?: string): Observable<Booking[]> {
-    let params = new HttpParams();
+  getBookings(search: string = '', status?: string, page: number = 1, limit: number = 10): Observable<PaginatedResponse<Booking>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('search', search);
+
     if (status) {
       params = params.set('status', status);
     }
-    return this.http.get<Booking[]>(this.bookingsUrl, { params });
+    return this.http.get<PaginatedResponse<Booking>>(this.bookingsUrl, { params });
   }
 
   createBooking(booking: Booking): Observable<Booking> {
@@ -34,11 +39,16 @@ export class BookingService {
   }
 
   // Support helpers
-  getCustomers(): Observable<any[]> {
-    return this.http.get<any[]>(this.customersUrl);
+  getCustomers(limit: number = 1000): Observable<any> {
+    const params = new HttpParams().set('page', '1').set('limit', limit.toString());
+    return this.http.get<any>(this.customersUrl, { params });
   }
 
-  getVehicles(): Observable<any[]> {
-    return this.http.get<any[]>(this.vehiclesUrl);
+  getVehicles(customerId?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (customerId) {
+      params = params.set('customerId', customerId.toString());
+    }
+    return this.http.get<any[]>(this.vehiclesUrl, { params });
   }
 }

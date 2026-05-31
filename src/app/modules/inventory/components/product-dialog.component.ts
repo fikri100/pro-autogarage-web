@@ -46,8 +46,8 @@ export class ProductDialogComponent implements OnInit {
       this.productForm = this.fb.group({
         code: [p?.code ?? '', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-_]+$/)]],
         name: [p?.name ?? '', [Validators.required]],
-        itemType: [p?.itemType ?? 'SPR', [Validators.required]],
-        category: [p?.category ?? 'Lainnya', [Validators.required]],
+        itemType: [p?.itemType ?? null, [Validators.required]],
+        category: [p?.category ?? null, [Validators.required]],
         purchasePrice: [p?.purchasePrice ?? 0, [Validators.min(0)]],
         salePrice: [p?.salePrice ?? 0, [Validators.required, Validators.min(0)]],
         stockQuantity: [p?.stockQuantity ?? 0, [Validators.min(0)]],
@@ -103,7 +103,7 @@ export class ProductDialogComponent implements OnInit {
     
     // Auto adjust category value if not in the current list
     const currentCategoryVal = this.productForm.get('category')?.value;
-    if (!this.currentCategories.includes(currentCategoryVal)) {
+    if (currentCategoryVal && !this.currentCategories.includes(currentCategoryVal)) {
       this.productForm.get('category')?.setValue(this.currentCategories[0] || 'Lainnya');
     }
 

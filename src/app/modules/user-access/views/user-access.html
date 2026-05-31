@@ -93,6 +93,14 @@
         </table>
       </div>
 
+      <!-- Server-Side Pagination -->
+      <mat-paginator [length]="totalData"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[5, 10, 20]"
+                     (page)="onPageChange($event)"
+                     aria-label="Pilih halaman pengguna">
+      </mat-paginator>
+
       <div *ngIf="filteredUsers.length === 0 && !loading" class="empty-state">
         <mat-icon>manage_accounts</mat-icon>
         <p>Tidak ada pengguna ditemukan.</p>
@@ -125,7 +133,11 @@
             <label class="form-label-static">Pilih Role</label>
             <mat-form-field appearance="outline" class="full-width">
             
-            <input type="text" matInput [formControl]="roleControl" [matAutocomplete]="roleAccessAuto" placeholder="Ketik nama role..." />
+            <input type="text" matInput [formControl]="roleControl" 
+                   [matAutocomplete]="roleAccessAuto" 
+                   #roleAccessTrigger="matAutocompleteTrigger" 
+                   (focus)="roleAccessTrigger.openPanel()" 
+                   placeholder="Ketik nama role..." />
             <mat-autocomplete #roleAccessAuto="matAutocomplete" [displayWith]="displayRole">
               <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.id">
                 {{ role.roleName }}

@@ -1,6 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PageEvent } from '@angular/material/paginator';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { CashierService } from '../cashier.service';
 import { InvoicePrintDialogComponent } from './invoice-print-dialog.component';
@@ -10,13 +13,20 @@ import { InvoicePrintDialogComponent } from './invoice-print-dialog.component';
   templateUrl: '../views/cashier.html',
   standalone: false
 })
-export class CashierComponent implements OnInit {
+export class CashierComponent implements OnInit, OnDestroy {
   readyWOs: any[] = [];
   filteredReadyWOs: any[] = [];
   selectedWO: any = null;
   transaction: any = null;
   loading = false;
   submitting = false;
+
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
 
   // Checkout Inputs
   discount = 0;
@@ -39,16 +49,30 @@ export class CashierComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(1000)
+    ).subscribe(searchValue => {
+      this.searchQuery = searchValue;
+      this.currentPage = 1;
+      this.loadReadyWOs();
+    });
     this.loadReadyWOs();
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   loadReadyWOs(): void {
     this.loading = true;
     this.cdr.detectChanges();
 
-    this.cashierService.getReadyWorkOrders().subscribe({
-      next: (data: any[]) => {
-        this.readyWOs = data || [];
+    this.cashierService.getReadyWorkOrders(this.searchQuery, this.currentPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.readyWOs = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
         this.filteredReadyWOs = [...this.readyWOs];
         if (this.readyWOs.length > 0) {
           const exists = this.readyWOs.find(w => w.id === this.selectedWO?.id);
@@ -237,11 +261,13 @@ export class CashierComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredReadyWOs = this.readyWOs.filter(wo => 
-      (wo.licensePlate && wo.licensePlate.toLowerCase().includes(filterValue)) ||
-      (wo.customerName && wo.customerName.toLowerCase().includes(filterValue)) ||
-      (wo.mechanicName && wo.mechanicName.toLowerCase().includes(filterValue))
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadReadyWOs();
   }
 }

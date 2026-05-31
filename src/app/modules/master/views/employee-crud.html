@@ -84,7 +84,11 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                class="table-row-hover"
+                [class.selected-row]="isEditMode && editingEmployeeId === row.id"
+                (click)="selectForEdit(row)"
+                style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
           </table>
         </div>
         <mat-paginator 
@@ -122,7 +126,12 @@
           <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Jabatan / Posisi <span class="required">*</span></label>
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
-            <input type="text" matInput formControlName="position" [matAutocomplete]="autoPosition" placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;">
+            <input type="text" matInput formControlName="position" 
+                   [matAutocomplete]="autoPosition" 
+                   #posTrigger="matAutocompleteTrigger" 
+                   (focus)="posTrigger.openPanel()" 
+                   (click)="posTrigger.openPanel()" 
+                   placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;">
             <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
               <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName" style="font-family: 'Inter', sans-serif;">
                 {{ role.roleName }}

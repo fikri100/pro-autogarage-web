@@ -198,6 +198,15 @@
     <!-- Filters Body -->
     <div style="padding: 1.25rem 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; border-bottom: 1px solid #f1f5f9;">
       
+      <!-- Search Input -->
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Cari Keterangan</label>
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem; vertical-align: middle;">search</mat-icon>
+          <input matInput placeholder="Ketik keterangan..." [value]="searchQuery" (input)="applyFilter($event)" />
+        </mat-form-field>
+      </div>
+
       <!-- Type Filter -->
       <div class="form-col-wrapper">
         <label class="form-label-static">Tipe Arus Kas</label>
@@ -333,6 +342,14 @@
 
         </table>
       </div>
+
+      <mat-paginator [length]="totalData"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[5, 10, 20]"
+                     (page)="onPageChange($event)"
+                     aria-label="Pilih halaman cashflow"
+                     style="border-top: 1px solid #e2e8f0;">
+      </mat-paginator>
 
     </div>
 

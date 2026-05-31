@@ -515,6 +515,10 @@ body {
   background-color: #eff6ff !important;
 }
 
+.mat-mdc-row.selected-row td:first-child {
+  border-left: 3px solid #1e40af !important;
+}
+
 .mat-mdc-header-cell {
   font-family: var(--font-body) !important;
   font-size: var(--text-xs) !important;
@@ -765,6 +769,19 @@ body {
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
   gap: 1rem;
+}
+
+/* Collapse form grids inside dialogs on small screens */
+@media (max-width: 600px) {
+  .two-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .three-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
 }
 
 .confirm-content p {
@@ -1215,6 +1232,14 @@ body {
   gap: 1.5rem;
 }
 
+/* Collapse double-panel-grid (tabel+form) to single column on medium screens */
+@media (max-width: 1200px) {
+  .double-panel-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
 .responsive-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -1231,6 +1256,14 @@ body {
   display: grid;
   grid-template-columns: 1.8fr 1.2fr;
   gap: 1.5rem;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* Each card inside checkout-grid fills the grid row height */
+.checkout-grid > .card-panel {
+  height: 100%;
+  box-sizing: border-box;
 }
 
 /* Ensure default column widths collapse under 1024px */
@@ -1275,6 +1308,16 @@ body {
   .double-panel-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
+  }
+
+  .two-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .three-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
   }
 
   .responsive-cards-grid {
@@ -1449,3 +1492,77 @@ table td,
   margin-right: 0.25rem !important;
 }.form-label-static { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569; }
 .form-col-wrapper { display: flex; flex-direction: column; gap: 0.35rem; }
+
+/* =============================================
+   Cashier Module - Responsive Styles
+   ============================================= */
+
+/* Compact card padding for checkout area cards (match left panel feel) */
+/* Cards now use padding:0 with list-header/body structure — no override needed here */
+
+.checkout-grid .card-panel {
+  /* Height set by flex-row-responsive stretch */
+}
+
+/* Faktur Transaksi: horizontal scroll so table never breaks layout */
+.invoice-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0.35rem;
+}
+
+.invoice-table-container table {
+  min-width: 520px; /* ensure columns never collapse too small */
+}
+
+/* Payment summary row: label left, value right */
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-row .value {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* Payment methods button group */
+.payment-methods-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+/* Change amount display box */
+.change-amount-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  border-radius: 0.35rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+.change-amount-box .change-value {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #047857;
+}
+
+/* On screens <= 768px: stack payment method buttons vertically */
+@media (max-width: 768px) {
+  .payment-methods-container {
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+  }
+
+  .payment-methods-container button {
+    width: 100% !important;
+    flex: none !important;
+    height: 2.5rem;
+  }
+}

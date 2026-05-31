@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 
 import { BookingService } from '../booking.service';
 import { Booking } from '../models/object';
@@ -14,13 +15,19 @@ import { BookingDialogComponent } from './booking-dialog.component';
   templateUrl: '../views/booking.html',
   standalone: false
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnInit, OnDestroy {
   bookings: Booking[] = [];
   filteredBookings: Booking[] = [];
   loading = false;
 
-  selectedStatus: 'ALL' | 'PENDING' | 'CONFIRMED' | 'CANCELLED' = 'ALL';
+  totalData = 0;
+  currentPage = 1;
+  pageSize = 10;
   searchQuery = '';
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
+
+  selectedStatus: 'ALL' | 'PENDING' | 'CONFIRMED' | 'CANCELLED' = 'ALL';
 
   statusControl = new FormControl('ALL');
   statusOptions = [
@@ -29,7 +36,6 @@ export class BookingComponent implements OnInit {
     { value: 'CONFIRMED', label: 'Dikonfirmasi' },
     { value: 'CANCELLED', label: 'Dibatalkan' }
   ];
-  filteredStatusOptions$!: Observable<any[]>;
 
   constructor(
     private bookingService: BookingService,
@@ -39,32 +45,29 @@ export class BookingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(1000)
+    ).subscribe(searchValue => {
+      this.searchQuery = searchValue;
+      this.currentPage = 1;
+      this.loadBookings();
+    });
     this.setupAutocomplete();
     this.loadBookings();
   }
 
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
+
   setupAutocomplete() {
-    this.filteredStatusOptions$ = this.statusControl.valueChanges.pipe(
-      startWith('ALL'),
-      map(value => {
-        const name = typeof value === 'string' ? value : (this.getStatusLabel(value || '') || '');
-        return name ? this.statusOptions.filter(s => s.label.toLowerCase().includes(name.toLowerCase())) : this.statusOptions.slice();
-      })
-    );
-
     this.statusControl.valueChanges.subscribe(val => {
-       if (typeof val === 'string' && val.length > 0 && !this.statusOptions.find(o => o.value === val)) return;
-       this.filterByStatus(val as any);
+       if (val) {
+         this.filterByStatus(val as any);
+       }
     });
-  }
-
-  getStatusLabel(value: string): string {
-    const s = this.statusOptions.find(o => o.value === value);
-    return s ? s.label : value;
-  }
-
-  displayStatus = (value: string): string => {
-    return this.getStatusLabel(value);
   }
 
   loadBookings(): void {
@@ -72,19 +75,11 @@ export class BookingComponent implements OnInit {
     this.cdr.detectChanges();
 
     const apiStatus = this.selectedStatus === 'ALL' ? '' : this.selectedStatus;
-    this.bookingService.getBookings(apiStatus).subscribe({
-      next: (data: Booking[]) => {
-        this.bookings = (data || []).sort((a, b) => {
-          const statusA = (a.status || '').toUpperCase();
-          const statusB = (b.status || '').toUpperCase();
-          if (statusA === 'PENDING' && statusB !== 'PENDING') return -1;
-          if (statusA !== 'PENDING' && statusB === 'PENDING') return 1;
-          
-          const idA = a.id || 0;
-          const idB = b.id || 0;
-          return idB - idA;
-        });
-        this.applyFilter();
+    this.bookingService.getBookings(this.searchQuery, apiStatus, this.currentPage, this.pageSize).subscribe({
+      next: (res: any) => {
+        this.bookings = res.data || [];
+        this.totalData = res.pageResponse?.total || 0;
+        this.filteredBookings = [...this.bookings];
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -97,27 +92,20 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  applyFilter(): void {
-    if (!this.searchQuery) {
-      this.filteredBookings = this.bookings;
-    } else {
-      const q = this.searchQuery.toLowerCase();
-      this.filteredBookings = this.bookings.filter(b => 
-        (b.customerName?.toLowerCase().includes(q)) ||
-        (b.licensePlate?.toLowerCase().includes(q)) ||
-        (b.vehicleBrand?.toLowerCase().includes(q)) ||
-        (b.vehicleModel?.toLowerCase().includes(q))
-      );
-    }
+  onSearchChange(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(filterValue);
   }
 
-  onSearchChange(event: Event): void {
-    this.searchQuery = (event.target as HTMLInputElement).value;
-    this.applyFilter();
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadBookings();
   }
 
   filterByStatus(status: 'ALL' | 'PENDING' | 'CONFIRMED' | 'CANCELLED'): void {
     this.selectedStatus = status;
+    this.currentPage = 1;
     this.loadBookings();
   }
 

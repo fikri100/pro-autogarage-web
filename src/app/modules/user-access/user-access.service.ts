@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, Role, Employee } from './models/object';
 
+import { PaginatedResponse } from '../../models/pagination.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,8 +12,15 @@ export class UserAccessService {
   constructor(private http: HttpClient) {}
 
   // Users
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>('/api/users');
+  getUsers(search: string = '', page: number = 1, limit: number = 10): Observable<PaginatedResponse<User>> {
+    let params: any = {
+      page: page.toString(),
+      limit: limit.toString()
+    };
+    if (search) {
+      params.search = search;
+    }
+    return this.http.get<PaginatedResponse<User>>('/api/users', { params });
   }
 
   createUser(user: User): Observable<void> {

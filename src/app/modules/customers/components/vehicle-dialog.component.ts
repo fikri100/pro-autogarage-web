@@ -53,7 +53,7 @@ export class VehicleDialogComponent implements OnInit {
   }
 
   displayTransmission = (value: string): string => {
-    return value;
+    return value || '';
   }
 
   private initForm(): void {
@@ -64,7 +64,7 @@ export class VehicleDialogComponent implements OnInit {
       brand: [v?.brand || '', [Validators.required]],
       model: [v?.model || '', [Validators.required]],
       yearMade: [v?.yearMade || null],
-      transmission: [v?.transmission || 'Manual (MT)']
+      transmission: [v?.transmission || null]
     });
   }
 

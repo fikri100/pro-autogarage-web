@@ -56,6 +56,7 @@ export class PortalVehicleDialogComponent implements OnInit {
   }
 
   getTransmissionLabel(id: string): string {
+    if (!id) return '';
     const t = this.transmissions.find(x => x.id === id);
     return t ? t.label : id;
   }
@@ -68,10 +69,10 @@ export class PortalVehicleDialogComponent implements OnInit {
     const v = this.data.vehicle;
     this.vehicleForm = this.fb.group({
       licensePlate: [v?.licensePlate || '', [Validators.required, Validators.pattern(/^[a-zA-Z]{1,3}\s[0-9]{1,4}\s[a-zA-Z]{1,3}$/)]],
-      brand: [v?.brand || '', [Validators.required]],
+      brand: [v?.brand || null, [Validators.required]],
       model: [v?.model || '', [Validators.required]],
       yearMade: [v?.yearMade || new Date().getFullYear(), [Validators.required, Validators.min(1980), Validators.max(new Date().getFullYear() + 1)]],
-      transmission: [v?.transmission || 'AUTOMATIC', [Validators.required]]
+      transmission: [v?.transmission || null, [Validators.required]]
     });
   }
 

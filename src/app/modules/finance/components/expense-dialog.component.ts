@@ -51,21 +51,24 @@ export class ExpenseDialogComponent implements OnInit {
     const today = new Date();
     
     this.expenseForm = this.fb.group({
-      cashflowType: ['EXP', [Validators.required]],
+      cashflowType: [null, [Validators.required]],
       amount: [null, [Validators.required, Validators.min(1)]],
-      category: ['OTHER', [Validators.required]],
+      category: [null, [Validators.required]],
       flowDate: [today, [Validators.required]],
       description: [null]
     });
 
-    this.updateCategories('EXP');
+    this.categories = [];
 
     // Watch type change to update categories
     this.expenseForm.get('cashflowType')?.valueChanges.subscribe(type => {
       if (type === 'EXP' || type === 'INC') {
         this.updateCategories(type);
-        this.expenseForm.get('category')?.updateValueAndValidity();
+      } else {
+        this.categories = [];
+        this.expenseForm.get('category')?.setValue(null);
       }
+      this.expenseForm.get('category')?.updateValueAndValidity();
     });
 
     this.setupAutocomplete();
@@ -90,6 +93,7 @@ export class ExpenseDialogComponent implements OnInit {
   }
 
   getCashflowLabel(value: string): string {
+    if (!value) return '';
     const type = this.cashflowTypes.find(t => t.value === value);
     return type ? type.label : value;
   }
@@ -99,6 +103,7 @@ export class ExpenseDialogComponent implements OnInit {
   }
 
   getCategoryLabel(value: string): string {
+    if (!value) return '';
     const cat = this.categories.find(c => c.value === value);
     return cat ? cat.label : value;
   }
@@ -111,8 +116,8 @@ export class ExpenseDialogComponent implements OnInit {
     this.categories = this.allCategories[type] || [];
     const currentCategory = this.expenseForm.get('category')?.value;
     // Reset category if not available in new list
-    if (!this.categories.find(c => c.value === currentCategory)) {
-      this.expenseForm.get('category')?.setValue(this.categories[0]?.value || 'OTHER');
+    if (!currentCategory || !this.categories.find(c => c.value === currentCategory)) {
+      this.expenseForm.get('category')?.setValue(null);
     }
   }
 

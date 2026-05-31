@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BookingService } from '../booking.service';
@@ -16,11 +17,13 @@ export interface BookingDialogData {
   standalone: false
 })
 export class BookingDialogComponent implements OnInit {
+  @ViewChild('custTrigger') custTrigger!: MatAutocompleteTrigger;
+  @ViewChild('vehTrigger') vehTrigger!: MatAutocompleteTrigger;
+
   bookingForm!: FormGroup;
   isSaving = false;
 
   customers: any[] = [];
-  vehicles: any[] = [];
   filteredVehicles: any[] = [];
 
   filteredCustomers$!: Observable<any[]>;
@@ -44,7 +47,7 @@ export class BookingDialogComponent implements OnInit {
         customerId: [null, [Validators.required]],
         vehicleId: [{ value: null, disabled: true }, [Validators.required]],
         bookingDate: [null, [Validators.required]],
-        bookingTime: ['09:00', [Validators.required]],
+        bookingTime: [null, [Validators.required]],
         complaints: [null]
       });
 
@@ -53,15 +56,21 @@ export class BookingDialogComponent implements OnInit {
       // Filter vehicles based on selected customer
       this.bookingForm.get('customerId')?.valueChanges.subscribe(custId => {
         if (typeof custId === 'number') {
-          this.filteredVehicles = this.vehicles.filter(v => v.customerId === custId);
-          this.bookingForm.get('vehicleId')?.enable({ emitEvent: false });
+          this.bookingService.getVehicles(custId).subscribe(data => {
+            this.filteredVehicles = data || [];
+            this.bookingForm.get('vehicleId')?.enable({ emitEvent: false });
+            this.bookingForm.get('vehicleId')?.setValue(null, { emitEvent: true });
+            
+            // Open registered vehicles dropdown automatically!
+            setTimeout(() => {
+              if (this.vehTrigger) {
+                this.vehTrigger.openPanel();
+              }
+            }, 150);
+          });
         } else {
           this.filteredVehicles = [];
           this.bookingForm.get('vehicleId')?.disable({ emitEvent: false });
-        }
-        // only reset if customer changes to a different one or invalid
-        const currentV = this.bookingForm.get('vehicleId')?.value;
-        if (currentV && !this.filteredVehicles.find(v => v.id === currentV)) {
           this.bookingForm.get('vehicleId')?.setValue(null, { emitEvent: false });
         }
         this.bookingForm.get('vehicleId')?.updateValueAndValidity({ emitEvent: false });
@@ -96,7 +105,8 @@ export class BookingDialogComponent implements OnInit {
     );
   }
 
-  getCustomerName(id: number): string {
+  getCustomerName(id: any): string {
+    if (id === null || id === undefined) return '';
     const c = this.customers.find(x => x.id === id);
     return c ? `${c.name} - ${c.phone}` : '';
   }
@@ -105,8 +115,9 @@ export class BookingDialogComponent implements OnInit {
     return this.getCustomerName(id);
   }
 
-  getVehicleName(id: number): string {
-    const v = this.vehicles.find(x => x.id === id);
+  getVehicleName(id: any): string {
+    if (id === null || id === undefined) return '';
+    const v = this.filteredVehicles.find(x => x.id === id);
     return v ? `${v.licensePlate} (${v.brand} ${v.model})` : '';
   }
 
@@ -117,15 +128,18 @@ export class BookingDialogComponent implements OnInit {
   displayTime = (val: string): string => val;
 
   loadCustomersAndVehicles(): void {
-    this.bookingService.getCustomers().subscribe(data => {
-      this.customers = data || [];
-      // Trigger update on load
-      this.bookingForm.get('customerId')?.updateValueAndValidity();
-    });
-    this.bookingService.getVehicles().subscribe(data => {
-      this.vehicles = data || [];
-      // Trigger update on load
-      this.bookingForm.get('customerId')?.updateValueAndValidity();
+    this.bookingService.getCustomers(1000).subscribe((res: any) => {
+      this.customers = res.data || [];
+      // Force valueChanges stream to emit so autocomplete is populated
+      const currentVal = this.bookingForm.get('customerId')?.value;
+      this.bookingForm.get('customerId')?.setValue(currentVal, { emitEvent: true });
+      
+      // Auto open customer dropdown immediately when pop-up opens and data loaded
+      setTimeout(() => {
+        if (this.custTrigger) {
+          this.custTrigger.openPanel();
+        }
+      }, 300);
     });
   }
 
