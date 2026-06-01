@@ -47,10 +47,13 @@
             <label class="form-label-static">Nomor WhatsApp <span class="text-danger">*</span></label>
             <mat-form-field appearance="outline" class="full-width">
               <span matTextPrefix class="phone-prefix">+62&nbsp;</span>
-              <input matInput formControlName="phone" placeholder="812-3456-7890" />
+              <input matInput formControlName="phone" placeholder="812-3456-7890" (keypress)="onPhoneKeyPress($event)" />
               <mat-icon matSuffix>phone</mat-icon>
               <mat-error *ngIf="customerForm.get('phone')?.hasError('required')">
                 Nomor WhatsApp wajib diisi
+              </mat-error>
+              <mat-error *ngIf="customerForm.get('phone')?.hasError('pattern')">
+                Nomor WhatsApp hanya boleh berisi angka
               </mat-error>
             </mat-form-field>
           </div>

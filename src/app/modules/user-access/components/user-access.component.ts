@@ -25,7 +25,7 @@ export class UserAccessComponent implements OnInit {
   selectedUser: User | null = null;
   selectedRole: Role | null = null;
 
-  roleControl = new FormControl();
+  roleControl = new FormControl(null, [Validators.required]);
   filteredRoles$!: Observable<Role[]>;
 
   systemMenus: any[] = [];

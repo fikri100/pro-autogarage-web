@@ -125,7 +125,10 @@ export class UserDialogComponent implements OnInit {
   }
 
   onSave(): void {
-    if (this.userForm.invalid) return;
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
     this.isSaving = true;
     
     const formVal = { ...this.userForm.value };

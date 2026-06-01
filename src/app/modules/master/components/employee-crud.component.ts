@@ -56,7 +56,7 @@ export class EmployeeCrudComponent implements OnInit {
   private initForm(): void {
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s()]+$/)]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       position: [null, [Validators.required]],
       address: ['', []]
     });
@@ -65,6 +65,13 @@ export class EmployeeCrudComponent implements OnInit {
       startWith(''),
       map(value => this._filterRoles(value || ''))
     );
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    const charCode = event.key;
+    if (!/^[0-9]$/.test(charCode) && charCode.length === 1) {
+      event.preventDefault();
+    }
   }
 
   private _filterRoles(value: string): Role[] {

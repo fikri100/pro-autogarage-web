@@ -84,7 +84,7 @@
 
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 1rem;">
         <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nama Kategori</label>
+          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nama Kategori <span class="required">*</span></label>
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">label</mat-icon>
             <input matInput formControlName="name" placeholder="Contoh: Oli Mesin, Jasa Service" style="font-family: 'Inter', sans-serif;">

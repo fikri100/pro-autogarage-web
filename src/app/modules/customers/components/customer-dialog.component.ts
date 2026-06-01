@@ -27,13 +27,21 @@ export class CustomerDialogComponent implements OnInit {
     if (this.data.mode !== 'confirm') {
       this.customerForm = this.fb.group({
         name: [this.data.customer?.name ?? null, [Validators.required]],
-        phone: [this.data.customer?.phone ?? null, [Validators.required]],
+        phone: [this.data.customer?.phone ?? null, [Validators.required, Validators.pattern('^[0-9]*$')]],
         email: [this.data.customer?.email ?? null, [Validators.email]],
         address: [this.data.customer?.address ?? null],
         plate: [null],
         brand: [null],
         year: [null]
       });
+    }
+  }
+
+  onPhoneKeyPress(event: KeyboardEvent): void {
+    const charCode = event.key;
+    // Allow numbers, and control keys like Backspace/Arrow keys (which have longer key names)
+    if (!/^[0-9]$/.test(charCode) && charCode.length === 1) {
+      event.preventDefault();
     }
   }
 

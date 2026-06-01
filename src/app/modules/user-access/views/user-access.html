@@ -130,7 +130,7 @@
         <div>
           <label class="text-xs-caps" style="display: block; margin-bottom: 0.5rem;">Assigned Role</label>
           <div class="form-col-wrapper">
-            <label class="form-label-static">Pilih Role</label>
+            <label class="form-label-static">Pilih Role <span class="required">*</span></label>
             <mat-form-field appearance="outline" class="full-width">
             
             <input type="text" matInput [formControl]="roleControl" 
@@ -143,6 +143,9 @@
                 {{ role.roleName }}
               </mat-option>
             </mat-autocomplete>
+            <mat-error *ngIf="roleControl.hasError('required')">
+              Role wajib dipilih
+            </mat-error>
           </mat-form-field>
           </div>
         </div>
