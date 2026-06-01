@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 
 import { UserAccessService } from '../user-access.service';
 import { User, Role, Employee } from '../models/object';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { UserDialogComponent } from './user-dialog.component';
@@ -25,7 +25,7 @@ export class UserAccessComponent implements OnInit {
   selectedUser: User | null = null;
   selectedRole: Role | null = null;
 
-  roleControl = new FormControl(null, [Validators.required]);
+  roleControl = new FormControl<number | null>(null, [Validators.required]);
   filteredRoles$!: Observable<Role[]>;
 
   systemMenus: any[] = [];
