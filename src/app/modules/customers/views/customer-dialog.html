@@ -91,8 +91,14 @@
           <div class="form-col-wrapper">
             <label class="form-label-static">Plat Nomor</label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="plate" placeholder="B 1234 ABC"
-                style="font-family: monospace; font-weight: 600;" />
+              <input matInput formControlName="plate" (input)="onPlateInput($event)"
+                placeholder="Contoh: B 1234 ABC"
+                style="font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: 0.08em;" />
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-hint>Ketik saja — format otomatis: B 6877 XYZ atau AE 7887 RK</mat-hint>
+              <mat-error *ngIf="customerForm.get('plate')?.hasError('pattern')">
+                Format salah. Contoh: B 1234 ABC atau AE 7887 RK
+              </mat-error>
             </mat-form-field>
           </div>
 

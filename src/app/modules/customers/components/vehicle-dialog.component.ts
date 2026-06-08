@@ -60,12 +60,40 @@ export class VehicleDialogComponent implements OnInit {
     const v = this.data.vehicle;
     this.vehicleForm = this.fb.group({
       customerId: [this.data.customerId || v?.customerId || null],
-      licensePlate: [v?.licensePlate || '', [Validators.required]],
+      licensePlate: [v?.licensePlate || '', [Validators.required, Validators.pattern(/^[A-Z]{1,3}\s[0-9]{1,4}\s[A-Z]{1,3}$/)]],
       brand: [v?.brand || '', [Validators.required]],
       model: [v?.model || '', [Validators.required]],
       yearMade: [v?.yearMade || null],
       transmission: [v?.transmission || null]
     });
+  }
+
+  /**
+   * Formats raw input into Indonesian license plate format: AA 1234 ABC
+   * Strips invalid chars, auto-inserts spaces between letter/digit segments.
+   */
+  private formatPlate(raw: string): string {
+    // Remove all non-alphanumeric characters
+    const clean = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+    // Extract segments: leading letters, middle digits, trailing letters
+    const match = clean.match(/^([A-Z]{1,3})([0-9]{0,4})([A-Z]{0,3})/);
+    if (!match) return clean;
+
+    const [, prefix, numbers, suffix] = match;
+    let result = prefix;
+    if (numbers) result += ' ' + numbers;
+    if (suffix)  result += ' ' + suffix;
+    return result;
+  }
+
+  onPlateInput(event: any): void {
+    const cursor = event.target.selectionStart;
+    const formatted = this.formatPlate(event.target.value);
+    this.vehicleForm.get('licensePlate')?.setValue(formatted, { emitEvent: false });
+    // Restore cursor position after value replacement
+    event.target.value = formatted;
+    event.target.setSelectionRange(formatted.length, formatted.length);
   }
 
   onCancel(): void {
@@ -77,12 +105,12 @@ export class VehicleDialogComponent implements OnInit {
   }
 
   onSave(): void {
+    this.vehicleForm.markAllAsTouched();
     if (this.vehicleForm.invalid) return;
     this.isSaving = true;
     
-    // Force license plate to uppercase
     const formVal = { ...this.vehicleForm.value };
-    formVal.licensePlate = formVal.licensePlate.trim().toUpperCase();
+    formVal.licensePlate = this.formatPlate(formVal.licensePlate);
     
     this.dialogRef.close(formVal);
   }

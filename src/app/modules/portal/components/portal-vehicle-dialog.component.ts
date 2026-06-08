@@ -68,7 +68,7 @@ export class PortalVehicleDialogComponent implements OnInit {
   private initForm(): void {
     const v = this.data.vehicle;
     this.vehicleForm = this.fb.group({
-      licensePlate: [v?.licensePlate || '', [Validators.required, Validators.pattern(/^[a-zA-Z]{1,3}\s[0-9]{1,4}\s[a-zA-Z]{1,3}$/)]],
+      licensePlate: [v?.licensePlate || '', [Validators.required, Validators.pattern(/^[A-Z]{1,3}\s[0-9]{1,4}\s[A-Z]{1,3}$/)]],
       brand: [v?.brand || null, [Validators.required]],
       model: [v?.model || '', [Validators.required]],
       yearMade: [v?.yearMade || new Date().getFullYear(), [Validators.required, Validators.min(1980), Validators.max(new Date().getFullYear() + 1)]],
@@ -76,9 +76,26 @@ export class PortalVehicleDialogComponent implements OnInit {
     });
   }
 
+  /**
+   * Formats raw input into Indonesian license plate format: AA 1234 ABC
+   * Strips invalid chars, auto-inserts spaces between letter/digit segments.
+   */
+  private formatPlate(raw: string): string {
+    const clean = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const match = clean.match(/^([A-Z]{1,3})([0-9]{0,4})([A-Z]{0,3})/);
+    if (!match) return clean;
+    const [, prefix, numbers, suffix] = match;
+    let result = prefix;
+    if (numbers) result += ' ' + numbers;
+    if (suffix)  result += ' ' + suffix;
+    return result;
+  }
+
   onPlateInput(event: any): void {
-    let val = event.target.value.toUpperCase();
-    this.vehicleForm.get('licensePlate')?.setValue(val, { emitEvent: false });
+    const formatted = this.formatPlate(event.target.value);
+    this.vehicleForm.get('licensePlate')?.setValue(formatted, { emitEvent: false });
+    event.target.value = formatted;
+    event.target.setSelectionRange(formatted.length, formatted.length);
   }
 
   onCancel(): void {
@@ -86,11 +103,12 @@ export class PortalVehicleDialogComponent implements OnInit {
   }
 
   onSave(): void {
+    this.vehicleForm.markAllAsTouched();
     if (this.vehicleForm.invalid) return;
     this.isSaving = true;
     
     const formVal = { ...this.vehicleForm.value };
-    formVal.licensePlate = formVal.licensePlate.trim().toUpperCase();
+    formVal.licensePlate = this.formatPlate(formVal.licensePlate);
     
     this.dialogRef.close(formVal);
   }

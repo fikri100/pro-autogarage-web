@@ -389,6 +389,62 @@ body {
   height: 100%;
 }
 
+/* ================================================
+   PORTAL DASHBOARD — MOBILE RESPONSIVE
+   Reduces vertical spacing between sections on
+   small screens to avoid excessive whitespace.
+   ================================================ */
+@media (max-width: 1023px) {
+  /* Reduce main wrapper gap between sections */
+  .portal-dashboard {
+    gap: 1rem !important;
+  }
+
+  /* Compact welcome banner */
+  .portal-dashboard > div:first-child {
+    padding: 1.25rem 1.25rem !important;
+    border-radius: 0.75rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .portal-dashboard > div:first-child h2 {
+    font-size: 1.35rem !important;
+  }
+
+  /* Compact KPI card grid */
+  .portal-dashboard > div:nth-child(2) {
+    gap: 0.75rem !important;
+  }
+
+  /* Compact card panels inside dashboard */
+  .portal-dashboard .card-panel {
+    padding: 1rem 1.25rem !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Reduce flex-row-responsive gap inside dashboard */
+  .portal-dashboard .flex-row-responsive {
+    gap: 0.75rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Even tighter on very small phones */
+  .portal-dashboard {
+    gap: 0.75rem !important;
+  }
+
+  .portal-dashboard > div:first-child {
+    padding: 1rem !important;
+  }
+
+  /* KPI cards: 2-column grid on small phones instead of stacking */
+  .portal-dashboard > div:nth-child(2) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+}
+
 /* Avatars & Details */
 .avatar-lg {
   width: 4rem;
@@ -554,7 +610,8 @@ body {
 .dense-search-input .mat-mdc-text-field-wrapper {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  height: 2.25rem !important; /* 36px */
+  height: 2.25rem !important;
+  /* 36px */
 }
 
 .dense-search-input .mat-mdc-form-field-flex {
@@ -720,12 +777,12 @@ body {
   gap: 1.25rem;
 }
 
-.dialog-section > * {
+.dialog-section>* {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-.form-col-wrapper > mat-form-field {
+.form-col-wrapper>mat-form-field {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
@@ -799,7 +856,7 @@ body {
 .phone-prefix {
   color: #64748b;
   font-weight: 500;
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
 }
 
 /* Mat Snackbar */
@@ -1261,7 +1318,7 @@ body {
 }
 
 /* Each card inside checkout-grid fills the grid row height */
-.checkout-grid > .card-panel {
+.checkout-grid>.card-panel {
   height: 100%;
   box-sizing: border-box;
 }
@@ -1490,8 +1547,20 @@ table td,
   font-size: 0.95rem !important;
   width: 1rem !important;
   margin-right: 0.25rem !important;
-}.form-label-static { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569; }
-.form-col-wrapper { display: flex; flex-direction: column; gap: 0.35rem; }
+}
+
+.form-label-static {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.form-col-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
 
 /* =============================================
    Cashier Module - Responsive Styles
@@ -1513,7 +1582,8 @@ table td,
 }
 
 .invoice-table-container table {
-  min-width: 520px; /* ensure columns never collapse too small */
+  min-width: 520px;
+  /* ensure columns never collapse too small */
 }
 
 /* Payment summary row: label left, value right */

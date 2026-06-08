@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ReportFinanceSummary, ReportChartItem } from '../models/reports.model';
 
 @Injectable({
@@ -22,13 +23,24 @@ export class ReportsService {
   }
 
   getExpenses(startDate?: string, endDate?: string): Observable<any[]> {
-    let params = new HttpParams().set('type', 'EXP');
+    let params = new HttpParams()
+      .set('type', 'EXP')
+      .set('limit', '9999') // Fetch all expenses for breakdown chart
+      .set('page', '1');
     if (startDate) {
       params = params.set('startDate', startDate);
     }
     if (endDate) {
       params = params.set('endDate', endDate);
     }
-    return this.http.get<any[]>(this.cashflowUrl, { params });
+    // Backend returns PaginatedResponse { data: [...], ... } — extract the data array
+    return this.http.get<any>(this.cashflowUrl, { params }).pipe(
+      map(res => {
+        // Handle both paginated response and direct array (backward compat)
+        if (res && Array.isArray(res.data)) return res.data;
+        if (Array.isArray(res)) return res;
+        return [];
+      })
+    );
   }
 }

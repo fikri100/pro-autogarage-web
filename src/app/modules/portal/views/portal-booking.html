@@ -90,11 +90,9 @@
                 <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
                   placeholder="Contoh: B 1234 ABC"
                   style="font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: 0.1em;">
-                <mat-hint *ngIf="!selectedVehicle">Format: B 1234 ABC (Gunakan spasi pemisah)</mat-hint>
-                <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('required')">Plat nomor wajib
-                  diisi</mat-error>
-                <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('pattern')">Format salah. Contoh yang benar:
-                  B 1234 ABC (Wajib spasi pemisah)</mat-error>
+                <mat-hint *ngIf="!selectedVehicle">Ketik saja — format otomatis: B 6877 XYZ atau AE 7887 RK</mat-hint>
+                <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('required')">Plat nomor wajib diisi</mat-error>
+                <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('pattern')">Format salah. Contoh: B 1234 ABC atau AE 7887 RK</mat-error>
               </mat-form-field>
             </div>
 

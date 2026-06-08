@@ -33,11 +33,15 @@
           <label class="form-label-static">Plat Nomor <span class="required">*</span></label>
           <mat-form-field appearance="outline" class="full-width">
           
-          <input matInput formControlName="licensePlate" placeholder="e.g. B 1234 ABC" 
-                 style="font-family: monospace; font-weight: 600; text-transform: uppercase;" />
+          <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
+                 placeholder="Contoh: B 1234 ABC"
+                 style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;" />
           <mat-icon matSuffix>badge</mat-icon>
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
             Plat nomor wajib diisi
+          </mat-error>
+          <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('pattern')">
+            Format salah. Contoh: B 1234 ABC atau AE 7887 RK
           </mat-error>
         </mat-form-field>
         </div>
