@@ -1,19 +1,14 @@
-<div class="portal-dashboard" style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; gap: 2rem;">
+<div class="portal-dashboard portal-dashboard-wrapper">
 
   <!-- Welcome Banner -->
-  <div
-    style="background: linear-gradient(135deg, #1e3a8a, #0f172a); border-radius: 1rem; padding: 2rem 2.5rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);">
-    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-      <span
-        style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #38bdf8;">Selamat
-        Datang Kembali</span>
-      <h2
-        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: var(--fw-bold); font-size: 1.75rem; margin: 0; letter-spacing: -0.02em;">
-        {{ customerName }}</h2>
+  <div class="portal-welcome-banner">
+    <div class="portal-welcome-banner-text">
+      <span class="portal-welcome-banner-eyebrow">Selamat Datang Kembali</span>
+      <h2>{{ customerName }}</h2>
     </div>
     <div style="display: flex; gap: 0.75rem;">
       <button mat-flat-button color="primary" routerLink="/portal/booking"
-        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; border-radius: 8px; background-color: #38bdf8; color: #0f172a; padding: 0.6rem 1.25rem;">
+        style="font-family: var(--font-heading); font-weight: 700; border-radius: 8px; background-color: #38bdf8; color: #0f172a; padding: 0.6rem 1.25rem;">
         <mat-icon style="margin-right: 0.35rem;">calendar_today</mat-icon>
         BUAT BOOKING
       </button>
@@ -21,65 +16,38 @@
   </div>
 
   <!-- KPI summary cards -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+  <div class="kpi-grid">
 
     <!-- Vehicles Count Card -->
-    <div class="card-panel"
-      style="display: flex; align-items: center; gap: 1.25rem; transition: transform 0.2s; cursor: pointer;"
-      onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'"
-      routerLink="/portal/vehicles">
-      <div
-        style="background-color: #eff6ff; color: #1e3a8a; border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-        <mat-icon style="font-size: 1.5rem; width: auto; height: auto;">directions_car</mat-icon>
+    <div class="card-panel kpi-card" routerLink="/portal/vehicles">
+      <div class="kpi-icon-box kpi-icon-box--blue">
+        <mat-icon>directions_car</mat-icon>
       </div>
-      <div style="display: flex; flex-direction: column;">
-        <span
-          style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Mobil
-          Terdaftar</span>
-        <h3
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0.15rem 0 0 0; line-height: 1;">
-          {{ summary.totalVehicles }}
-        </h3>
+      <div class="kpi-text">
+        <span class="kpi-label">Mobil Terdaftar</span>
+        <h3 class="kpi-value">{{ summary.totalVehicles }}</h3>
       </div>
     </div>
 
     <!-- Active Bookings Card -->
-    <div class="card-panel"
-      style="display: flex; align-items: center; gap: 1.25rem; transition: transform 0.2s; cursor: pointer;"
-      onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'"
-      routerLink="/portal/history">
-      <div
-        style="background-color: #fffbeb; color: #d97706; border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-        <mat-icon style="font-size: 1.5rem; width: auto; height: auto;">pending_actions</mat-icon>
+    <div class="card-panel kpi-card" routerLink="/portal/history">
+      <div class="kpi-icon-box kpi-icon-box--amber">
+        <mat-icon>pending_actions</mat-icon>
       </div>
-      <div style="display: flex; flex-direction: column;">
-        <span
-          style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Booking
-          Aktif</span>
-        <h3
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0.15rem 0 0 0; line-height: 1;">
-          {{ summary.activeBookings }}
-        </h3>
+      <div class="kpi-text">
+        <span class="kpi-label">Booking Aktif</span>
+        <h3 class="kpi-value">{{ summary.activeBookings }}</h3>
       </div>
     </div>
 
     <!-- Total History Card -->
-    <div class="card-panel"
-      style="display: flex; align-items: center; gap: 1.25rem; transition: transform 0.2s; cursor: pointer;"
-      onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'"
-      routerLink="/portal/history">
-      <div
-        style="background-color: #ecfdf5; color: #059669; border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
-        <mat-icon style="font-size: 1.5rem; width: auto; height: auto;">history</mat-icon>
+    <div class="card-panel kpi-card" routerLink="/portal/history">
+      <div class="kpi-icon-box kpi-icon-box--green">
+        <mat-icon>history</mat-icon>
       </div>
-      <div style="display: flex; flex-direction: column;">
-        <span
-          style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Total
-          Reservasi</span>
-        <h3
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0.15rem 0 0 0; line-height: 1;">
-          {{ summary.totalHistory }}
-        </h3>
+      <div class="kpi-text">
+        <span class="kpi-label">Total Reservasi</span>
+        <h3 class="kpi-value">{{ summary.totalHistory }}</h3>
       </div>
     </div>
 
@@ -89,25 +57,22 @@
   <div class="flex-row-responsive">
 
     <!-- Left Column: Recent Activities -->
-    <div class="card-panel col-70"
-      style="padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.85rem;">
+    <div class="card-panel col-70" style="padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.85rem;">
         <div>
-          <h3
-            style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin: 0; letter-spacing: -0.01em;">
+          <h3 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; font-size: 1rem; margin: 0; letter-spacing: -0.01em;">
             Aktivitas Reservasi Terakhir</h3>
           <p style="color: #64748b; font-size: 0.75rem; margin: 0.15rem 0 0 0;">3 Pengajuan reservasi terbaru Anda di
             Pro Auto Garage.</p>
         </div>
         <button mat-button color="primary" routerLink="/portal/history"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.8rem;">
+          style="font-family: var(--font-heading); font-weight: 600; font-size: 0.8rem;">
           Lihat Semua
         </button>
       </div>
 
       <!-- Loading State -->
-      <div *ngIf="loadingHistory" style="display: flex; justify-content: center; align-items: center; padding: 3rem 0;">
+      <div *ngIf="loadingHistory" class="portal-loading-state" style="padding: 3rem 0;">
         <mat-spinner diameter="32"></mat-spinner>
       </div>
 
@@ -115,47 +80,34 @@
       <div *ngIf="!loadingHistory && recentBookings.length === 0"
         style="text-align: center; padding: 4rem 1.5rem; color: #64748b; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
         <mat-icon style="font-size: 2.5rem; width: auto; height: auto; color: #cbd5e1;">calendar_today</mat-icon>
-        <h4
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; margin: 0.5rem 0 0 0; font-size: 0.95rem;">
+        <h4 style="font-family: var(--font-heading); font-weight: 700; color: #334155; margin: 0.5rem 0 0 0; font-size: 0.95rem;">
           Belum Ada Jadwal Booking</h4>
         <p style="font-size: 0.8rem; max-width: 320px; margin: 0;">Silakan klik tombol di bawah untuk membuat reservasi
           pertama Anda.</p>
         <button mat-flat-button color="primary" routerLink="/portal/booking"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.8rem; background-color: #1e3a8a; color: #ffffff; border-radius: 6px; padding: 0.5rem 1rem; margin-top: 0.5rem;">
+          style="font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; background-color: #1e3a8a; color: #ffffff; border-radius: 6px; padding: 0.5rem 1rem; margin-top: 0.5rem;">
           Buat Booking Baru
         </button>
       </div>
 
       <!-- Booking Loop -->
-      <div *ngIf="!loadingHistory && recentBookings.length > 0"
-        style="display: flex; flex-direction: column; gap: 1rem;">
-        <div *ngFor="let b of recentBookings"
-          style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+      <div *ngIf="!loadingHistory && recentBookings.length > 0" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div *ngFor="let b of recentBookings" class="booking-row-item">
           <div style="display: flex; gap: 1rem; align-items: flex-start;">
-            <div
-              style="background-color: #f1f5f9; padding: 0.5rem; border-radius: 8px; color: #475569; display: flex; align-items: center; justify-content: center;">
+            <div style="background-color: #f1f5f9; padding: 0.5rem; border-radius: 8px; color: #475569; display: flex; align-items: center; justify-content: center;">
               <mat-icon>event</mat-icon>
             </div>
             <div style="display: flex; flex-direction: column; gap: 0.15rem;">
-              <span
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: var(--fw-bold); font-size: 0.85rem; color: #1e293b;">
-                {{ b.bookingDate | date:'dd MMMM yyyy':'':'id-ID' }}
-              </span>
-              <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #64748b;">
-                {{ b.bookingTime }} WIB — <span class="plate-badge"
-                  style="padding: 0 0.25rem; font-size: 0.7rem; border-radius: 3px;">{{ b.licensePlate }}</span>
+              <span style="font-family: var(--font-heading); font-weight: var(--fw-bold); font-size: 0.85rem; color: #1e293b;">
+                {{ b.bookingDate | date:'dd MMMM yyyy':'':'id-ID' }} — {{ b.bookingTime }} WIB
               </span>
               <span style="font-size: 0.75rem; color: #475569; font-weight: 500; margin-top: 0.15rem;">
-                {{ b.vehicleBrand }} {{ b.vehicleModel }}
+                {{ b.vehicleBrand }} {{ b.vehicleModel }} — <span class="plate-badge" style="padding: 0 0.25rem; font-size: 0.7rem; border-radius: 3px; font-family: var(--font-mono);">{{ b.licensePlate }}</span>
               </span>
               <!-- Estimated Completion Badge -->
-              <div *ngIf="b.estimatedCompletion"
-                style="display: flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; background-color: #fffbeb; border: 1px solid #fbbf2440; border-radius: 6px; padding: 0.25rem 0.6rem; width: fit-content;">
-                <mat-icon
-                  style="font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #d97706;">alarm_on</mat-icon>
-                <span style="font-size: 0.7rem; font-weight: 600; color: #92400e;">
-                  Estimasi Selesai: {{ b.estimatedCompletion | date:"dd MMM yyyy, HH:mm" }} WIB
-                </span>
+              <div *ngIf="b.estimatedCompletion" class="estimation-badge">
+                <mat-icon>alarm_on</mat-icon>
+                <span>Estimasi Selesai: {{ b.estimatedCompletion | date:"dd MMM yyyy, HH:mm" }} WIB</span>
               </div>
             </div>
           </div>
@@ -163,7 +115,7 @@
             <span [style.background-color]="getStatusDetails(b.operationalStatus).color + '15'"
               [style.color]="getStatusDetails(b.operationalStatus).color"
               [style.border]="'1px solid ' + getStatusDetails(b.operationalStatus).color + '40'"
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;">
+              class="portal-status-pill--sm">
               {{ getStatusDetails(b.operationalStatus).label }}
             </span>
           </div>
@@ -172,45 +124,38 @@
     </div>
 
     <!-- Right Column: Quick Links / Support Info -->
-    <div class="card-panel col-40"
-      style="padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
+    <div class="card-panel col-40" style="padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem;">
       <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 0.85rem;">
-        <h3
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; font-size: 1rem; margin: 0; letter-spacing: -0.01em;">
+        <h3 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; font-size: 1rem; margin: 0; letter-spacing: -0.01em;">
           Pintasan Cepat</h3>
         <p style="color: #64748b; font-size: 0.75rem; margin: 0.15rem 0 0 0;">Akses cepat navigasi portal.</p>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 0.75rem;">
 
-        <button mat-stroked-button routerLink="/portal/booking"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; text-align: left; padding: 0.6rem 1rem; width: 100%; border-radius: 8px; border-color: #cbd5e1; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; height: auto;">
-          <mat-icon style="color: #1e3a8a;">calendar_today</mat-icon>
+        <button mat-stroked-button routerLink="/portal/booking" class="portal-quick-link-btn">
+          <mat-icon>calendar_today</mat-icon>
           <span>Buat Reservasi Baru</span>
         </button>
 
-        <button mat-stroked-button routerLink="/portal/vehicles"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; text-align: left; padding: 0.6rem 1rem; width: 100%; border-radius: 8px; border-color: #cbd5e1; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; height: auto;">
-          <mat-icon style="color: #1e3a8a;">directions_car</mat-icon>
+        <button mat-stroked-button routerLink="/portal/vehicles" class="portal-quick-link-btn">
+          <mat-icon>directions_car</mat-icon>
           <span>Kelola Kendaraan Saya</span>
         </button>
 
-        <button mat-stroked-button routerLink="/portal/profile"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; text-align: left; padding: 0.6rem 1rem; width: 100%; border-radius: 8px; border-color: #cbd5e1; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; height: auto;">
-          <mat-icon style="color: #1e3a8a;">manage_accounts</mat-icon>
+        <button mat-stroked-button routerLink="/portal/profile" class="portal-quick-link-btn">
+          <mat-icon>manage_accounts</mat-icon>
           <span>Pengaturan Akun & Profil</span>
         </button>
 
       </div>
 
-      <div
-        style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
-        <span
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem;">
-          <mat-icon style="color: #0284c7; font-size: 1.1rem; width: auto; height: auto;">support_agent</mat-icon>
+      <div class="portal-support-box">
+        <span class="portal-support-box-title">
+          <mat-icon class="icon-accent" style="font-size: 1.1rem !important;">support_agent</mat-icon>
           <span>Bantuan & Kontak</span>
         </span>
-        <p style="font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.4;">
+        <p>
           Mengalami kendala saat reservasi mandiri atau ingin mengubah data booking aktif? Hubungi admin bengkel via
           WhatsApp di nomor <strong>0812-3456-7890</strong>.
         </p>

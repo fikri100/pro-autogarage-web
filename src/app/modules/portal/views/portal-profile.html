@@ -1,92 +1,64 @@
-<style>
-  .responsive-profile-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-  .profile-form-padding {
-    padding: 2.5rem;
-  }
-  .password-form-padding {
-    padding: 2rem 2.5rem 2.5rem 2.5rem;
-  }
-  @media (max-width: 768px) {
-    .responsive-profile-grid {
-      grid-template-columns: 1fr !important;
-      gap: 1.25rem !important;
-    }
-    .profile-form-padding {
-      padding: 1.5rem 1.25rem !important;
-    }
-    .password-form-padding {
-      padding: 1.5rem 1.25rem !important;
-    }
-    .profile-header-padding {
-      padding: 1rem 1.25rem !important;
-    }
-  }
-</style>
-
-<div style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; gap: 2rem;">
+<div class="portal-page-stack">
 
   <!-- Header Section -->
-  <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 1.25rem;">
-    <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; margin: 0; font-size: 1.5rem; letter-spacing: -0.02em;">Pengaturan Akun & Profil</h2>
-    <p style="color: #64748b; font-size: 0.85rem; margin: 0.25rem 0 0 0;">Perbarui informasi profil personal Anda serta atur kredensial kata sandi.</p>
+  <div class="portal-page-header">
+    <h2>Pengaturan Akun & Profil</h2>
+    <p>Perbarui informasi profil personal Anda serta atur kredensial kata sandi.</p>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" style="display: flex; justify-content: center; align-items: center; padding: 5rem 0;">
+  <div *ngIf="loading" class="portal-loading-state">
     <mat-spinner diameter="48"></mat-spinner>
   </div>
 
   <!-- Main Profile Form -->
-  <div *ngIf="!loading" style="background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; max-width: 800px; margin: 0 auto; width: 100%;">
+  <div *ngIf="!loading" class="portal-card portal-card--medium">
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-      
+
       <!-- Section 1: Informasi Umum -->
-      <div class="profile-form-padding" style="border-bottom: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 1.5rem;">
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon style="color: #0284c7; font-size: 1.2rem; width: auto; height: auto;">person</mat-icon>
+      <div class="portal-card-body profile-section-body">
+        <h3 class="portal-section-heading">
+          <mat-icon class="icon-accent">person</mat-icon>
           <span>Informasi Personal Keanggotaan</span>
         </h3>
 
-        <div class="responsive-profile-grid" style="margin-top: 0.5rem;">
+        <div class="portal-profile-grid">
           <!-- Name -->
-          <div style="display: flex; flex-direction: column; gap: 0.35rem; grid-column: span 1; -ms-grid-column-span: 2;">
-            <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nama Lengkap <span class="required">*</span></label>
-            <mat-form-field appearance="outline" style="width: 100%;">
+          <div class="form-col-wrapper grid-span-2">
+            <label class="form-label-static">Nama Lengkap <span class="required">*</span></label>
+            <mat-form-field appearance="outline" class="full-width">
               <input matInput formControlName="name" placeholder="Nama Lengkap Anda" />
               <mat-error *ngIf="profileForm.get('name')?.hasError('required')">Nama wajib diisi</mat-error>
             </mat-form-field>
           </div>
 
-          <!-- WhatsApp Number (Read-only for security) -->
-          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-            <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nomor WhatsApp</label>
-            <mat-form-field appearance="outline" style="width: 100%;">
-              <input matInput [value]="customerPhone" readonly style="color: #64748b; background-color: #f8fafc;" />
-              <mat-icon matSuffix style="color: #94a3b8;">phone</mat-icon>
+          <!-- WhatsApp Number (Read-only) -->
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Nomor WhatsApp</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput [value]="customerPhone" readonly class="input-readonly" />
+              <mat-icon matSuffix class="input-suffix-icon">phone</mat-icon>
               <mat-hint>Nomor WhatsApp terverifikasi OTP</mat-hint>
             </mat-form-field>
           </div>
 
           <!-- Username -->
-          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-            <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Username Akun <span class="required">*</span></label>
-            <mat-form-field appearance="outline" style="width: 100%;">
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Username Akun <span class="required">*</span></label>
+            <mat-form-field appearance="outline" class="full-width">
               <input matInput formControlName="username" placeholder="Username login" />
-              <mat-icon matSuffix style="color: #64748b;">account_circle</mat-icon>
+              <mat-icon matSuffix class="input-suffix-icon">account_circle</mat-icon>
               <mat-error *ngIf="profileForm.get('username')?.hasError('required')">Username wajib diisi</mat-error>
             </mat-form-field>
           </div>
 
           <!-- Alamat -->
-          <div style="display: flex; flex-direction: column; gap: 0.35rem; grid-column: 1 / -1;">
-            <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Alamat Lengkap <span class="required">*</span></label>
-            <mat-form-field appearance="outline" style="width: 100%;">
-              <textarea matInput formControlName="address" placeholder="Masukkan alamat lengkap tinggal Anda" rows="2" style="font-family: 'Inter', sans-serif; resize: none;"></textarea>
-              <mat-icon matSuffix style="color: #64748b;">home</mat-icon>
+          <div class="form-col-wrapper grid-col-full">
+            <label class="form-label-static">Alamat Lengkap <span class="required">*</span></label>
+            <mat-form-field appearance="outline" class="full-width">
+              <textarea matInput formControlName="address" placeholder="Masukkan alamat lengkap tinggal Anda" rows="2"
+                class="input-body no-resize"></textarea>
+              <mat-icon matSuffix class="input-suffix-icon">home</mat-icon>
               <mat-error *ngIf="profileForm.get('address')?.hasError('required')">Alamat wajib diisi</mat-error>
               <mat-error *ngIf="profileForm.get('address')?.hasError('minlength')">Alamat minimal 5 karakter</mat-error>
             </mat-form-field>
@@ -95,47 +67,47 @@
       </div>
 
       <!-- Section 2: Ganti Kata Sandi -->
-      <div class="password-form-padding" style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-          <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-            <mat-icon style="color: #0284c7; font-size: 1.2rem; width: auto; height: auto;">lock_reset</mat-icon>
+      <div class="portal-card-body profile-password-section">
+        <div class="portal-heading-group">
+          <h3 class="portal-section-heading">
+            <mat-icon class="icon-accent">lock_reset</mat-icon>
             <span>Ubah Kata Sandi Akun</span>
           </h3>
-          <p style="color: #64748b; font-size: 0.75rem; margin: 0;">Biarkan isian di bawah ini kosong jika Anda tidak ingin mengubah kata sandi saat ini.</p>
+          <p class="portal-hint-text">Biarkan isian di bawah ini kosong jika Anda tidak ingin mengubah kata sandi saat ini.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-top: 0.5rem;">
+        <div class="portal-single-col-grid">
           <!-- Current Password -->
-          <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-            <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Kata Sandi Saat Ini</label>
-            <mat-form-field appearance="outline" style="width: 100%;">
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Kata Sandi Saat Ini</label>
+            <mat-form-field appearance="outline" class="full-width">
               <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" formControlName="currentPassword" placeholder="Masukkan kata sandi lama Anda" />
               <button mat-icon-button type="button" matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideCurrentPassword">
-                <mat-icon style="color: #64748b;">{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-icon class="input-suffix-icon">{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
           </div>
 
           <!-- Password Grid (New & Confirm) -->
-          <div class="responsive-profile-grid">
+          <div class="portal-profile-grid">
             <!-- New Password -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Kata Sandi Baru</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Kata Sandi Baru</label>
+              <mat-form-field appearance="outline" class="full-width">
                 <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" placeholder="Minimal 6 karakter" />
                 <button mat-icon-button type="button" matSuffix (click)="hideNewPassword = !hideNewPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideNewPassword">
-                  <mat-icon style="color: #64748b;">{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  <mat-icon class="input-suffix-icon">{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
               </mat-form-field>
             </div>
 
             <!-- Confirm New Password -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Ulangi Kata Sandi Baru</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Ulangi Kata Sandi Baru</label>
+              <mat-form-field appearance="outline" class="full-width">
                 <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Konfirmasi kata sandi baru" />
                 <button mat-icon-button type="button" matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
-                  <mat-icon style="color: #64748b;">{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  <mat-icon class="input-suffix-icon">{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
               </mat-form-field>
             </div>
@@ -144,10 +116,10 @@
       </div>
 
       <!-- Action Footer -->
-      <div class="profile-header-padding" style="padding: 1.25rem 2.5rem; background-color: #fafafa; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
-        <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid || isSaving" 
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; border-radius: 8px; padding: 0.75rem 1.75rem; font-size: 0.875rem; width: auto;">
-          <mat-icon style="margin-right: 0.35rem;">save</mat-icon>
+      <div class="portal-card-footer">
+        <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid || isSaving"
+                class="btn-portal-save">
+          <mat-icon>save</mat-icon>
           {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN PERUBAHAN' }}
         </button>
       </div>

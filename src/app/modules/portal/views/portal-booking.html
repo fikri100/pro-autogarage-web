@@ -1,67 +1,30 @@
-<style>
-  .responsive-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
-
-  .form-container-card {
-    padding: 2.5rem;
-  }
-
-  @media (max-width: 768px) {
-    .responsive-form-grid {
-      grid-template-columns: 1fr !important;
-      gap: 1rem !important;
-    }
-
-    .form-container-card {
-      padding: 1.25rem !important;
-    }
-
-    .title-section-padding {
-      padding: 1.5rem 1.25rem !important;
-    }
-  }
-</style>
-
-<div
-  style="font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: flex-start; width: 100%;">
-  <div
-    style="background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); width: 100%; max-width: 680px; overflow: hidden;">
+<div class="portal-page-wrapper">
+  <div class="portal-card portal-card--narrow">
 
     <!-- Title Section -->
-    <div class="title-section-padding" style="padding: 2rem 2.5rem; border-bottom: 1px solid #f1f5f9;">
-      <h2
-        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; margin: 0; font-size: 1.4rem; letter-spacing: -0.02em;">
-        Formulir Reservasi Servis Mandiri</h2>
-      <p style="color: #64748b; font-size: 0.85rem; margin: 0.25rem 0 0 0;">Lengkapi detail kendaraan Anda serta
-        tentukan jadwal pengerjaan servis bengkel.</p>
+    <div class="portal-card-header">
+      <h2>Formulir Reservasi Servis Mandiri</h2>
+      <p>Lengkapi detail kendaraan Anda serta tentukan jadwal pengerjaan servis bengkel.</p>
     </div>
 
     <!-- Form Section -->
-    <div class="form-container-card">
-      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()"
-        style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <div class="portal-card-body">
+      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="portal-form">
 
         <!-- SECTION 1: SPESIFIKASI KENDARAAN -->
         <div>
-          <h3
-            style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
-            <mat-icon style="color: #0284c7; font-size: 1.2rem; width: auto; height: auto;">directions_car</mat-icon>
+          <h3 class="portal-section-heading">
+            <mat-icon class="icon-accent">directions_car</mat-icon>
             <span>Informasi Fisik Kendaraan</span>
           </h3>
 
-          <div class="responsive-form-grid">
+          <div class="portal-form-grid">
 
             <!-- Pilih Kendaraan (Dropdown) -->
-            <div
-              style="display: flex; flex-direction: column; gap: 0.35rem; grid-column: span 1; -ms-grid-column-span: 2;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Pilih
-                Kendaraan Anda</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">directions_car</mat-icon>
+            <div class="form-col-wrapper grid-span-2">
+              <label class="form-label-static">Pilih Kendaraan Anda</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">directions_car</mat-icon>
                 <input type="text" matInput formControlName="vehicleId" [matAutocomplete]="vehAuto" placeholder="Cari kendaraan..." />
                 <mat-autocomplete #vehAuto="matAutocomplete" [displayWith]="displayVehicle" (optionSelected)="onVehicleSelect({value: $event.option.value})">
                   <mat-option value="new">-- Kendaraan Baru (Input Manual) --</mat-option>
@@ -73,23 +36,19 @@
             </div>
 
             <!-- Pre-filled Lock Banner -->
-            <div *ngIf="selectedVehicle"
-              style="grid-column: span 1; background-color: #f0fdf4; border: 1px dashed #bbf7d0; border-radius: 8px; padding: 0.75rem 1rem; color: #166534; font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-              <mat-icon style="font-size: 1.1rem; width: auto; height: auto; color: #16a34a;">check_circle</mat-icon>
+            <div *ngIf="selectedVehicle" class="vehicle-lock-banner grid-span-2">
+              <mat-icon>check_circle</mat-icon>
               <span>Kendaraan <strong>[{{ selectedVehicle.licensePlate }}]</strong> dipilih. Detail fisik kendaraan
                 telah otomatis terisi dan terkunci.</span>
             </div>
 
             <!-- Plat Nomor -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem; grid-column: span 1;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nomor
-                Polisi (Plat Nomor)</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">pin</mat-icon>
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Nomor Polisi (Plat Nomor)</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">pin</mat-icon>
                 <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
-                  placeholder="Contoh: B 1234 ABC"
-                  style="font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: 0.1em;">
+                  placeholder="Contoh: B 1234 ABC" class="input-plate">
                 <mat-hint *ngIf="!selectedVehicle">Ketik saja — format otomatis: B 6877 XYZ atau AE 7887 RK</mat-hint>
                 <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('required')">Plat nomor wajib diisi</mat-error>
                 <mat-error *ngIf="bookingForm.get('licensePlate')?.hasError('pattern')">Format salah. Contoh: B 1234 ABC atau AE 7887 RK</mat-error>
@@ -97,11 +56,9 @@
             </div>
 
             <!-- Brand -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Merek
-                Mobil</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
+            <div class="form-col-wrapper portal-mt-sm">
+              <label class="form-label-static">Merek Mobil</label>
+              <mat-form-field appearance="outline" class="full-width">
                 <input type="text" matInput formControlName="brand" [matAutocomplete]="brandAuto" placeholder="Ketik atau pilih merek..." />
                 <mat-autocomplete #brandAuto="matAutocomplete">
                   <mat-option *ngFor="let b of filteredBrands$ | async" [value]="b">{{ b }}</mat-option>
@@ -111,68 +68,55 @@
             </div>
 
             <!-- Model -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Tipe
-                / Model Mobil</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <input matInput formControlName="model" placeholder="Contoh: Jazz GE8, Avanza Veloz"
-                  style="font-family: 'Inter', sans-serif;">
-                <mat-error *ngIf="bookingForm.get('model')?.hasError('required')">Tipe model mobil wajib
-                  diisi</mat-error>
+            <div class="form-col-wrapper portal-mt-sm">
+              <label class="form-label-static">Tipe / Model Mobil</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="model" placeholder="Contoh: Jazz GE8, Avanza Veloz" class="input-body">
+                <mat-error *ngIf="bookingForm.get('model')?.hasError('required')">Tipe model mobil wajib diisi</mat-error>
               </mat-form-field>
             </div>
 
             <!-- Year Made -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Tahun
-                Pembuatan</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <input matInput type="number" formControlName="yearMade" style="font-family: 'Inter', sans-serif;">
-                <mat-error *ngIf="bookingForm.get('yearMade')?.hasError('required')">Tahun pembuatan wajib
-                  diisi</mat-error>
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Tahun Pembuatan</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput type="number" formControlName="yearMade" class="input-body">
+                <mat-error *ngIf="bookingForm.get('yearMade')?.hasError('required')">Tahun pembuatan wajib diisi</mat-error>
                 <mat-error *ngIf="bookingForm.get('yearMade')?.hasError('min')">Tahun minimal 1980</mat-error>
               </mat-form-field>
             </div>
 
             <!-- Transmission -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Transmisi</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Transmisi</label>
+              <mat-form-field appearance="outline" class="full-width">
                 <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto" placeholder="Ketik transmisi..." />
                 <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
                   <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.id">{{ t.label }}</mat-option>
                 </mat-autocomplete>
-                <mat-error *ngIf="bookingForm.get('transmission')?.hasError('required')">Transmisi wajib
-                  dipilih</mat-error>
+                <mat-error *ngIf="bookingForm.get('transmission')?.hasError('required')">Transmisi wajib dipilih</mat-error>
               </mat-form-field>
             </div>
 
           </div>
         </div>
 
-        <div style="border-top: 1px solid #f1f5f9; margin: 0.5rem 0;"></div>
+        <div class="portal-form-divider"></div>
 
         <!-- SECTION 2: JADWAL & KELUHAN -->
         <div>
-          <h3
-            style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
-            <mat-icon style="color: #0284c7; font-size: 1.2rem; width: auto; height: auto;">event</mat-icon>
+          <h3 class="portal-section-heading">
+            <mat-icon class="icon-accent">event</mat-icon>
             <span>Jadwal Booking & Keluhan</span>
           </h3>
 
-          <div class="responsive-form-grid">
+          <div class="portal-form-grid">
 
             <!-- Booking Date -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Tanggal
-                Kedatangan</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal"
-                  style="font-family: 'Inter', sans-serif;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Tanggal Kedatangan</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" class="input-body">
                 <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
                 <mat-datepicker #datePicker></mat-datepicker>
                 <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">Tanggal wajib diisi</mat-error>
@@ -180,11 +124,9 @@
             </div>
 
             <!-- Booking Time -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Jam
-                Rencana Kedatangan</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Jam Rencana Kedatangan</label>
+              <mat-form-field appearance="outline" class="full-width">
                 <input type="text" matInput formControlName="bookingTime" [matAutocomplete]="timeAuto" placeholder="Ketik jam kedatangan..." />
                 <mat-autocomplete #timeAuto="matAutocomplete">
                   <mat-option *ngFor="let t of filteredTimes$ | async" [value]="t">{{ t }} WIB</mat-option>
@@ -193,23 +135,21 @@
               </mat-form-field>
             </div>
           </div>
+
           <!-- Complaints -->
-          <div
-            style="display: flex; flex-direction: column; gap: 0.35rem; grid-column: span 1; -ms-grid-column-span: 2; margin-top: 0.5rem;">
-            <label
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Keluhan
-              / Catatan Tambahan (Opsional)</label>
-            <mat-form-field appearance="outline" style="width: 100%;">
+          <div class="form-col-wrapper portal-form-mt">
+            <label class="form-label-static">Keluhan / Catatan Tambahan (Opsional)</label>
+            <mat-form-field appearance="outline" class="full-width">
               <textarea matInput formControlName="complaints"
                 placeholder="Tuliskan keluhan atau gejala kerusakan pada mobil Anda di sini..." rows="3"
-                style="font-family: 'Inter', sans-serif;"></textarea>
+                class="input-body"></textarea>
             </mat-form-field>
           </div>
         </div>
 
         <!-- Submit Button -->
         <button mat-flat-button color="primary" type="submit" [disabled]="bookingForm.invalid || loading"
-          style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.85rem; border-radius: 8px; font-size: 1rem; background-color: #0284c7; color: #ffffff; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+          class="btn-portal-submit">
           <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
           <span>{{ loading ? 'MENGAJUKAN...' : 'AJUKAN RESERVASI SEKARANG' }}</span>
         </button>

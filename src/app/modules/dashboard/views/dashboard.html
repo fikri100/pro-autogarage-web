@@ -1,91 +1,83 @@
 <div class="page-container">
 
   <!-- Header -->
-  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div class="page-header admin-header-row">
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Dashboard Utama</h2>
-      <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Status operasional, antrean booking, dan live monitor pengerjaan teknis.</p>
+      <h2 class="page-title">Dashboard Utama</h2>
+      <p class="page-subtitle">Status operasional, antrean booking, dan live monitor pengerjaan teknis.</p>
     </div>
-    <div style="display: flex; gap: 0.75rem; align-items: center;">
-      <button mat-stroked-button (click)="loadSummary()" [disabled]="loading" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 0.6rem 1rem; border-radius: 8px; border-color: #cbd5e1; background-color: #ffffff;">
-        <mat-icon [class.pi-spin]="loading" style="margin-right: 0.25rem;">refresh</mat-icon>
+    <div class="admin-action-group">
+      <button mat-stroked-button (click)="loadSummary()" [disabled]="loading" class="btn-admin-refresh">
+        <mat-icon [class.pi-spin]="loading" class="icon-mr-1">refresh</mat-icon>
         <span>SEGARKAN</span>
       </button>
     </div>
   </div>
 
   <!-- KPI SUMMARY CARDS -->
-  <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+  <div class="kpi-grid">
 
     <!-- CARD: Total Pelanggan -->
-    <div class="kpi-card emerald" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div class="admin-kpi-card admin-kpi-card--emerald">
+      <div class="admin-kpi-inner">
         <div>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #065f46; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Total Pelanggan</span>
-          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #047857; font-size: 1.8rem; margin: 0.5rem 0 0.25rem 0;">
-            {{ summary.stats.totalCustomers | number:'1.0-0':'id-ID' }}
-          </h3>
-          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #059669;">Pelanggan terdaftar</span>
+          <span class="admin-kpi-label">Total Pelanggan</span>
+          <h3 class="admin-kpi-value">{{ summary.stats.totalCustomers | number:'1.0-0':'id-ID' }}</h3>
+          <span class="admin-kpi-sub">Pelanggan terdaftar</span>
         </div>
-        <div style="background-color: #a7f3d0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #047857;">
+        <div class="admin-kpi-icon">
           <mat-icon>people</mat-icon>
         </div>
       </div>
     </div>
 
     <!-- CARD: Booking Pending -->
-    <div class="kpi-card amber" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; border-radius: 12px; padding: 1.25rem; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      
+    <div class="admin-kpi-card admin-kpi-card--amber">
       <!-- Premium Pulsing Blinker Badge -->
-      <div *ngIf="summary.stats.pendingBookings > 0" 
-           style="position: absolute; top: 12px; right: 12px; display: flex; height: 10px; width: 10px;">
-        <span class="animate-ping" style="position: absolute; display: inline-flex; height: 100%; width: 100%; border-radius: 9999px; background-color: #ef4444; opacity: 0.75;"></span>
-        <span style="position: relative; display: inline-flex; border-radius: 9999px; height: 10px; width: 10px; background-color: #ef4444;"></span>
+      <div *ngIf="summary.stats.pendingBookings > 0" class="kpi-badge-ping-container">
+        <span class="animate-ping kpi-badge-ping-dot"></span>
+        <span class="kpi-badge-active-dot"></span>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="admin-kpi-inner">
         <div>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #92400e; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Antrean Booking PENDING</span>
-          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #b45309; font-size: 1.8rem; margin: 0.5rem 0 0.25rem 0;">
-            {{ summary.stats.pendingBookings | number:'1.0-0':'id-ID' }}
-          </h3>
-          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #d97706; font-weight: 500;">
+          <span class="admin-kpi-label">Antrean Booking PENDING</span>
+          <h3 class="admin-kpi-value">{{ summary.stats.pendingBookings | number:'1.0-0':'id-ID' }}</h3>
+          <span class="admin-kpi-sub">
             {{ summary.stats.pendingBookings > 0 ? 'Butuh persetujuan segera' : 'Antrean booking bersih' }}
           </span>
         </div>
-        <div style="background-color: #fde68a; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #b45309;">
+        <div class="admin-kpi-icon">
           <mat-icon>pending_actions</mat-icon>
         </div>
       </div>
     </div>
 
     <!-- CARD: Servis Aktif (Live WOs) -->
-    <div class="kpi-card blue" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div class="admin-kpi-card admin-kpi-card--blue">
+      <div class="admin-kpi-inner">
         <div>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #1e40af; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Servis Aktif Bengkel</span>
-          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1d4ed8; font-size: 1.8rem; margin: 0.5rem 0 0.25rem 0;">
-            {{ summary.stats.activeWorkOrders | number:'1.0-0':'id-ID' }}
-          </h3>
-          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #2563eb;">Mobil dalam pengerjaan</span>
+          <span class="admin-kpi-label">Servis Aktif Bengkel</span>
+          <h3 class="admin-kpi-value">{{ summary.stats.activeWorkOrders | number:'1.0-0':'id-ID' }}</h3>
+          <span class="admin-kpi-sub">Mobil dalam pengerjaan</span>
         </div>
-        <div style="background-color: #bfdbfe; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #1d4ed8;">
+        <div class="admin-kpi-icon">
           <mat-icon>car_repair</mat-icon>
         </div>
       </div>
     </div>
 
     <!-- CARD: Pendapatan Hari Ini -->
-    <div class="kpi-card slate" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div class="admin-kpi-card admin-kpi-card--slate">
+      <div class="admin-kpi-inner">
         <div>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #334155; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">Pendapatan Hari Ini</span>
-          <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1e293b; font-size: 1.8rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+          <span class="admin-kpi-label">Pendapatan Hari Ini</span>
+          <h3 class="admin-kpi-value admin-kpi-value--lg">
             Rp {{ summary.stats.todayRevenue | number:'1.0-0':'id-ID' }}
           </h3>
-          <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #475569;">Transaksi lunas hari ini</span>
+          <span class="admin-kpi-sub">Transaksi lunas hari ini</span>
         </div>
-        <div style="background-color: #e2e8f0; border-radius: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #334155;">
+        <div class="admin-kpi-icon">
           <mat-icon>payments</mat-icon>
         </div>
       </div>
@@ -97,72 +89,69 @@
   <div class="double-panel-grid">
 
     <!-- PANEL 1: ANTREAN RESERVASI PENDING -->
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
-      
+    <div class="admin-panel-card">
+
       <!-- Panel Header -->
       <div class="card-header-responsive">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon style="color: #d97706;">pending_actions</mat-icon>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Antrean Validasi Booking Baru</span>
+        <div class="flex-align-center-gap-2">
+          <mat-icon class="icon-amber">pending_actions</mat-icon>
+          <span class="text-heading-bold-slate">Antrean Validasi Booking Baru</span>
         </div>
-        <span *ngIf="summary.recentBookings.length > 0" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 9999px; background-color: #fef3c7; color: #b45309;">
+        <span *ngIf="summary.recentBookings.length > 0" class="admin-count-badge--amber">
           {{ summary.recentBookings.length }} MENUNGGU
         </span>
       </div>
 
       <!-- Panel Body -->
-      <div style="position: relative; flex: 1; min-height: 250px;">
-        <div *ngIf="loading" style="padding: 4rem; display: flex; align-items: center; justify-content: center;">
+      <div class="admin-panel-body">
+        <div *ngIf="loading" class="admin-panel-loading">
           <mat-spinner diameter="40"></mat-spinner>
         </div>
 
-        <div *ngIf="!loading && summary.recentBookings.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
-          <mat-icon style="font-size: 3.5rem; width: auto; height: auto; color: #cbd5e1;">task_alt</mat-icon>
-          <span style="font-weight: 600; color: #475569;">Tidak ada booking pending</span>
-          <span style="font-size: 0.8rem; color: #94a3b8;">Semua booking mandiri pelanggan sudah divalidasi.</span>
+        <div *ngIf="!loading && summary.recentBookings.length === 0" class="admin-panel-empty">
+          <mat-icon>task_alt</mat-icon>
+          <span class="admin-panel-empty-title">Tidak ada booking pending</span>
+          <span class="admin-panel-empty-sub">Semua booking mandiri pelanggan sudah divalidasi.</span>
         </div>
 
         <!-- Bookings Table -->
-        <div *ngIf="!loading && summary.recentBookings.length > 0" style="overflow-x: auto;">
-          <table mat-table [dataSource]="summary.recentBookings" style="width: 100%;">
+        <div *ngIf="!loading && summary.recentBookings.length > 0" class="admin-panel-table-wrap">
+          <table mat-table [dataSource]="summary.recentBookings" class="admin-table-full">
 
             <!-- Column: Waktu -->
             <ng-container matColumnDef="time">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Waktu</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem;">
-                <div style="font-weight: 600; color: #1e293b;">{{ row.bookingDate | date:'dd MMM yyyy':'':'id-ID' }}</div>
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #64748b; margin-top: 0.15rem;">{{ row.bookingTime }} WIB</div>
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Waktu</th>
+              <td mat-cell *matCellDef="let row" class="admin-td">
+                <div class="admin-td-date-primary">{{ row.bookingDate | date:'dd MMM yyyy':'':'id-ID' }}</div>
+                <div class="admin-td-date-secondary">{{ row.bookingTime }} WIB</div>
               </td>
             </ng-container>
 
             <!-- Column: Pelanggan -->
             <ng-container matColumnDef="customer">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Pelanggan</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem;">
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Pelanggan</th>
+              <td mat-cell *matCellDef="let row" class="admin-td">
                 <div class="flex-responsive-stack">
-                  <span style="font-weight: 600; color: #334155;">{{ row.customerName }}</span>
-                  <span *ngIf="row.createdBy === 'SELF_SERVICE'" 
-                        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.65rem; background-color: #ecfdf5; color: #059669; padding: 0.1rem 0.35rem; border-radius: 4px; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid #a7f3d0; display: inline-block;">
+                  <span class="text-semi-bold-slate">{{ row.customerName }}</span>
+                  <span *ngIf="row.createdBy === 'SELF_SERVICE'" class="badge-self-service">
                     Self-Service
                   </span>
                 </div>
-                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.15rem;">+62 {{ row.customerPhone }}</div>
+                <div class="text-slate-muted-xs">+62 {{ row.customerPhone }}</div>
               </td>
             </ng-container>
 
             <!-- Column: Kendaraan -->
             <ng-container matColumnDef="vehicle">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Kendaraan</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #475569; font-size: 0.85rem;">
-                <div style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #1e293b; background-color: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; display: inline-block;">
-                  {{ row.licensePlate }}
-                </div>
-                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">{{ row.vehicleBrand }} {{ row.vehicleModel }}</div>
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Kendaraan</th>
+              <td mat-cell *matCellDef="let row" class="admin-td text-gray-medium">
+                <div class="admin-td-plate">{{ row.licensePlate }}</div>
+                <div class="text-slate-muted-sm">{{ row.vehicleBrand }} {{ row.vehicleModel }}</div>
                 <!-- Ownership Conflict warning -->
                 <div *ngIf="row.vehicleCustomerId && row.vehicleCustomerId !== row.customerId"
-                     style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; color: #ef4444; font-weight: 600; margin-top: 0.35rem; display: flex; align-items: center; gap: 0.25rem;"
+                     class="ownership-conflict-warn"
                      [matTooltip]="'Plat nomor ini sebelumnya sudah terdaftar atas nama pelanggan lain'">
-                  <mat-icon style="font-size: 0.85rem; width: auto; height: auto;">warning</mat-icon>
+                  <mat-icon>warning</mat-icon>
                   <span>⚠️ Plat milik: {{ row.vehicleOwnerName }}</span>
                 </div>
               </td>
@@ -170,40 +159,39 @@
 
             <!-- Column: Keluhan -->
             <ng-container matColumnDef="complaints">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Keluhan</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.8rem; max-width: 140px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" [matTooltip]="row.complaints">
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Keluhan</th>
+              <td mat-cell *matCellDef="let row" class="admin-td text-slate-muted-xs-ellipsis"
+                  [matTooltip]="row.complaints">
                 {{ row.complaints || '-' }}
               </td>
             </ng-container>
 
             <!-- Column: Aksi -->
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 120px;">Persetujuan</th>
-              <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center;">
-                <div style="display: flex; gap: 0.35rem; justify-content: center; align-items: center;">
-                  
-                  <button mat-icon-button 
-                          [disabled]="actionLoading" 
-                          (click)="approveBooking(row)" 
-                          matTooltip="Setujui & Buat Perintah Kerja (Work Order)"
-                          style="background-color: #10b981; color: #ffffff; width: 32px; height: 32px; min-width: auto; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                    <mat-icon style="font-size: 1.1rem; width: auto; height: auto;">check</mat-icon>
-                  </button>
-                  
-                  <button mat-icon-button 
-                          [disabled]="actionLoading" 
-                          (click)="cancelBooking(row)" 
-                          matTooltip="Batalkan Booking"
-                          style="background-color: #ef4444; color: #ffffff; width: 32px; height: 32px; min-width: auto; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                    <mat-icon style="font-size: 1.1rem; width: auto; height: auto;">close</mat-icon>
+              <th mat-header-cell *matHeaderCellDef class="admin-th th-center-w120">Persetujuan</th>
+              <td mat-cell *matCellDef="let row" class="td-padding-sm-center">
+                <div class="admin-action-group-center">
+                  <button mat-icon-button
+                          class="admin-action-btn-approve"
+                          [disabled]="actionLoading"
+                          (click)="approveBooking(row)"
+                          matTooltip="Setujui & Buat Perintah Kerja (Work Order)">
+                    <mat-icon>check</mat-icon>
                   </button>
 
+                  <button mat-icon-button
+                          class="admin-action-btn-cancel"
+                          [disabled]="actionLoading"
+                          (click)="cancelBooking(row)"
+                          matTooltip="Batalkan Booking">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="bookingColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: bookingColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+            <tr mat-header-row *matHeaderRowDef="bookingColumns" class="admin-table-header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: bookingColumns;" class="admin-table-row"></tr>
 
           </table>
         </div>
@@ -213,40 +201,40 @@
     </div>
 
     <!-- PANEL 2: LIVE MONITOR SERVIS BENGKEL -->
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
-      
+    <div class="admin-panel-card">
+
       <!-- Panel Header -->
       <div class="card-header-responsive">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon style="color: #3b82f6;">car_repair</mat-icon>
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Live Monitor Pengerjaan Bengkel</span>
+        <div class="flex-align-center-gap-2">
+          <mat-icon class="icon-blue">car_repair</mat-icon>
+          <span class="text-heading-bold-slate">Live Monitor Pengerjaan Bengkel</span>
         </div>
-        <span *ngIf="summary.activeWorkOrders.length > 0" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 9999px; background-color: #dbeafe; color: #1e40af;">
+        <span *ngIf="summary.activeWorkOrders.length > 0" class="admin-count-badge--blue">
           {{ summary.activeWorkOrders.length }} MOBIL
         </span>
       </div>
 
       <!-- Panel Body -->
-      <div style="position: relative; flex: 1; min-height: 250px;">
-        <div *ngIf="loading" style="padding: 4rem; display: flex; align-items: center; justify-content: center;">
+      <div class="admin-panel-body">
+        <div *ngIf="loading" class="admin-panel-loading">
           <mat-spinner diameter="40"></mat-spinner>
         </div>
 
-        <div *ngIf="!loading && summary.activeWorkOrders.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
-          <mat-icon style="font-size: 3.5rem; width: auto; height: auto; color: #cbd5e1;">directions_car</mat-icon>
-          <span style="font-weight: 600; color: #475569;">Tidak ada mobil diservis</span>
-          <span style="font-size: 0.8rem; color: #94a3b8;">Bengkel saat ini sedang kosong/istirahat.</span>
+        <div *ngIf="!loading && summary.activeWorkOrders.length === 0" class="admin-panel-empty">
+          <mat-icon>directions_car</mat-icon>
+          <span class="admin-panel-empty-title">Tidak ada mobil diservis</span>
+          <span class="admin-panel-empty-sub">Bengkel saat ini sedang kosong/istirahat.</span>
         </div>
 
         <!-- Work Orders Table -->
-        <div *ngIf="!loading && summary.activeWorkOrders.length > 0" style="overflow-x: auto;">
-          <table mat-table [dataSource]="summary.activeWorkOrders" style="width: 100%;">
+        <div *ngIf="!loading && summary.activeWorkOrders.length > 0" class="admin-panel-table-wrap">
+          <table mat-table [dataSource]="summary.activeWorkOrders" class="admin-table-full">
 
             <!-- Column: Plat Nomor -->
             <ng-container matColumnDef="plate">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Plat Nomor</th>
-              <td mat-cell *matCellDef="let row" style="padding: 1rem;">
-                <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1e293b; background-color: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.9rem; border: 1px solid #cbd5e1;">
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Plat Nomor</th>
+              <td mat-cell *matCellDef="let row" class="td-plate-cell">
+                <span class="plate-badge plate-badge-styled">
                   {{ row.licensePlate }}
                 </span>
               </td>
@@ -254,19 +242,19 @@
 
             <!-- Column: Kendaraan -->
             <ng-container matColumnDef="vehicle">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Kendaraan</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem;">
-                <div style="font-weight: 600; color: #334155;">{{ row.vehicleBrand }} {{ row.vehicleModel }}</div>
-                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.15rem;">Pelanggan: {{ row.customerName }}</div>
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Kendaraan</th>
+              <td mat-cell *matCellDef="let row" class="admin-td">
+                <div class="admin-td-date-primary">{{ row.vehicleBrand }} {{ row.vehicleModel }}</div>
+                <div class="text-slate-muted-xs">Pelanggan: {{ row.customerName }}</div>
               </td>
             </ng-container>
 
             <!-- Column: Mekanik -->
             <ng-container matColumnDef="mechanic">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Mekanik</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #475569; font-size: 0.85rem; font-weight: 500;">
+              <th mat-header-cell *matHeaderCellDef class="admin-th">Mekanik</th>
+              <td mat-cell *matCellDef="let row" class="admin-td text-gray-semi-bold-500">
                 <div class="flex-responsive-stack">
-                  <mat-icon style="font-size: 1rem; width: auto; height: auto; color: #64748b;">engineering</mat-icon>
+                  <mat-icon class="icon-engineering-gray">engineering</mat-icon>
                   <span>{{ row.mechanicName || 'Belum ditugaskan' }}</span>
                 </div>
               </td>
@@ -274,21 +262,19 @@
 
             <!-- Column: Status -->
             <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center;">Status</th>
-              <td mat-cell *matCellDef="let row" style="padding: 1rem; text-align: center;">
+              <th mat-header-cell *matHeaderCellDef class="admin-th th-center">Status</th>
+              <td mat-cell *matCellDef="let row" class="td-padding-md-center">
                 <span [style.background-color]="getStatusDetails(row.workStatus).color + '18'"
                       [style.color]="getStatusDetails(row.workStatus).color"
                       [style.border]="'1px solid ' + getStatusDetails(row.workStatus).color + '40'"
-                      style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; display: inline-block;">
+                      class="admin-status-pill">
                   {{ getStatusDetails(row.workStatus).label }}
                 </span>
               </td>
             </ng-container>
 
-
-
-            <tr mat-header-row *matHeaderRowDef="woColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: woColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+            <tr mat-header-row *matHeaderRowDef="woColumns" class="admin-table-header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: woColumns;" class="admin-table-row"></tr>
 
           </table>
         </div>

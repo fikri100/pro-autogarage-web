@@ -1,35 +1,13 @@
-<!-- Printable Executive Layout Style Overrides -->
+<!-- Print styles (must remain in component for @media print scope) -->
 <style>
   @media print {
-    body * {
-      visibility: hidden;
-    }
-    .printable-section, .printable-section * {
-      visibility: visible;
-    }
-    .printable-section {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      padding: 0;
-      background: white !important;
-    }
-    .no-print {
-      display: none !important;
-    }
-    .layout-sidebar, .layout-topbar, .sidebar-menu {
-      display: none !important;
-    }
-    .layout-content {
-      padding: 0 !important;
-      overflow: visible !important;
-    }
-    .page-container {
-      box-shadow: none !important;
-      border: none !important;
-      background: transparent !important;
-    }
+    body * { visibility: hidden; }
+    .printable-section, .printable-section * { visibility: visible; }
+    .printable-section { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white !important; }
+    .no-print { display: none !important; }
+    .layout-sidebar, .layout-topbar, .sidebar-menu { display: none !important; }
+    .layout-content { padding: 0 !important; overflow: visible !important; }
+    .page-container { box-shadow: none !important; border: none !important; background: transparent !important; }
   }
 
   /* Premium SVG Donut Keyframes */
@@ -46,173 +24,164 @@
 <div class="page-container printable-section">
 
   <!-- Loading State -->
-  <div *ngIf="loading && expensesLoading" style="position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000;">
+  <div *ngIf="loading && expensesLoading" class="fullscreen-loading-overlay">
     <mat-spinner diameter="50" color="primary"></mat-spinner>
-    <p style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #475569; margin-top: 1rem;">Membuat Laporan Analitis...</p>
+    <p class="fullscreen-loading-text">Membuat Laporan Analitis...</p>
   </div>
 
   <!-- Header -->
-  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+  <div class="page-header admin-header-row admin-mb-2rem">
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #0f172a; margin: 0; font-size: 1.85rem; letter-spacing: -0.03em;">Laporan Laba-Rugi Analitis</h2>
-      <p style="font-family: 'Inter', sans-serif; color: #475569; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Analisis kinerja finansial, HPP/COGS, margin operasional, dan beban eksekutif Pro Auto Garage.</p>
+      <h2 class="page-title">Laporan Laba-Rugi Analitis</h2>
+      <p class="page-subtitle">Analisis kinerja finansial, HPP/COGS, margin operasional, dan beban eksekutif Pro Auto Garage.</p>
     </div>
     <div class="no-print">
-      <button mat-flat-button 
-              color="primary" 
-              (click)="printReport()" 
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 0.6rem 1.25rem; border-radius: 8px; letter-spacing: 0.02em; background-color: #1e3a8a;">
-        <mat-icon style="margin-right: 0.25rem;">print</mat-icon>
+      <button mat-flat-button color="primary" (click)="printReport()" class="btn-admin-print">
+        <mat-icon class="icon-mr-1">print</mat-icon>
         <span>CETAK LAPORAN</span>
       </button>
     </div>
   </div>
 
   <!-- KPI SUMMARY GRID -->
-  <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+  <div class="kpi-grid admin-mb-2rem">
 
     <!-- CARD 1: Revenue -->
-    <div class="kpi-card" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e40af; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">1. Penerimaan Kotor</span>
-      <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1d4ed8; font-size: 1.55rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+    <div class="admin-kpi-card admin-kpi-card--blue">
+      <span class="admin-kpi-label">1. Penerimaan Kotor</span>
+      <h3 class="admin-kpi-value--sm">
         Rp {{ (summary.totalServiceRevenue + summary.totalSparepartSales) | number:'1.0-0':'id-ID' }}
       </h3>
-      <div style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #1e3a8a; display: flex; flex-direction: column; gap: 0.1rem;">
+      <div class="admin-kpi-sub admin-kpi-sub-stack">
         <span>Jasa Servis: Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</span>
         <span>Sparepart: Rp {{ summary.totalSparepartSales | number:'1.0-0':'id-ID' }}</span>
       </div>
     </div>
 
     <!-- CARD 2: COGS -->
-    <div class="kpi-card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fde68a; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #92400e; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">2. Total HPP Sparepart</span>
-      <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #b45309; font-size: 1.55rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
-        Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }}
-      </h3>
-      <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #b45309; display: block; margin-top: 0.4rem;">Nilai modal beli sparepart fisik yang telah terjual</span>
+    <div class="admin-kpi-card admin-kpi-card--amber">
+      <span class="admin-kpi-label">2. Total HPP Sparepart</span>
+      <h3 class="admin-kpi-value--sm">Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }}</h3>
+      <span class="admin-kpi-sub block mt-2">Nilai modal beli sparepart fisik yang telah terjual</span>
     </div>
 
     <!-- CARD 3: Laba Kotor -->
-    <div class="kpi-card" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #065f46; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">3. Estimasi Laba Kotor</span>
-      <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #047857; font-size: 1.55rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
-        Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}
-      </h3>
-      <div style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #059669; display: flex; justify-content: space-between;">
+    <div class="admin-kpi-card admin-kpi-card--emerald">
+      <span class="admin-kpi-label">3. Estimasi Laba Kotor</span>
+      <h3 class="admin-kpi-value--sm">Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}</h3>
+      <div class="admin-kpi-sub flex-space-between">
         <span>Margin Laba Kotor:</span>
-        <span style="font-weight: 600;">
+        <span class="font-semibold">
           {{ (summary.totalServiceRevenue + summary.totalSparepartSales) > 0 ? ((summary.grossProfit / (summary.totalServiceRevenue + summary.totalSparepartSales)) * 100 | number:'1.1-1') : '0.0' }}%
         </span>
       </div>
     </div>
 
     <!-- CARD 4: Beban Operasional -->
-    <div class="kpi-card" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 1px solid #fecdd3; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #9f1239; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">4. Beban Operasional</span>
-      <h3 style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #be123c; font-size: 1.55rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
-        Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }}
-      </h3>
-      <span style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #e11d48; display: block; margin-top: 0.4rem;">Gaji, restock, listrik, dll dari arus kas keluar</span>
+    <div class="admin-kpi-card admin-kpi-card--rose">
+      <span class="admin-kpi-label">4. Beban Operasional</span>
+      <h3 class="admin-kpi-value--sm">Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }}</h3>
+      <span class="admin-kpi-sub block mt-2">Gaji, restock, listrik, dll dari arus kas keluar</span>
     </div>
 
     <!-- CARD 5: Laba Bersih -->
-    <div class="kpi-card" style="background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 1px solid #e9d5ff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #5b21b6; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">5. Laba Bersih</span>
-      <h3 [style.color]="netOperatingProfit >= 0 ? '#6d28d9' : '#dc2626'" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.55rem; margin: 0.5rem 0 0.25rem 0; letter-spacing: -0.02em;">
+    <div class="admin-kpi-card admin-kpi-card--purple">
+      <span class="admin-kpi-label admin-kpi-label--purple">5. Laba Bersih</span>
+      <h3 class="admin-kpi-value--sm" [style.color]="netOperatingProfit >= 0 ? '#6d28d9' : '#dc2626'">
         Rp {{ netOperatingProfit | number:'1.0-0':'id-ID' }}
       </h3>
-      <div style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #7c3aed; display: flex; justify-content: space-between;">
+      <div class="admin-kpi-sub admin-kpi-sub-purple">
         <span>Margin Bersih:</span>
-        <span style="font-weight: 600;">{{ profitMarginPercentage | number:'1.1-1' }}%</span>
+        <span class="font-semibold">{{ profitMarginPercentage | number:'1.1-1' }}%</span>
       </div>
     </div>
 
   </div>
 
   <!-- INTERACTIVE TABS & CONTENT -->
-  <mat-tab-group class="no-print" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden;">
-    
+  <mat-tab-group class="no-print admin-tab-group">
+
     <!-- TAB 1: LAPORAN LABA RUGI -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <div style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 0 0.5rem;">
+        <div class="admin-tab-label-container">
           <mat-icon>receipt_long</mat-icon>
-          <span>Laporan P&L Terstruktur</span>
+          <span>Laporan P&amp;L Terstruktur</span>
         </div>
       </ng-template>
-      
-      <div style="padding: 2rem;">
-        <div style="border-bottom: 2px solid #334155; padding-bottom: 0.75rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end;">
+
+      <div class="tab-content-padding">
+        <div class="financial-report-header">
           <div>
-            <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #1e293b; margin: 0; font-size: 1.25rem;">LAPORAN LABA RUGI KOMPREHENSIF</h4>
-            <p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #64748b; margin: 0.25rem 0 0 0;">Periode: Tahun Berjalan s/d Hari ini ({{ currentDate | date:'dd MMMM yyyy':'':'id-ID' }})</p>
+            <h4 class="financial-report-title">LAPORAN LABA RUGI KOMPREHENSIF</h4>
+            <p class="financial-report-subtitle">Periode: Tahun Berjalan s/d Hari ini ({{ currentDate | date:'dd MMMM yyyy':'':'id-ID' }})</p>
           </div>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; color: #475569; letter-spacing: 0.05em;">RUPIAH (IDR)</span>
+          <span class="financial-report-currency">RUPIAH (IDR)</span>
         </div>
 
         <!-- P&L Structured Table -->
-        <div style="width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #ffffff;">
-          <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 0.875rem;">
-            
-            <!-- SECTION 1: PENDAPATAN OPERASIONAL -->
-            <tr style="background-color: #f8fafc; border-bottom: 1px solid #cbd5e1;">
-              <th colspan="2" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; text-align: left; padding: 0.75rem 1.25rem; color: #0f172a; font-size: 0.9rem;">1. PENDAPATAN OPERASIONAL</th>
+        <div class="financial-report-table-wrap">
+          <table class="financial-report-table">
+
+            <!-- SECTION 1: PENDAPATAN -->
+            <tr class="section-header-row">
+              <th colspan="2" class="section-header-cell">1. PENDAPATAN OPERASIONAL</th>
             </tr>
-            <tr style="border-bottom: 1px dashed #e2e8f0;">
-              <td style="padding: 0.75rem 2rem; color: #334155;">Pendapatan Jasa Servis</td>
-              <td style="text-align: right; padding: 0.75rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #0f172a; font-weight: 500;">Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</td>
+            <tr class="item-row">
+              <td class="item-cell-label">Pendapatan Jasa Servis</td>
+              <td class="item-cell-value-mono">Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</td>
             </tr>
-            <tr style="border-bottom: 1px dashed #e2e8f0;">
-              <td style="padding: 0.75rem 2rem; color: #334155;">Pendapatan Penjualan Sparepart</td>
-              <td style="text-align: right; padding: 0.75rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #0f172a; font-weight: 500;">Rp {{ summary.totalSparepartSales | number:'1.0-0':'id-ID' }}</td>
+            <tr class="item-row">
+              <td class="item-cell-label">Pendapatan Penjualan Sparepart</td>
+              <td class="item-cell-value-mono">Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</td>
             </tr>
-            <tr style="border-bottom: 1px solid #94a3b8; font-weight: 700;">
-              <td style="padding: 0.8rem 1.5rem; color: #1e3a8a; font-family: 'Plus Jakarta Sans', sans-serif;">TOTAL PENDAPATAN KOTOR (REVENUE)</td>
-              <td style="text-align: right; padding: 0.8rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #1e3a8a; font-size: 0.95rem;">Rp {{ (summary.totalServiceRevenue + summary.totalSparepartSales) | number:'1.0-0':'id-ID' }}</td>
+            <tr class="total-gross-row">
+              <td class="total-gross-label">TOTAL PENDAPATAN KOTOR (REVENUE)</td>
+              <td class="total-gross-value">Rp {{ (summary.totalServiceRevenue + summary.totalSparepartSales) | number:'1.0-0':'id-ID' }}</td>
             </tr>
 
-            <!-- SECTION 2: HARGA POKOK PENJUALAN (COGS) -->
-            <tr style="background-color: #f8fafc; border-bottom: 1px solid #cbd5e1; border-top: 1px solid #cbd5e1;">
-              <th colspan="2" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; text-align: left; padding: 0.75rem 1.25rem; color: #0f172a; font-size: 0.9rem;">2. HARGA POKOK PENJUALAN (HPP)</th>
+            <!-- SECTION 2: COGS -->
+            <tr class="section-header-row">
+              <th colspan="2" class="section-header-cell">2. HARGA POKOK PENJUALAN (HPP)</th>
             </tr>
-            <tr style="border-bottom: 1px dashed #e2e8f0;">
-              <td style="padding: 0.75rem 2rem; color: #334155;">HPP/Modal Sparepart Fisik Terjual</td>
-              <td style="text-align: right; padding: 0.75rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
+            <tr class="item-row">
+              <td class="item-cell-label">HPP/Modal Sparepart Fisik Terjual</td>
+              <td class="item-cell-value-mono-neg">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
             </tr>
-            <tr style="border-bottom: 1px solid #94a3b8; font-weight: 700;">
-              <td style="padding: 0.8rem 1.5rem; color: #92400e; font-family: 'Plus Jakarta Sans', sans-serif;">TOTAL HARGA POKOK PENJUALAN</td>
-              <td style="text-align: right; padding: 0.8rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #b45309; font-size: 0.95rem;">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
-            </tr>
-
-            <!-- GROSS PROFIT INTERMEDIATE TOTAL -->
-            <tr style="background-color: #f0fdf4; border-bottom: 2px solid #86efac; border-top: 2px solid #86efac; font-weight: 800;">
-              <td style="padding: 0.9rem 1.25rem; color: #166534; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem;">LABA KOTOR OPERASIONAL (GROSS PROFIT)</td>
-              <td style="text-align: right; padding: 0.9rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #166534; font-size: 1.05rem;">Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}</td>
+            <tr class="total-gross-row">
+              <td class="total-cogs-label">TOTAL HARGA POKOK PENJUALAN</td>
+              <td class="total-cogs-value">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
             </tr>
 
-            <!-- SECTION 3: BEBAN OPERASIONAL -->
-            <tr style="background-color: #f8fafc; border-bottom: 1px solid #cbd5e1;">
-              <th colspan="2" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; text-align: left; padding: 0.75rem 1.25rem; color: #0f172a; font-size: 0.9rem;">3. BEBAN OPERASIONAL</th>
+            <!-- GROSS PROFIT -->
+            <tr class="gross-profit-row">
+              <td class="gross-profit-label">LABA KOTOR OPERASIONAL (GROSS PROFIT)</td>
+              <td class="gross-profit-value">Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}</td>
             </tr>
-            <tr *ngFor="let item of expensesBreakdown" style="border-bottom: 1px dashed #e2e8f0;">
-              <td style="padding: 0.75rem 2rem; color: #334155; display: flex; align-items: center; gap: 0.5rem;">
-                <div [style.background-color]="item.color" style="width: 8px; height: 8px; border-radius: 99px;"></div>
+
+            <!-- SECTION 3: BEBAN -->
+            <tr class="section-header-row">
+              <th colspan="2" class="section-header-cell">3. BEBAN OPERASIONAL</th>
+            </tr>
+            <tr *ngFor="let item of expensesBreakdown" class="item-row">
+              <td class="item-cell-label-flex">
+                <div [style.background-color]="item.color" class="item-cell-dot"></div>
                 <span>{{ item.label }}</span>
               </td>
-              <td style="text-align: right; padding: 0.75rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ item.amount | number:'1.0-0':'id-ID' }})</td>
+              <td class="item-cell-value-mono-neg">(Rp {{ item.amount | number:'1.0-0':'id-ID' }})</td>
             </tr>
-            <tr *ngIf="expensesBreakdown.length === 0" style="border-bottom: 1px dashed #e2e8f0;">
-              <td style="padding: 1.5rem 2rem; color: #94a3b8; font-style: italic;" colspan="2">Belum ada pengeluaran kas tercatat</td>
+            <tr *ngIf="expensesBreakdown.length === 0" class="item-row">
+              <td class="chart-table-td-empty" colspan="2">Belum ada pengeluaran kas tercatat</td>
             </tr>
-            <tr style="border-bottom: 1px solid #94a3b8; font-weight: 700;">
-              <td style="padding: 0.8rem 1.5rem; color: #9f1239; font-family: 'Plus Jakarta Sans', sans-serif;">TOTAL BEBAN OPERASIONAL (EXPENSES)</td>
-              <td style="text-align: right; padding: 0.8rem 1.5rem; font-family: 'JetBrains Mono', monospace; color: #be123c; font-size: 0.95rem;">(Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }})</td>
+            <tr class="total-gross-row">
+              <td class="total-expenses-label">TOTAL BEBAN OPERASIONAL (EXPENSES)</td>
+              <td class="total-expenses-value">(Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }})</td>
             </tr>
 
-            <!-- FINAL BOTTOM LINE: NET PROFIT -->
-            <tr style="background-color: #faf5ff; border-bottom: 3px double #d8b4fe; border-top: 2px solid #c084fc; font-weight: 900;">
-              <td style="padding: 1rem 1.25rem; color: #6b21a8; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem;">LABA OPERASIONAL BERSIH (NET OPERATING PROFIT)</td>
-              <td style="text-align: right; padding: 1rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 1.15rem;"
+            <!-- NET PROFIT -->
+            <tr class="net-profit-row">
+              <td class="net-profit-label">LABA OPERASIONAL BERSIH (NET OPERATING PROFIT)</td>
+              <td class="net-profit-value"
                   [style.color]="netOperatingProfit >= 0 ? '#6d28d9' : '#dc2626'">
                 Rp {{ netOperatingProfit | number:'1.0-0':'id-ID' }}
               </td>
@@ -222,11 +191,11 @@
         </div>
 
         <!-- Note info panel -->
-        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: flex-start;">
-          <mat-icon style="color: #2563eb; font-size: 1.25rem; width: auto; height: auto;">info</mat-icon>
+        <div class="reports-note-box">
+          <mat-icon>info</mat-icon>
           <div>
-            <h5 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e3a8a; margin: 0; font-size: 0.85rem;">Catatan Akuntansi Eksekutif:</h5>
-            <p style="font-family: 'Inter', sans-serif; font-size: 0.78rem; color: #1e40af; margin: 0.25rem 0 0 0; line-height: 1.4;">
+            <h5>Catatan Akuntansi Eksekutif:</h5>
+            <p>
               Laporan di atas disusun berdasarkan pencatatan transaksi kasir lunas (Pemasukan) dan penambahan kas pengeluaran operasional (Beban) terverifikasi. Pembelian stok (restock barang) dihitung sebagai HPP/COGS pada saat barang laku terjual, sedangkan biaya restock kas awal dicatat dalam beban kas riil.
             </p>
           </div>
@@ -238,126 +207,111 @@
     <!-- TAB 2: TREN KAS & BAR CHART -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <div style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 0 0.5rem;">
+        <div class="admin-tab-label-container">
           <mat-icon>insert_chart</mat-icon>
           <span>Tren Grafik Batang</span>
         </div>
       </ng-template>
 
-      <div style="padding: 2rem;">
-        
+      <div class="tab-content-padding">
+
         <!-- Toggle & Info -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div class="admin-chart-header admin-mb-2rem">
           <div>
-            <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.15rem;">Grafik Perbandingan Kas Masuk vs Kas Keluar</h4>
-            <p style="font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #64748b; margin: 0.15rem 0 0 0;">Visualisasi dinamika peredaran kas operasional bulanan/harian.</p>
+            <h4>Grafik Perbandingan Kas Masuk vs Kas Keluar</h4>
+            <p>Visualisasi dinamika peredaran kas operasional bulanan/harian.</p>
           </div>
-          
-          <div style="display: flex; background-color: #f1f5f9; padding: 0.25rem; border-radius: 8px; gap: 0.25rem;">
-            <button mat-button 
+
+          <div class="admin-chart-period-group">
+            <button mat-button
+                    class="admin-chart-period-btn"
                     [style.background-color]="chartPeriod === 'daily' ? '#ffffff' : 'transparent'"
                     [style.box-shadow]="chartPeriod === 'daily' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'"
-                    (click)="changeChartPeriod('daily')"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-radius: 6px; padding: 0.25rem 0.75rem; min-width: auto; height: 32px; color: #1e293b;">
+                    (click)="changeChartPeriod('daily')">
               Harian (30 Hari)
             </button>
-            <button mat-button 
+            <button mat-button
+                    class="admin-chart-period-btn"
                     [style.background-color]="chartPeriod === 'monthly' ? '#ffffff' : 'transparent'"
                     [style.box-shadow]="chartPeriod === 'monthly' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'"
-                    (click)="changeChartPeriod('monthly')"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-radius: 6px; padding: 0.25rem 0.75rem; min-width: auto; height: 32px; color: #1e293b;">
+                    (click)="changeChartPeriod('monthly')">
               Bulanan (12 Bulan)
             </button>
           </div>
         </div>
 
         <!-- SVG Bar Chart -->
-        <div style="position: relative; width: 100%; height: 260px; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff; border: 1px solid #f1f5f9; border-radius: 12px; padding: 1rem 1rem 0.5rem 1rem;">
-          
-          <div *ngIf="chartLoading" style="position: absolute; inset: 0; background-color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; z-index: 10;">
+        <div class="admin-chart-area chart-border-area">
+
+          <div *ngIf="chartLoading" class="admin-chart-loading">
             <mat-spinner diameter="40"></mat-spinner>
           </div>
 
-          <div *ngIf="!chartLoading && chartItems.length === 0" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
-            <mat-icon style="font-size: 3rem; width: auto; height: auto; margin-bottom: 0.5rem; color: #cbd5e1;">bar_chart</mat-icon>
+          <div *ngIf="!chartLoading && chartItems.length === 0" class="admin-chart-empty">
+            <mat-icon>bar_chart</mat-icon>
             <span>Belum ada data grafik untuk periode ini</span>
           </div>
 
-          <div *ngIf="chartItems.length > 0" style="flex: 1; width: 100%; display: flex; align-items: flex-end; padding-bottom: 1.5rem;">
-            
-            <!-- Y-Axis Values -->
-            <div style="width: 70px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; padding-right: 0.75rem; border-right: 1px solid #e2e8f0; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #64748b;">
+          <div *ngIf="chartItems.length > 0" class="admin-chart-main-row">
+            <div class="admin-chart-yaxis chart-yaxis-small">
               <span>Rp {{ maxChartVal | number:'1.0-0':'id-ID' }}</span>
               <span>Rp {{ (maxChartVal * 0.5) | number:'1.0-0':'id-ID' }}</span>
               <span>Rp 0</span>
             </div>
 
-            <!-- Columns -->
-            <div style="flex: 1; height: 100%; display: flex; justify-content: space-around; align-items: flex-end; padding-left: 0.75rem; position: relative;">
-              <div style="position: absolute; left: 0; right: 0; bottom: 50%; border-top: 1px dashed #f1f5f9; z-index: 1;"></div>
-              
-              <div *ngFor="let item of chartItems" style="display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; position: relative; z-index: 2; max-width: 80px;">
-                <div style="display: flex; gap: 4px; align-items: flex-end; height: 100%; width: 100%; justify-content: center;">
-                  
-                  <!-- Income (Emerald) -->
-                  <div [style.height.%]="getBarHeight(item.income)" 
+            <div class="admin-chart-bars">
+              <div class="admin-chart-midline"></div>
+              <div *ngFor="let item of chartItems" class="admin-chart-bar-col">
+                <div class="admin-chart-bar-pair">
+                  <div [style.height.%]="getBarHeight(item.income)"
                        matTooltip="Masuk: Rp {{ item.income | number:'1.0-0':'id-ID' }}"
-                       style="width: 12px; background: linear-gradient(to top, #10b981, #34d399); border-radius: 3px 3px 0 0; transition: height 0.4s ease-in-out; cursor: pointer;">
-                  </div>
-
-                  <!-- Expense (Rose) -->
+                       class="admin-chart-bar--income chart-bar-income-styled"></div>
                   <div [style.height.%]="getBarHeight(item.expense)"
                        matTooltip="Keluar: Rp {{ item.expense | number:'1.0-0':'id-ID' }}"
-                       style="width: 12px; background: linear-gradient(to top, #f43f5e, #fb7185); border-radius: 3px 3px 0 0; transition: height 0.4s ease-in-out; cursor: pointer;">
-                  </div>
-
+                       class="admin-chart-bar--expense chart-bar-expense-styled"></div>
                 </div>
-
-                <span style="position: absolute; bottom: -20px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem; font-weight: 600; color: #64748b; white-space: nowrap; transform: rotate(-15deg); transform-origin: top center;">
-                  {{ getChartLabelShort(item.label) }}
-                </span>
+                <span class="admin-chart-xlabel">{{ getChartLabelShort(item.label) }}</span>
               </div>
             </div>
 
           </div>
 
-          <!-- Legend -->
-          <div style="display: flex; justify-content: center; gap: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; font-weight: 700; color: #475569; padding-top: 0.5rem; border-top: 1px solid #f1f5f9;">
-            <div style="display: flex; align-items: center; gap: 0.4rem;">
-              <div style="width: 10px; height: 10px; background-color: #10b981; border-radius: 3px;"></div>
+          <div class="admin-chart-legend chart-legend-small-bold">
+            <div class="admin-chart-legend-item">
+              <div class="admin-chart-legend-dot admin-chart-legend-dot--income"></div>
               <span>Kas Masuk (INC)</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.4rem;">
-              <div style="width: 10px; height: 10px; background-color: #f43f5e; border-radius: 3px;"></div>
+            <div class="admin-chart-legend-item">
+              <div class="admin-chart-legend-dot admin-chart-legend-dot--expense"></div>
               <span>Kas Keluar (EXP)</span>
             </div>
           </div>
 
         </div>
 
-        <!-- Data table representing chart entries -->
-        <h5 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; margin: 2rem 0 0.75rem 0; font-size: 0.95rem;">Tabel Rincian Riwayat Transaksi Kas</h5>
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #ffffff;">
-          <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 0.85rem;">
+        <!-- Data table chart entries -->
+        <h5 class="chart-rincian-heading">Tabel Rincian Riwayat Transaksi Kas</h5>
+        <div class="chart-table-wrap">
+          <table class="chart-table">
             <thead>
-              <tr style="background-color: #f8fafc; border-bottom: 2px solid #cbd5e1; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; text-align: left;">
-                <th style="padding: 0.75rem 1.25rem;">Periode</th>
-                <th style="padding: 0.75rem 1.25rem; text-align: right;">Total Kas Masuk</th>
-                <th style="padding: 0.75rem 1.25rem; text-align: right;">Total Kas Keluar</th>
-                <th style="padding: 0.75rem 1.25rem; text-align: right;">Saldo Bersih Kas</th>
+              <tr class="chart-table-thead-row">
+                <th class="chart-table-th">Periode</th>
+                <th class="chart-table-th-right">Total Kas Masuk</th>
+                <th class="chart-table-th-right">Total Kas Keluar</th>
+                <th class="chart-table-th-right">Saldo Bersih Kas</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of chartItems" style="border-bottom: 1px solid #f1f5f9;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                <td style="padding: 0.75rem 1.25rem; font-weight: 600; color: #1e293b;">{{ item.label }}</td>
-                <td style="padding: 0.75rem 1.25rem; text-align: right; font-family: 'JetBrains Mono', monospace; color: #047857; font-weight: 600;">+Rp {{ item.income | number:'1.0-0':'id-ID' }}</td>
-                <td style="padding: 0.75rem 1.25rem; text-align: right; font-family: 'JetBrains Mono', monospace; color: #be123c;">-Rp {{ item.expense | number:'1.0-0':'id-ID' }}</td>
-                <td style="padding: 0.75rem 1.25rem; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700;" [style.color]="(item.income - item.expense) >= 0 ? '#1d4ed8' : '#be123c'">
+              <tr *ngFor="let item of chartItems" class="table-row-hover chart-table-tr">
+                <td class="chart-table-td-label">{{ item.label }}</td>
+                <td class="chart-table-td-inc">+Rp {{ item.income | number:'1.0-0':'id-ID' }}</td>
+                <td class="chart-table-td-exp">-Rp {{ item.expense | number:'1.0-0':'id-ID' }}</td>
+                <td class="chart-table-td-net" [style.color]="(item.income - item.expense) >= 0 ? '#1d4ed8' : '#be123c'">
                   Rp {{ (item.income - item.expense) | number:'1.0-0':'id-ID' }}
                 </td>
               </tr>
               <tr *ngIf="chartItems.length === 0">
-                <td colspan="4" style="padding: 2rem; text-align: center; color: #94a3b8; font-style: italic;">Tidak ada data riwayat kas untuk ditampilkan</td>
+                <td colspan="4" class="chart-table-td-empty">Tidak ada data riwayat kas untuk ditampilkan</td>
               </tr>
             </tbody>
           </table>
@@ -366,56 +320,51 @@
       </div>
     </mat-tab>
 
-    <!-- TAB 3: DIAGRAM BULAT BEBAN OPERASIONAL -->
+    <!-- TAB 3: DIAGRAM BULAT BEBAN -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <div style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 0 0.5rem;">
+        <div class="admin-tab-label-container">
           <mat-icon>pie_chart</mat-icon>
           <span>Porsi Distribusi Beban</span>
         </div>
       </ng-template>
 
-      <div style="padding: 2rem;">
-        <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0 0 1.5rem 0; font-size: 1.15rem;">Analisis Kontribusi Beban Pengeluaran Operasional</h4>
-        
-        <div style="display: flex; flex-direction: column; gap: 2rem; align-items: center; justify-content: center; width: 100%;" class="flex-row-responsive">
-          
-          <!-- LEFT COLUMN: SVG Donut Chart -->
-          <div style="width: 100%; max-width: 320px; display: flex; justify-content: center; position: relative;" class="col-40">
-            
-            <div *ngIf="expensesLoading" style="position: absolute; display: flex; align-items: center; justify-content: center; inset: 0; background: rgba(255,255,255,0.7); z-index: 5;">
+      <div class="tab-content-padding">
+        <h4 class="donut-heading">Analisis Kontribusi Beban Pengeluaran Operasional</h4>
+
+        <div class="donut-flex-container flex-row-responsive">
+
+          <!-- LEFT: SVG Donut Chart -->
+          <div class="donut-wrap col-40">
+
+            <div *ngIf="expensesLoading" class="donut-loading-box">
               <mat-spinner diameter="40"></mat-spinner>
             </div>
 
-            <div *ngIf="!expensesLoading && expensesBreakdown.length === 0" style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; min-height: 220px; font-family: 'Inter', sans-serif;">
-              <mat-icon style="font-size: 3rem; width: auto; height: auto; margin-bottom: 0.5rem; color: #cbd5e1;">pie_chart</mat-icon>
+            <div *ngIf="!expensesLoading && expensesBreakdown.length === 0" class="donut-empty-box">
+              <mat-icon class="donut-empty-icon">pie_chart</mat-icon>
               <span>Belum ada data pengeluaran kas</span>
             </div>
 
             <!-- Custom Pure SVG Responsive Donut -->
-            <svg *ngIf="expensesBreakdown.length > 0" width="100%" height="240" viewBox="0 0 42 42" style="transform: rotate(0deg); overflow: visible;">
-              <!-- Donut Background Circle -->
+            <svg *ngIf="expensesBreakdown.length > 0" width="100%" height="240" viewBox="0 0 42 42" class="donut-svg-element">
               <circle cx="21" cy="21" r="15.91549430918954" fill="#ffffff"></circle>
               <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f1f5f9" stroke-width="3"></circle>
-              
-              <!-- Segment Slices -->
               <circle *ngFor="let item of expensesBreakdown"
                       class="donut-segment"
-                      cx="21" cy="21" r="15.91549430918954" 
-                      fill="transparent" 
-                      [attr.stroke]="item.color" 
-                      stroke-width="3" 
-                      [attr.stroke-dasharray]="item.strokeDashArray" 
+                      cx="21" cy="21" r="15.91549430918954"
+                      fill="transparent"
+                      [attr.stroke]="item.color"
+                      stroke-width="3"
+                      [attr.stroke-dasharray]="item.strokeDashArray"
                       [attr.stroke-dashoffset]="item.strokeDashOffset"
                       [matTooltip]="item.label + ': Rp ' + (item.amount | number:'1.0-0':'id-ID') + ' (' + (item.percentage | number:'1.1-1') + '%)'">
               </circle>
-              
-              <!-- Center Text labels -->
               <g>
-                <text x="21" y="19" text-anchor="middle" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.8px; font-weight: 700; fill: #64748b;">
+                <text x="21" y="19" text-anchor="middle" class="donut-svg-text-label">
                   TOTAL BEBAN
                 </text>
-                <text x="21" y="24" text-anchor="middle" style="font-family: 'JetBrains Mono', monospace; font-size: 3.2px; font-weight: 800; fill: #be123c;">
+                <text x="21" y="24" text-anchor="middle" class="donut-svg-text-val">
                   Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }}
                 </text>
               </g>
@@ -423,29 +372,28 @@
 
           </div>
 
-          <!-- RIGHT COLUMN: Detailed Legend Table -->
-          <div style="flex: 1; width: 100%; display: flex; flex-direction: column; gap: 0.85rem;" class="col-60">
-            <h5 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; margin: 0; font-size: 0.9rem; letter-spacing: 0.02em; text-transform: uppercase;">Rincian Pengeluaran Kategori</h5>
-            
-            <div *ngFor="let item of expensesBreakdown" style="background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8px; padding: 0.85rem 1.15rem; display: flex; flex-direction: column; gap: 0.4rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <div [style.background-color]="item.color" style="width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0;"></div>
-                  <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; font-size: 0.85rem;">{{ item.label }}</span>
+          <!-- RIGHT: Detailed Legend Table -->
+          <div class="donut-legend-container col-60">
+            <h5 class="donut-legend-heading">Rincian Pengeluaran Kategori</h5>
+
+            <div *ngFor="let item of expensesBreakdown" class="donut-legend-card">
+              <div class="donut-legend-row">
+                <div class="donut-legend-left-col">
+                  <div [style.background-color]="item.color" class="donut-legend-color-dot"></div>
+                  <span class="donut-legend-label">{{ item.label }}</span>
                 </div>
-                <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                  <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #be123c; font-size: 0.9rem;">Rp {{ item.amount | number:'1.0-0':'id-ID' }}</span>
-                  <span style="font-family: 'Inter', sans-serif; font-size: 0.72rem; color: #64748b; font-weight: 600;">{{ item.percentage | number:'1.1-1' }}% dari total beban</span>
+                <div class="donut-legend-right-col">
+                  <span class="donut-legend-val">Rp {{ item.amount | number:'1.0-0':'id-ID' }}</span>
+                  <span class="donut-legend-pct">{{ item.percentage | number:'1.1-1' }}% dari total beban</span>
                 </div>
               </div>
-
-              <!-- Bar percent representation inside box -->
-              <div style="width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 99px; overflow: hidden; margin-top: 0.2rem;">
-                <div [style.width.%]="item.percentage" [style.background-color]="item.color" style="height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+              <!-- Bar percent -->
+              <div class="donut-progress-bar-wrap">
+                <div [style.width.%]="item.percentage" [style.background-color]="item.color" class="donut-progress-bar-inner"></div>
               </div>
             </div>
 
-            <div *ngIf="expensesBreakdown.length === 0" style="padding: 2rem; border: 1px dashed #cbd5e1; border-radius: 8px; text-align: center; color: #94a3b8; font-style: italic;">
+            <div *ngIf="expensesBreakdown.length === 0" class="donut-empty-legend-box">
               Tidak ada data pengeluaran operasional
             </div>
           </div>
@@ -457,86 +405,78 @@
 
   </mat-tab-group>
 
-  <!-- PRINT ONLY STRUCTURED PL REPORT (FOR EXECUTIVES) -->
-  <div class="printable-section" style="display: none; background: white; padding: 0;">
-    <div style="text-align: center; margin-bottom: 2rem; border-bottom: 3px double #0f172a; padding-bottom: 1.5rem;">
-      <h1 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 850; color: #0f172a; margin: 0; font-size: 2.2rem; letter-spacing: -0.04em;">PRO AUTO GARAGE</h1>
-      <p style="font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #334155; margin: 0.35rem 0 0 0; text-transform: uppercase; font-weight: 600; letter-spacing: 0.1em;">Laporan Laba Rugi Operasional & Analisis Finansial Eksekutif</p>
-      <p style="font-family: 'Inter', sans-serif; font-size: 0.8rem; color: #64748b; margin: 0.15rem 0 0 0;">Dicetak pada: {{ currentDate | date:'dd MMMM yyyy, HH:mm':'':'id-ID' }} oleh Manajemen</p>
+  <!-- PRINT ONLY STRUCTURED P&L REPORT -->
+  <div class="printable-section no-print-section">
+    <div class="print-header">
+      <h1 class="print-title">PRO AUTO GARAGE</h1>
+      <p class="print-subtitle">Laporan Laba Rugi Operasional &amp; Analisis Finansial Eksekutif</p>
+      <p class="print-date">Dicetak pada: {{ currentDate | date:'dd MMMM yyyy, HH:mm':'':'id-ID' }} oleh Manajemen</p>
     </div>
 
-    <!-- P&L Table (Plain CSS styled specifically for crisp printing output) -->
-    <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 0.95rem; margin-bottom: 3rem;">
-      <tr style="background-color: #f1f5f9; border-bottom: 2px solid #0f172a;">
-        <th style="padding: 0.85rem 1rem; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;">1. PENDAPATAN OPERASIONAL (REVENUE)</th>
-        <th style="padding: 0.85rem 1rem; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700;">NILAI NOMINAL (IDR)</th>
+    <!-- Print P&L Table -->
+    <table class="print-table">
+      <tr class="print-table-section-row">
+        <th class="print-table-section-th">1. PENDAPATAN OPERASIONAL (REVENUE)</th>
+        <th class="print-table-section-th-val">NILAI NOMINAL (IDR)</th>
       </tr>
-      <tr style="border-bottom: 1px dashed #cbd5e1;">
-        <td style="padding: 0.75rem 1.5rem;">Pendapatan Jasa Servis Kendaraan</td>
-        <td style="text-align: right; padding: 0.75rem 1rem; font-family: 'JetBrains Mono', monospace;">Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</td>
+      <tr class="print-table-row">
+        <td class="print-table-td-label">Pendapatan Jasa Servis Kendaraan</td>
+        <td class="print-table-td-val">Rp {{ summary.totalServiceRevenue | number:'1.0-0':'id-ID' }}</td>
       </tr>
-      <tr style="border-bottom: 1px dashed #cbd5e1;">
-        <td style="padding: 0.75rem 1.5rem;">Pendapatan Penjualan Sparepart Bengkel</td>
-        <td style="text-align: right; padding: 0.75rem 1rem; font-family: 'JetBrains Mono', monospace;">Rp {{ summary.totalSparepartSales | number:'1.0-0':'id-ID' }}</td>
+      <tr class="print-table-row">
+        <td class="print-table-td-label">Pendapatan Penjualan Sparepart Bengkel</td>
+        <td class="print-table-td-val">Rp {{ summary.totalSparepartSales | number:'1.0-0':'id-ID' }}</td>
       </tr>
-      <tr style="border-bottom: 2px solid #475569; font-weight: 700; background: #fafafa;">
-        <td style="padding: 0.85rem 1rem;">TOTAL PENDAPATAN KOTOR</td>
-        <td style="text-align: right; padding: 0.85rem 1rem; font-family: 'JetBrains Mono', monospace;">Rp {{ (summary.totalServiceRevenue + summary.totalSparepartSales) | number:'1.0-0':'id-ID' }}</td>
+      <tr class="print-table-total-row">
+        <td class="print-table-total-td-label">TOTAL PENDAPATAN KOTOR</td>
+        <td class="print-table-total-td-val">Rp {{ (summary.totalServiceRevenue + summary.totalSparepartSales) | number:'1.0-0':'id-ID' }}</td>
       </tr>
-
-      <tr style="background-color: #f1f5f9; border-bottom: 2px solid #0f172a; border-top: 1.5rem solid transparent;">
-        <th style="padding: 0.85rem 1rem; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;">2. HARGA POKOK PENJUALAN (COGS)</th>
-        <th style="padding: 0.85rem 1rem; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700;"></th>
+      <tr class="print-table-section-row">
+        <th class="print-table-section-th">2. HARGA POKOK PENJUALAN (COGS)</th>
+        <th class="print-table-section-th-val"></th>
       </tr>
-      <tr style="border-bottom: 1px dashed #cbd5e1;">
-        <td style="padding: 0.75rem 1.5rem;">Harga Pokok/Modal Beli Sparepart Terjual</td>
-        <td style="text-align: right; padding: 0.75rem 1rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
+      <tr class="print-table-row">
+        <td class="print-table-td-label">Harga Pokok/Modal Beli Sparepart Terjual</td>
+        <td class="print-table-td-val-neg">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
       </tr>
-      <tr style="border-bottom: 2px solid #475569; font-weight: 700; background: #fafafa;">
-        <td style="padding: 0.85rem 1rem;">TOTAL HARGA POKOK PENJUALAN (COGS)</td>
-        <td style="text-align: right; padding: 0.85rem 1rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
+      <tr class="print-table-total-row">
+        <td class="print-table-total-td-label">TOTAL HARGA POKOK PENJUALAN (COGS)</td>
+        <td class="print-table-total-td-val-neg">(Rp {{ summary.totalSparepartCOGS | number:'1.0-0':'id-ID' }})</td>
       </tr>
-
-      <tr style="background-color: #ecfdf5; border-bottom: 2.5px solid #059669; border-top: 2.5px solid #059669; font-weight: 800; font-size: 1rem;">
-        <td style="padding: 1rem; color: #047857; font-family: 'Plus Jakarta Sans', sans-serif;">LABA KOTOR OPERASIONAL (GROSS PROFIT)</td>
-        <td style="text-align: right; padding: 1rem; font-family: 'JetBrains Mono', monospace; color: #047857;">Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}</td>
+      <tr class="print-table-gross-profit-row">
+        <td class="print-table-gross-profit-td-label">LABA KOTOR OPERASIONAL (GROSS PROFIT)</td>
+        <td class="print-table-gross-profit-td-val">Rp {{ summary.grossProfit | number:'1.0-0':'id-ID' }}</td>
       </tr>
-
-      <tr style="background-color: #f1f5f9; border-bottom: 2px solid #0f172a; border-top: 1.5rem solid transparent;">
-        <th style="padding: 0.85rem 1rem; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;">3. BEBAN OPERASIONAL (EXPENSES)</th>
-        <th style="padding: 0.85rem 1rem; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700;"></th>
+      <tr class="print-table-section-row">
+        <th class="print-table-section-th">3. BEBAN OPERASIONAL (EXPENSES)</th>
+        <th class="print-table-section-th-val"></th>
       </tr>
-      <tr *ngFor="let item of expensesBreakdown" style="border-bottom: 1px dashed #cbd5e1;">
-        <td style="padding: 0.75rem 1.5rem;">Beban {{ item.label }}</td>
-        <td style="text-align: right; padding: 0.75rem 1rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ item.amount | number:'1.0-0':'id-ID' }})</td>
+      <tr *ngFor="let item of expensesBreakdown" class="print-table-row">
+        <td class="print-table-td-label">Beban {{ item.label }}</td>
+        <td class="print-table-td-val-neg">(Rp {{ item.amount | number:'1.0-0':'id-ID' }})</td>
       </tr>
-      <tr style="border-bottom: 2px solid #475569; font-weight: 700; background: #fafafa;">
-        <td style="padding: 0.85rem 1rem;">TOTAL BEBAN OPERASIONAL</td>
-        <td style="text-align: right; padding: 0.85rem 1rem; font-family: 'JetBrains Mono', monospace; color: #dc2626;">(Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }})</td>
+      <tr class="print-table-total-row">
+        <td class="print-table-total-td-label">TOTAL BEBAN OPERASIONAL</td>
+        <td class="print-table-total-td-val-neg">(Rp {{ totalExpensesAmount | number:'1.0-0':'id-ID' }})</td>
       </tr>
-
-      <tr style="background-color: #faf5ff; border-bottom: 3.5px double #5b21b6; border-top: 2.5px solid #7c3aed; font-weight: 900; font-size: 1.1rem;">
-        <td style="padding: 1.15rem 1rem; color: #5b21b6; font-family: 'Plus Jakarta Sans', sans-serif;">LABA OPERASIONAL BERSIH (NET OPERATING PROFIT)</td>
-        <td style="text-align: right; padding: 1.15rem 1rem; font-family: 'JetBrains Mono', monospace;"
+      <tr class="print-table-net-profit-row">
+        <td class="print-table-net-profit-td-label">LABA OPERASIONAL BERSIH (NET OPERATING PROFIT)</td>
+        <td class="print-table-net-profit-td-val"
             [style.color]="netOperatingProfit >= 0 ? '#5b21b6' : '#dc2626'">
           Rp {{ netOperatingProfit | number:'1.0-0':'id-ID' }}
         </td>
       </tr>
     </table>
 
-    <!-- Executive Signatures block for paper copies -->
-    <div style="display: flex; justify-content: space-between; margin-top: 5rem; font-family: 'Inter', sans-serif;">
-      <div style="width: 200px; text-align: center;">
-        <p style="margin: 0 0 4.5rem 0; font-size: 0.85rem; color: #475569;">Dibuat Oleh,</p>
-        <div style="border-top: 1px solid #475569; padding-top: 0.4rem; font-weight: 700; font-size: 0.9rem;">
-          Staf Keuangan
-        </div>
+    <!-- Executive Signatures -->
+    <div class="print-signature-section">
+      <div class="print-signature-box">
+        <p class="print-signature-label">Dibuat Oleh,</p>
+        <div class="print-signature-line">Staf Keuangan</div>
       </div>
-      <div style="width: 200px; text-align: center;">
-        <p style="margin: 0 0 4.5rem 0; font-size: 0.85rem; color: #475569;">Disetujui Oleh,</p>
-        <div style="border-top: 1px solid #475569; padding-top: 0.4rem; font-weight: 700; font-size: 0.9rem;">
-          Pemilik (Owner)
-        </div>
+      <div class="print-signature-box">
+        <p class="print-signature-label">Disetujui Oleh,</p>
+        <div class="print-signature-line">Pemilik (Owner)</div>
       </div>
     </div>
   </div>

@@ -1,55 +1,52 @@
-<div style="font-family: 'Inter', sans-serif;">
-  
+<div style="font-family: var(--font-body);">
+
   <!-- Header Info -->
-  <div style="max-width: 800px; margin: 0 auto 2rem auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <div class="portal-history-page-header">
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; margin: 0; font-size: 1.5rem; letter-spacing: -0.02em;">Riwayat Booking & Live Monitor</h2>
+      <h2 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; margin: 0; font-size: 1.5rem; letter-spacing: -0.02em;">Riwayat Booking & Live Monitor</h2>
       <p style="color: #64748b; font-size: 0.85rem; margin: 0.25rem 0 0 0;">Pantau status persetujuan booking dan progres live pengerjaan servis mobil Anda.</p>
     </div>
-    
-    <button mat-stroked-button (click)="loadBookings()" [disabled]="loading" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; border-color: #cbd5e1; background-color: #ffffff;">
+
+    <button mat-stroked-button (click)="loadBookings()" [disabled]="loading"
+      style="font-family: var(--font-heading); font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px; border-color: #cbd5e1; background-color: #ffffff;">
       <mat-icon [class.pi-spin]="loading" style="margin-right: 0.25rem;">refresh</mat-icon>
       <span>Segarkan Halaman</span>
     </button>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" style="display: flex; justify-content: center; align-items: center; padding: 5rem 0;">
+  <div *ngIf="loading" class="portal-loading-state">
     <mat-spinner diameter="48"></mat-spinner>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && bookings.length === 0" 
-       style="max-width: 800px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 5rem 2rem; text-align: center; color: #64748b; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem;">
-    <mat-icon style="font-size: 4rem; width: auto; height: auto; color: #94a3b8;">calendar_today</mat-icon>
-    <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0.5rem 0 0 0; font-size: 1.1rem;">Belum Ada Riwayat Booking</h3>
-    <p style="font-size: 0.85rem; max-width: 380px; margin: 0;">Anda belum pernah mengajukan reservasi servis. Silakan buat reservasi pertama Anda sekarang.</p>
-    <button mat-flat-button color="primary" routerLink="/portal/booking" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #0284c7; color: #ffffff; padding: 0.6rem 1.2rem; border-radius: 8px; margin-top: 0.5rem;">
+  <div *ngIf="!loading && bookings.length === 0" class="portal-history-empty">
+    <mat-icon>calendar_today</mat-icon>
+    <h3>Belum Ada Riwayat Booking</h3>
+    <p>Anda belum pernah mengajukan reservasi servis. Silakan buat reservasi pertama Anda sekarang.</p>
+    <button mat-flat-button color="primary" routerLink="/portal/booking"
+      style="font-family: var(--font-heading); font-weight: 700; background-color: #0284c7; color: #ffffff; padding: 0.6rem 1.2rem; border-radius: 8px; margin-top: 0.5rem;">
       BUAT RESERVASI SEKARANG
     </button>
   </div>
 
   <!-- Bookings List -->
-  <div *ngIf="!loading && bookings.length > 0" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem;">
-    
+  <div *ngIf="!loading && bookings.length > 0" class="portal-history-list">
+
     <!-- Booking Card Loop -->
-    <div *ngFor="let b of bookings" 
-         style="background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s;"
-         onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-      
+    <div *ngFor="let b of bookings" class="portal-history-card">
+
       <!-- Card Header -->
       <div [style.border-left]="'4px solid ' + getStatusDetails(b.operationalStatus).color"
-           style="padding: 1.25rem 1.5rem; background-color: #fafafa; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        
+           class="portal-history-card-header">
+
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <mat-icon style="color: #64748b;">event</mat-icon>
+          <mat-icon class="input-suffix-icon">event</mat-icon>
           <div>
-            <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; font-size: 0.95rem;">
+            <span style="font-family: var(--font-heading); font-weight: 700; color: #1e293b; font-size: 0.95rem;">
               {{ b.bookingDate | date:'dd MMMM yyyy':'':'id-ID' }}
             </span>
-            <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #64748b; margin-left: 0.5rem; font-weight: 600; background-color: #e2e8f0; padding: 0.1rem 0.35rem; border-radius: 4px;">
-              {{ b.bookingTime }} WIB
-            </span>
+            <span class="history-time-chip">{{ b.bookingTime }} WIB</span>
           </div>
         </div>
 
@@ -58,7 +55,7 @@
           <span [style.background-color]="getStatusDetails(b.operationalStatus).color + '15'"
                 [style.color]="getStatusDetails(b.operationalStatus).color"
                 [style.border]="'1px solid ' + getStatusDetails(b.operationalStatus).color + '40'"
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                class="portal-status-pill">
             {{ getStatusDetails(b.operationalStatus).label }}
           </span>
         </div>
@@ -66,31 +63,28 @@
       </div>
 
       <!-- Card Body -->
-      <div style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-        
+      <div class="portal-history-card-body">
+
         <!-- Column 1: Info Mobil -->
-        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Kendaraan Terdaftar</span>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0f172a; background-color: #f1f5f9; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.9rem; border: 1px solid #cbd5e1; display: inline-block;">
-              {{ b.licensePlate }}
+        <div class="portal-history-card-col">
+          <span style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Kendaraan Terdaftar</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem; flex-wrap: wrap;">
+            <span style="font-size: 0.9rem; color: #0f172a; font-weight: 700;">
+              {{ b.vehicleBrand }} {{ b.vehicleModel }} ({{ b.transmission === 'AUTOMATIC' ? 'AT' : 'MT' }})
             </span>
+            <span style="color: #cbd5e1; font-weight: 600;">—</span>
+            <span class="history-plate-display">{{ b.licensePlate }}</span>
           </div>
-          <span style="font-size: 0.85rem; color: #1e293b; font-weight: 600; margin-top: 0.15rem;">
-            {{ b.vehicleBrand }} {{ b.vehicleModel }} ({{ b.transmission === 'AUTOMATIC' ? 'AT' : 'MT' }})
-          </span>
           <!-- Estimated Completion Badge -->
-          <div *ngIf="b.estimatedCompletion" style="display: flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; background-color: #fffbeb; border: 1px solid #fbbf2440; border-radius: 6px; padding: 0.25rem 0.6rem; width: fit-content;">
-            <mat-icon style="font-size: 0.85rem; width: 0.85rem; height: 0.85rem; color: #d97706;">alarm_on</mat-icon>
-            <span style="font-size: 0.7rem; font-weight: 600; color: #92400e;">
-              Estimasi Selesai: {{ b.estimatedCompletion | date:"dd MMM yyyy, HH:mm" }} WIB
-            </span>
+          <div *ngIf="b.estimatedCompletion" class="estimation-badge">
+            <mat-icon>alarm_on</mat-icon>
+            <span>Estimasi Selesai: {{ b.estimatedCompletion | date:"dd MMM yyyy, HH:mm" }} WIB</span>
           </div>
         </div>
 
         <!-- Column 2: Keluhan -->
-        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Keluhan / Masalah</span>
+        <div class="portal-history-card-col">
+          <span style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Keluhan / Masalah</span>
           <p style="font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.4;">
             {{ b.complaints || 'Tidak ada keluhan tertulis.' }}
           </p>
@@ -101,13 +95,13 @@
       <!-- Card Body: Estimation details (Expansion Panel) -->
       <mat-accordion *ngIf="b.estimationItems && b.estimationItems.length > 0">
         <mat-expansion-panel style="box-shadow: none; border-radius: 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; background-color: #f8fafc;">
-          
+
           <mat-expansion-panel-header style="padding: 0.75rem 1.5rem; height: auto; min-height: 48px;">
-            <mat-panel-title style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem; margin: 0;">
+            <mat-panel-title style="font-family: var(--font-heading); font-weight: 700; color: #475569; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.35rem; margin: 0;">
               <mat-icon style="font-size: 1.1rem; width: auto; height: auto; color: #1e3a8a; display: flex; align-items: center; justify-content: center;">build_circle</mat-icon>
               <span>Rincian Perbaikan & Biaya</span>
             </mat-panel-title>
-            <mat-panel-description style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #1e3a8a; font-size: 0.85rem; justify-content: flex-end; align-items: center; margin: 0; padding-right: 0.5rem;">
+            <mat-panel-description style="font-family: var(--font-heading); font-weight: 800; color: #1e3a8a; font-size: 0.85rem; justify-content: flex-end; align-items: center; margin: 0; padding-right: 0.5rem;">
               Total: Rp {{ b.totalAmount | number:'1.0-0' }}
             </mat-panel-description>
           </mat-expansion-panel-header>
@@ -115,23 +109,16 @@
           <div style="display: flex; flex-direction: column; gap: 0.75rem; padding: 0.5rem 0.5rem 0.75rem 0.5rem;">
             <!-- Items List -->
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <div *ngFor="let item of b.estimationItems" 
-                   style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding: 0.25rem 0; border-bottom: 1px dashed #cbd5e1; flex-wrap: wrap; gap: 0.5rem;">
-                
+              <div *ngFor="let item of b.estimationItems" class="expansion-item-row">
+
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                   <!-- Type Badge -->
-                  <span *ngIf="item.productType === 'SPR'" 
-                        style="font-size: 0.65rem; font-weight: 700; background-color: #e0f2fe; color: #0369a1; padding: 0.1rem 0.4rem; border-radius: 4px; letter-spacing: 0.02em;">
-                    SPAREPART
-                  </span>
-                  <span *ngIf="item.productType === 'SRV'" 
-                        style="font-size: 0.65rem; font-weight: 700; background-color: #dcfce7; color: #15803d; padding: 0.1rem 0.4rem; border-radius: 4px; letter-spacing: 0.02em;">
-                    JASA
-                  </span>
+                  <span *ngIf="item.productType === 'SPR'" class="item-type-badge item-type-badge--sparepart">SPAREPART</span>
+                  <span *ngIf="item.productType === 'SRV'" class="item-type-badge item-type-badge--jasa">JASA</span>
                   <span style="font-weight: 600; color: #1e293b;">{{ item.productName }}</span>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 1rem; font-family: 'Inter', sans-serif;">
+                <div style="display: flex; align-items: center; gap: 1rem; font-family: var(--font-body);">
                   <span style="color: #64748b; font-size: 0.75rem;">
                     {{ item.quantity }} x Rp {{ item.priceAtTransaction | number:'1.0-0' }}
                   </span>
@@ -144,24 +131,23 @@
             </div>
 
             <!-- Total Price Row inside -->
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif; border-top: 1px solid #cbd5e1;">
-              <span style="font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em;">Total Tagihan Perbaikan</span>
-              <span style="font-size: 0.95rem; font-weight: 800; color: #1e3a8a;">
-                Rp {{ b.totalAmount | number:'1.0-0' }}
-              </span>
+            <div class="expansion-total-row">
+              <span class="label">Total Tagihan Perbaikan</span>
+              <span class="amount">Rp {{ b.totalAmount | number:'1.0-0' }}</span>
             </div>
           </div>
 
         </mat-expansion-panel>
       </mat-accordion>
 
-      <!-- Card Footer (Informative Banner depending on status) -->
-      <div style="padding: 0.85rem 1.5rem; border-top: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #475569;">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon style="font-size: 1.1rem; width: auto; height: auto; color: #0284c7;">info</mat-icon>
+      <!-- Card Footer -->
+      <div class="portal-history-card-footer">
+        <div class="portal-history-card-footer-info">
+          <mat-icon>info</mat-icon>
           <span style="font-weight: 500;">{{ getStatusDetails(b.operationalStatus).desc }}</span>
         </div>
-        <button *ngIf="b.operationalStatus === 'PENDING'" mat-button color="warn" (click)="onCancelBooking(b.id)" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.75rem; color: #ef4444;">
+        <button *ngIf="b.operationalStatus === 'PENDING'" mat-button color="warn" (click)="onCancelBooking(b.id)"
+          style="font-family: var(--font-heading); font-weight: 700; font-size: 0.75rem; color: #ef4444;">
           <mat-icon style="font-size: 1rem; width: auto; height: auto; margin-right: 0.25rem;">cancel</mat-icon>
           BATALKAN
         </button>

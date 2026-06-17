@@ -1,69 +1,70 @@
-<div style="font-family: 'Inter', sans-serif; display: flex; flex-direction: column; gap: 2rem;">
+<div class="portal-page-stack">
 
   <!-- Header Section -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.25rem;">
+  <div class="portal-page-header">
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; margin: 0; font-size: 1.5rem; letter-spacing: -0.02em;">Daftar Kendaraan Saya</h2>
-      <p style="color: #64748b; font-size: 0.85rem; margin: 0.25rem 0 0 0;">Kelola daftar mobil Anda yang terdaftar di sistem pelayanan Pro Auto Garage.</p>
+      <h2>Daftar Kendaraan Saya</h2>
+      <p>Kelola daftar mobil Anda yang terdaftar di sistem pelayanan Pro Auto Garage.</p>
     </div>
-    
-    <button mat-flat-button color="primary" (click)="onAddVehicle()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; border-radius: 8px; padding: 0.6rem 1.25rem;">
+
+    <button mat-flat-button color="primary" (click)="onAddVehicle()"
+      style="font-family: var(--font-heading); font-weight: 700; background-color: #1e3a8a; color: #ffffff; border-radius: 8px; padding: 0.6rem 1.25rem;">
       <mat-icon style="margin-right: 0.35rem;">add_circle</mat-icon>
       TAMBAH KENDARAAN
     </button>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" style="display: flex; justify-content: center; align-items: center; padding: 5rem 0;">
+  <div *ngIf="loading" class="portal-loading-state">
     <mat-spinner diameter="48"></mat-spinner>
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && vehicles.length === 0" 
-       style="background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 5rem 2rem; text-align: center; color: #64748b; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; max-width: 600px; margin: 2rem auto;">
-    <mat-icon style="font-size: 4rem; width: auto; height: auto; color: #cbd5e1;">directions_car</mat-icon>
-    <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0.5rem 0 0 0; font-size: 1.1rem;">Belum Ada Kendaraan Terdaftar</h3>
-    <p style="font-size: 0.85rem; max-width: 380px; margin: 0;">Anda belum pernah menambahkan data mobil. Silakan daftarkan kendaraan Anda sekarang untuk mempermudah proses reservasi.</p>
-    <button mat-flat-button color="primary" (click)="onAddVehicle()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.2rem; border-radius: 8px; margin-top: 0.5rem;">
+  <div *ngIf="!loading && vehicles.length === 0" class="portal-empty-state-card">
+    <mat-icon>directions_car</mat-icon>
+    <h3>Belum Ada Kendaraan Terdaftar</h3>
+    <p>Anda belum pernah menambahkan data mobil. Silakan daftarkan kendaraan Anda sekarang untuk mempermudah proses reservasi.</p>
+    <button mat-flat-button color="primary" (click)="onAddVehicle()"
+      style="font-family: var(--font-heading); font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.2rem; border-radius: 8px; margin-top: 0.5rem;">
       DAFTARKAN KENDARAAN SEKARANG
     </button>
   </div>
 
   <!-- Vehicles Grid -->
-  <div *ngIf="!loading && vehicles.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
-    
+  <div *ngIf="!loading && vehicles.length > 0" class="portal-vehicles-grid">
+
     <!-- Vehicle Card -->
     <div *ngFor="let v of vehicles" class="car-card" style="position: relative; overflow: hidden; padding: 1.5rem; border-radius: 12px; border-left-width: 5px;">
-      
+
       <!-- Brand & Model -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #0f172a; font-size: 1.1rem; margin: 0;">
+        <h3 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; font-size: 1.1rem; margin: 0;">
           {{ v.brand }} {{ v.model }}
         </h3>
-        
-        <!-- Icons or transmission badge -->
-        <span style="font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; background-color: #f1f5f9; color: #475569; letter-spacing: 0.05em; text-transform: uppercase;">
+
+        <!-- Transmission badge -->
+        <span class="vehicle-transmission-badge">
           {{ v.transmission === 'AUTOMATIC' || v.transmission === 'Automatic (AT)' ? 'AT' : 'MT' }}
         </span>
       </div>
 
       <!-- Year -->
       <span style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Tahun Pembuatan: {{ v.yearMade || 'Tidak tercatat' }}</span>
-      
+
       <!-- Monospace License Plate -->
       <div style="margin: 1rem 0;">
-        <span class="plate-badge" style="font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 6px; letter-spacing: 0.08em; display: inline-block;">
+        <span class="plate-badge" style="font-size: 0.95rem; padding: 0.3rem 0.75rem; border-radius: 6px; letter-spacing: 0.08em; display: inline-block;">
           {{ v.licensePlate }}
         </span>
       </div>
 
-      <div style="border-top: 1px solid #f1f5f9; margin-top: 0.5rem; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
-        <button mat-stroked-button (click)="onEditVehicle(v)" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-color: #cbd5e1; color: #475569; padding: 0.25rem 0.75rem; height: 32px; line-height: 30px; border-radius: 6px;">
-          <mat-icon style="font-size: 1rem; width: auto; height: auto; margin-right: 0.25rem; vertical-align: middle;">edit</mat-icon>
+      <div class="vehicle-card-footer">
+        <button mat-stroked-button (click)="onEditVehicle(v)" class="vehicle-card-btn" style="border-color: #cbd5e1; color: #475569;">
+          <mat-icon>edit</mat-icon>
           EDIT
         </button>
-        <button mat-stroked-button color="warn" (click)="onDeleteVehicle(v)" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.75rem; border-color: #fecaca; color: #ef4444; padding: 0.25rem 0.75rem; height: 32px; line-height: 30px; border-radius: 6px;">
-          <mat-icon style="font-size: 1rem; width: auto; height: auto; margin-right: 0.25rem; vertical-align: middle;">delete_outline</mat-icon>
+        <button mat-stroked-button color="warn" (click)="onDeleteVehicle(v)" class="vehicle-card-btn" style="border-color: #fecaca; color: #ef4444;">
+          <mat-icon>delete_outline</mat-icon>
           HAPUS
         </button>
       </div>

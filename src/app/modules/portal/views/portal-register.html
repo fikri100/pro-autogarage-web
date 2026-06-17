@@ -1,79 +1,61 @@
-<div
-  style="min-height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); display: flex; align-items: center; justify-content: center; padding: 2rem; font-family: 'Inter', sans-serif;">
-  <div
-    style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 460px; overflow: hidden; border: 1px solid #e2e8f0;">
+<div class="auth-page-wrapper">
+  <div class="auth-card auth-card--wide">
 
     <!-- Header -->
-    <div
-      style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; text-align: center; color: #ffffff;">
-      <h2
-        style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1.4rem; margin: 0; letter-spacing: -0.02em;">
-        Pendaftaran Mandiri</h2>
-      <p style="color: #94a3b8; font-size: 0.8rem; margin: 0.25rem 0 0 0;">Daftarkan diri Anda untuk menikmati kemudahan
+    <div class="auth-card-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem;">
+      <h2 style="font-size: 1.4rem;">Pendaftaran Mandiri</h2>
+      <p style="font-size: 0.8rem; margin: 0.25rem 0 0 0;">Daftarkan diri Anda untuk menikmati kemudahan
         reservasi servis mobil.</p>
-
     </div>
 
     <!-- Forms Container -->
-    <div style="padding: 1.5rem 1.5rem 2rem 1.5rem;">
+    <div class="auth-card-body" style="padding: 1.5rem 1.5rem 2rem 1.5rem;">
 
       <mat-stepper [linear]="true" [selectedIndex]="step - 1" #stepper style="background: transparent;">
 
         <!-- STEP 1: Verifikasi WA -->
         <mat-step [stepControl]="step1Form" label="Verifikasi WA">
-          <form [formGroup]="step1Form" style="display: flex; flex-direction: column; gap: 1rem; padding-top: 1rem;">
+          <form [formGroup]="step1Form" class="auth-form" style="gap: 1rem; padding-top: 1rem;">
 
             <!-- Name -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nama
-                Lengkap</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
-                <input matInput formControlName="name" placeholder="Masukkan nama lengkap Anda" [readonly]="otpSent"
-                  style="font-family: 'Inter', sans-serif;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Nama Lengkap</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">badge</mat-icon>
+                <input matInput formControlName="name" placeholder="Masukkan nama lengkap Anda" [readonly]="otpSent" class="input-body">
                 <mat-error *ngIf="step1Form.get('name')?.hasError('required')">Nama wajib diisi</mat-error>
                 <mat-error *ngIf="step1Form.get('name')?.hasError('minlength')">Nama minimal 3 karakter</mat-error>
               </mat-form-field>
             </div>
 
             <!-- Phone -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nomor
-                WhatsApp</label>
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Nomor WhatsApp</label>
               <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
                 <mat-form-field appearance="outline" style="flex: 1;">
-                  <span matPrefix
-                    style="color: #64748b; margin-right: 0.5rem; font-weight: 600; padding-left: 16px">+62</span>
-                  <input matInput formControlName="phone" placeholder="8123456789" [readonly]="otpSent"
-                    style="font-family: 'Inter', sans-serif;">
+                  <span matPrefix class="phone-prefix" style="padding-left: 16px;">+62</span>
+                  <input matInput formControlName="phone" placeholder="8123456789" [readonly]="otpSent" class="input-body">
                   <mat-error *ngIf="step1Form.get('phone')?.hasError('required')">Nomor WhatsApp wajib diisi</mat-error>
-                  <mat-error *ngIf="step1Form.get('phone')?.hasError('pattern')">Format nomor tidak valid (angka saja,
-                    tanpa angka 0 di depan)</mat-error>
+                  <mat-error *ngIf="step1Form.get('phone')?.hasError('pattern')">Format nomor tidak valid (angka saja, tanpa angka 0 di depan)</mat-error>
                 </mat-form-field>
 
                 <button mat-stroked-button type="button" *ngIf="!otpSent" (click)="sendOTP()"
                   [disabled]="step1Form.get('name')?.invalid || step1Form.get('phone')?.invalid || loading"
-                  style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; height: 56px; border-radius: 8px; border-color: #0284c7; color: #0284c7;">
+                  class="btn-otp-send">
                   KIRIM OTP
                 </button>
               </div>
-              <span *ngIf="otpSent && !otpVerified"
-                style="font-size: 0.75rem; color: #0284c7; font-weight: 500; margin-top: -0.25rem;">
+              <span *ngIf="otpSent && !otpVerified" class="otp-sent-hint">
                 *OTP dikirim ke nomor WhatsApp Anda (Lihat log console/terminal backend).
               </span>
             </div>
 
             <!-- OTP Input -->
-            <div *ngIf="otpSent" style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Kode
-                Verifikasi OTP</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">sms</mat-icon>
-                <input matInput formControlName="otpCode" placeholder="Masukkan 6-digit kode OTP" maxLength="6"
-                  style="font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3em; font-weight: 700; text-align: center;">
+            <div *ngIf="otpSent" class="form-col-wrapper" style="margin-top: 0.5rem;">
+              <label class="form-label-static">Kode Verifikasi OTP</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">sms</mat-icon>
+                <input matInput formControlName="otpCode" placeholder="Masukkan 6-digit kode OTP" maxLength="6" class="input-otp">
                 <mat-error *ngIf="step1Form.get('otpCode')?.hasError('required')">Kode OTP wajib diisi</mat-error>
                 <mat-error *ngIf="step1Form.get('otpCode')?.hasError('pattern')">OTP harus 6 digit angka</mat-error>
               </mat-form-field>
@@ -82,7 +64,7 @@
             <!-- Send OTP Action -->
             <button mat-flat-button color="primary" type="button" *ngIf="otpSent" (click)="verifyOTP()"
               [disabled]="step1Form.invalid || loading"
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; background-color: #0284c7; color: #ffffff; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.5rem;">
+              class="btn-portal-submit">
               <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
               <span>VERIFIKASI OTP & LANJUT</span>
             </button>
@@ -93,57 +75,47 @@
         <!-- STEP 2: Set Akun -->
         <mat-step [stepControl]="step2Form" label="Set Akun">
           <form [formGroup]="step2Form" (ngSubmit)="onSubmitRegister()"
-            style="display: flex; flex-direction: column; gap: 1rem; padding-top: 1rem;">
+            class="auth-form" style="gap: 1rem; padding-top: 1rem;">
 
-            <div
-              style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 0.75rem 1rem; border-radius: 8px; display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
-              <mat-icon style="color: #16a34a;">check_circle</mat-icon>
-              <span style="font-size: 0.8rem; color: #166534; font-weight: 500;">Nomor +62 {{ step1Form.value.phone }}
-                telah terverifikasi!</span>
+            <div class="phone-verified-banner">
+              <mat-icon>check_circle</mat-icon>
+              <span>Nomor +62 {{ step1Form.value.phone }} telah terverifikasi!</span>
             </div>
 
             <!-- Username -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Username</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">person</mat-icon>
-                <input matInput formControlName="username" placeholder="Buat username unik Anda"
-                  style="font-family: 'Inter', sans-serif;">
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Username</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">person</mat-icon>
+                <input matInput formControlName="username" placeholder="Buat username unik Anda" class="input-body">
                 <mat-error *ngIf="step2Form.get('username')?.hasError('required')">Username wajib diisi</mat-error>
-                <mat-error *ngIf="step2Form.get('username')?.hasError('minlength')">Username minimal 4
-                  karakter</mat-error>
-                <mat-error *ngIf="step2Form.get('username')?.hasError('pattern')">Username hanya boleh berisi huruf,
-                  angka, dan underscore (_)</mat-error>
+                <mat-error *ngIf="step2Form.get('username')?.hasError('minlength')">Username minimal 4 karakter</mat-error>
+                <mat-error *ngIf="step2Form.get('username')?.hasError('pattern')">Username hanya boleh berisi huruf, angka, dan underscore (_)</mat-error>
               </mat-form-field>
             </div>
 
             <!-- Password -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Password</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">lock</mat-icon>
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Password</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">lock</mat-icon>
                 <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
-                  placeholder="Buat password aman Anda" style="font-family: 'Inter', sans-serif;">
+                  placeholder="Buat password aman Anda" class="input-body">
                 <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-                  <mat-icon style="color: #64748b;">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  <mat-icon class="input-suffix-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 <mat-error *ngIf="step2Form.get('password')?.hasError('required')">Password wajib diisi</mat-error>
-                <mat-error *ngIf="step2Form.get('password')?.hasError('minlength')">Password minimal 6
-                  karakter</mat-error>
+                <mat-error *ngIf="step2Form.get('password')?.hasError('minlength')">Password minimal 6 karakter</mat-error>
               </mat-form-field>
             </div>
 
             <!-- Alamat -->
-            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-              <label
-                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Alamat
-                Lengkap</label>
-              <mat-form-field appearance="outline" style="width: 100%;">
-                <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">home</mat-icon>
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Alamat Lengkap</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-icon matPrefix class="input-prefix-icon">home</mat-icon>
                 <textarea matInput formControlName="address" placeholder="Masukkan alamat lengkap tinggal Anda" rows="2"
-                  style="font-family: 'Inter', sans-serif; resize: none;"></textarea>
+                  class="input-body" style="resize: none;"></textarea>
                 <mat-error *ngIf="step2Form.get('address')?.hasError('required')">Alamat wajib diisi</mat-error>
                 <mat-error *ngIf="step2Form.get('address')?.hasError('minlength')">Alamat minimal 5 karakter</mat-error>
               </mat-form-field>
@@ -151,7 +123,7 @@
 
             <!-- Submit Register Action -->
             <button mat-flat-button color="primary" type="submit" [disabled]="step2Form.invalid || loading"
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; background-color: #0284c7; color: #ffffff; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 0.5rem;">
+              class="btn-portal-submit">
               <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
               <span>DAFTAR SEKARANG</span>
             </button>
@@ -162,12 +134,9 @@
       </mat-stepper>
 
       <!-- Footer Link -->
-      <div
-        style="border-top: 1px solid #f1f5f9; margin-top: 1.5rem; padding-top: 1.25rem; text-align: center; font-size: 0.85rem; color: #64748b;">
+      <div class="auth-footer-divider" style="margin-top: 1.5rem; padding-top: 1.25rem;">
         <span>Sudah punya akun? </span>
-        <a routerLink="/portal/login"
-          style="color: #0284c7; font-weight: 600; text-decoration: none; font-family: 'Plus Jakarta Sans', sans-serif;">Masuk
-          Ke Portal</a>
+        <a routerLink="/portal/login">Masuk Ke Portal</a>
       </div>
 
     </div>

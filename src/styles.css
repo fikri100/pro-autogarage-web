@@ -120,7 +120,7 @@ body {
 .layout-content {
   flex: 1;
   overflow-y: auto;
-  padding: 2rem;
+  padding: 1.25rem;
 }
 
 /* Sidebar Component */
@@ -1552,14 +1552,15 @@ table td,
 .form-label-static {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #475569;
+  margin-bottom: -0.1rem;
 }
 
 .form-col-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.2rem;
 }
 
 /* =============================================
@@ -1636,3 +1637,3429 @@ table td,
     height: 2.5rem;
   }
 }
+
+/* =============================================
+   PORTAL MODULE — Auth Pages (Login & Register)
+   ============================================= */
+
+/* Full-page auth wrapper (login & register) */
+.auth-page-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: var(--font-body);
+}
+
+/* Auth card container */
+.auth-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+/* Wider auth card for register page */
+.auth-card--wide {
+  max-width: 460px;
+}
+
+/* Dark gradient header inside auth card */
+.auth-card-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+.auth-card-header h2 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 1.5rem;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.auth-card-header p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0.35rem 0 0 0;
+}
+
+/* Icon box inside auth header */
+.auth-header-icon {
+  background-color: #38bdf8;
+  color: #0f172a;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.3);
+}
+
+.auth-header-icon mat-icon {
+  font-size: 1.5rem;
+  width: auto;
+  height: auto;
+}
+
+/* Form body padding inside auth card */
+.auth-card-body {
+  padding: 2.5rem 2rem;
+}
+
+/* Auth form vertical stack */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Portal primary submit button (blue #0284c7) */
+.btn-portal-submit {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-bold) !important;
+  padding: 0.75rem !important;
+  border-radius: 8px !important;
+  font-size: 0.95rem !important;
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+/* OTP send button (outlined, border #0284c7) */
+.btn-otp-send {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-bold) !important;
+  height: 56px !important;
+  border-radius: 8px !important;
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+}
+
+/* Auth footer divider & back-link area */
+.auth-footer-divider {
+  border-top: 1px solid #f1f5f9;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.auth-footer-divider a {
+  color: #0284c7;
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  font-family: var(--font-heading);
+}
+
+/* OTP sent info text */
+.otp-sent-hint {
+  font-size: 0.75rem;
+  color: #0284c7;
+  font-weight: var(--fw-medium);
+  margin-top: -0.25rem;
+}
+
+/* Phone verified success banner */
+.phone-verified-banner {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.phone-verified-banner mat-icon {
+  color: #16a34a;
+}
+
+.phone-verified-banner span {
+  font-size: 0.8rem;
+  color: #166534;
+  font-weight: var(--fw-medium);
+}
+
+
+/* =============================================
+   PORTAL MODULE — Card & Page Layout
+   ============================================= */
+
+/* Generic portal content wrapper */
+.portal-page-wrapper {
+  font-family: var(--font-body);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Portal page vertical stack layout */
+.portal-page-stack {
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Portal card (white rounded, for form/history containers) */
+.portal-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Max-width centered variant (booking/profile form) */
+.portal-card--narrow {
+  max-width: 680px;
+}
+
+/* Max-width centered variant for profile */
+.portal-card--medium {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Portal card header (title + subtitle area) */
+.portal-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.portal-card-header h2 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #0f172a;
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.portal-card-header p {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Portal card body padding */
+.portal-card-body {
+  padding: 1.25rem;
+}
+
+/* Portal form (vertical flex with consistent gap) */
+.portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Section heading inside portal forms (h3 uppercase label) */
+.portal-section-heading {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #334155;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Accent icon (blue #0284c7) used in portal section headings */
+.icon-accent {
+  color: #0284c7;
+  font-size: 1.2rem !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Horizontal divider in portal forms */
+.portal-form-divider {
+  border-top: 1px solid #f1f5f9;
+  margin: 0;
+}
+
+/* Selected vehicle lock banner */
+.vehicle-lock-banner {
+  grid-column: span 1;
+  background-color: #f0fdf4;
+  border: 1px dashed #bbf7d0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #166534;
+  font-size: 0.8rem;
+  font-weight: var(--fw-medium);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.vehicle-lock-banner mat-icon {
+  font-size: 1.1rem;
+  width: auto;
+  height: auto;
+  color: #16a34a;
+}
+
+/* Page header area (title + subtitle + optional button) */
+.portal-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1.25rem;
+}
+
+.portal-page-header h2 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #0f172a;
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.portal-page-header p {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Portal action footer (e.g., save button bar) */
+.portal-card-footer {
+  padding: 1rem 1.75rem;
+  background-color: #fafafa;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsive form grids inside portal */
+.portal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.portal-profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem;
+}
+
+@media (max-width: 768px) {
+  .portal-card-header {
+    padding: 1.15rem 1rem !important;
+  }
+
+  .portal-card-body {
+    padding: 1rem !important;
+  }
+
+  .portal-card-footer {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .portal-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .portal-profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Force grid children to stack as 1 column */
+  .portal-form-grid > *,
+  .portal-profile-grid > *,
+  .grid-span-2,
+  .grid-col-full {
+    grid-column: span 1 !important;
+  }
+
+  /* Reset margin on mobile for aligned items */
+  .portal-mt-sm {
+    margin-top: 0 !important;
+  }
+}
+
+/* Loading center state (portal pages) */
+.portal-loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 0;
+}
+
+/* Portal empty state card (full centered) */
+.portal-empty-state-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.portal-empty-state-card mat-icon {
+  font-size: 4rem;
+  width: auto;
+  height: auto;
+  color: #cbd5e1;
+}
+
+.portal-empty-state-card h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #1e293b;
+  margin: 0.5rem 0 0 0;
+  font-size: 1.1rem;
+}
+
+.portal-empty-state-card p {
+  font-size: 0.85rem;
+  max-width: 380px;
+  margin: 0;
+}
+
+
+/* =============================================
+   PORTAL MODULE — Dashboard (KPI & Welcome)
+   ============================================= */
+
+/* Full-page dashboard container */
+.portal-dashboard-wrapper {
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Welcome banner gradient */
+.portal-welcome-banner {
+  background: linear-gradient(135deg, #1e3a8a, #0f172a);
+  border-radius: 1rem;
+  padding: 2rem 2.5rem;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
+}
+
+.portal-welcome-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.portal-welcome-banner-eyebrow {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #38bdf8;
+}
+
+.portal-welcome-banner h2 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 1.75rem;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* KPI grid container */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+/* KPI card (uses .card-panel base) */
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+}
+
+/* KPI icon box */
+.kpi-icon-box {
+  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpi-icon-box mat-icon {
+  font-size: 1.5rem;
+  width: auto;
+  height: auto;
+}
+
+/* KPI icon color variants */
+.kpi-icon-box--blue {
+  background-color: #eff6ff;
+  color: #1e3a8a;
+}
+
+.kpi-icon-box--amber {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.kpi-icon-box--green {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+/* KPI text block */
+.kpi-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* KPI label (small caps) */
+.kpi-label {
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* KPI numeric value */
+.kpi-value {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: var(--fw-extrabold);
+  color: #0f172a;
+  margin: 0.15rem 0 0 0;
+  line-height: 1;
+}
+
+/* Estimation complete badge (amber) */
+.estimation-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  background-color: #fffbeb;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  width: fit-content;
+}
+
+.estimation-badge mat-icon {
+  font-size: 0.85rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  color: #d97706;
+}
+
+.estimation-badge span {
+  font-size: 0.7rem;
+  font-weight: var(--fw-semibold);
+  color: #92400e;
+}
+
+/* Booking row item in dashboard recent list */
+.booking-row-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Quick link button (portal sidebar shortcuts) */
+.portal-quick-link-btn {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-semibold) !important;
+  text-align: left !important;
+  padding: 0.6rem 1rem !important;
+  width: 100% !important;
+  border-radius: 8px !important;
+  border-color: #cbd5e1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.75rem !important;
+  height: auto !important;
+}
+
+.portal-quick-link-btn mat-icon {
+  color: #1e3a8a;
+}
+
+/* Support/help info box in dashboard */
+.portal-support-box {
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.portal-support-box-title {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #334155;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.portal-support-box p {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+
+/* =============================================
+   PORTAL MODULE — History Cards
+   ============================================= */
+
+/* Centered container for history page content */
+.portal-history-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* History page header (max-width centered) */
+.portal-history-page-header {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* History page empty state (max-width centered) */
+.portal-history-empty {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.portal-history-empty mat-icon {
+  font-size: 4rem;
+  width: auto;
+  height: auto;
+  color: #94a3b8;
+}
+
+.portal-history-empty h3 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #1e293b;
+  margin: 0.5rem 0 0 0;
+  font-size: 1.1rem;
+}
+
+/* History cards list */
+.portal-history-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Individual history booking card */
+.portal-history-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+.portal-history-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Card header section (colored left border, status badge) */
+.portal-history-card-header {
+  padding: 0.75rem 1.5rem;
+  background-color: #fafafa;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Card body (info grid) */
+.portal-history-card-body {
+  padding: 1.15rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card body info column */
+.portal-history-card-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Card footer */
+.portal-history-card-footer {
+  padding: 0.6rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.portal-history-card-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.portal-history-card-footer-info mat-icon {
+  font-size: 1.1rem;
+  width: auto;
+  height: auto;
+  color: #0284c7;
+}
+
+/* Status pill badge (dynamic color via [style.color] Angular binding) */
+.portal-status-pill {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Smaller status pill for dashboard recent list */
+.portal-status-pill--sm {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+}
+
+/* Item type badges (sparepart / jasa) */
+.item-type-badge {
+  font-size: 0.65rem;
+  font-weight: var(--fw-bold);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.item-type-badge--sparepart {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.item-type-badge--jasa {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* License plate display in history */
+.history-plate-display {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: #0f172a;
+  background-color: #f1f5f9;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border: 1px solid #cbd5e1;
+  display: inline-block;
+}
+
+/* Booking time chip in history card header */
+.history-time-chip {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-left: 0.5rem;
+  font-weight: var(--fw-semibold);
+  background-color: #e2e8f0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* Expansion panel item row (rincian biaya) */
+.expansion-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed #cbd5e1;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Total tagihan row inside expansion */
+.expansion-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  font-family: var(--font-heading);
+  border-top: 1px solid #cbd5e1;
+}
+
+.expansion-total-row .label {
+  font-size: 0.75rem;
+  font-weight: var(--fw-bold);
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.expansion-total-row .amount {
+  font-size: 0.95rem;
+  font-weight: var(--fw-extrabold);
+  color: #1e3a8a;
+}
+
+
+/* =============================================
+   PORTAL MODULE — Vehicle Page & Transmission Badge
+   ============================================= */
+
+/* Vehicles grid */
+.portal-vehicles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Transmission badge on vehicle card */
+.vehicle-transmission-badge {
+  font-size: 0.65rem;
+  font-weight: var(--fw-bold);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  color: #475569;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Vehicle card action footer */
+.vehicle-card-footer {
+  border-top: 1px solid #f1f5f9;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Small action button on car cards */
+.vehicle-card-btn {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-semibold) !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.75rem !important;
+  height: 32px !important;
+  line-height: 30px !important;
+  border-radius: 6px !important;
+}
+
+.vehicle-card-btn mat-icon {
+  font-size: 1rem !important;
+  width: auto !important;
+  height: auto !important;
+  margin-right: 0.25rem !important;
+  vertical-align: middle;
+}
+
+/* Dialog responsive grid for vehicle dialog */
+.responsive-dialog-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .responsive-dialog-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* =============================================
+   PORTAL MODULE — Shared Input/Icon Utilities
+   ============================================= */
+
+/* Muted prefix icon inside mat-form-field */
+.input-prefix-icon {
+  color: #64748b;
+  margin-right: 0.5rem;
+}
+
+/* Muted suffix icon */
+.input-suffix-icon {
+  color: #64748b;
+}
+
+/* License plate input font */
+.input-plate {
+  font-family: var(--font-mono) !important;
+  font-weight: var(--fw-bold) !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* Regular inter body input */
+.input-body {
+  font-family: var(--font-body) !important;
+}
+
+/* OTP center input */
+.input-otp {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.3em !important;
+  font-weight: var(--fw-bold) !important;
+  text-align: center !important;
+}
+
+/* =============================================
+   ADMIN MODULE — Page Header Utilities
+   ============================================= */
+
+/* Standard admin page title */
+.page-title {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #1e293b;
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+/* Standard admin page subtitle */
+.page-subtitle {
+  font-family: var(--font-body);
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+/* Admin action header row */
+.admin-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Flex row with gap for action buttons */
+.admin-action-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+
+/* =============================================
+   ADMIN MODULE — KPI Cards (Dashboard, Finance, Reports)
+   ============================================= */
+
+/* Shared KPI card base (gradient card with icon) */
+.admin-kpi-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+/* Inner layout: icon right, text left */
+.admin-kpi-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* KPI label (small caps heading) */
+.admin-kpi-label {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-semibold);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* KPI large numeric value */
+.admin-kpi-value {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 1.8rem;
+  margin: 0.5rem 0 0.25rem 0;
+}
+
+/* KPI sub-label / description */
+.admin-kpi-sub {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+}
+
+/* KPI icon box (40x40 rounded) */
+.admin-kpi-icon {
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Color variants — Emerald (pemasukan, pelanggan) */
+.admin-kpi-card--emerald {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #a7f3d0;
+}
+.admin-kpi-card--emerald .admin-kpi-label { color: #065f46; }
+.admin-kpi-card--emerald .admin-kpi-value { color: #047857; }
+.admin-kpi-card--emerald .admin-kpi-sub   { color: #059669; }
+.admin-kpi-card--emerald .admin-kpi-icon  { background-color: #a7f3d0; color: #047857; }
+
+/* Rose (pengeluaran) */
+.admin-kpi-card--rose {
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  border: 1px solid #fecdd3;
+}
+.admin-kpi-card--rose .admin-kpi-label { color: #9f1239; }
+.admin-kpi-card--rose .admin-kpi-value { color: #be123c; }
+.admin-kpi-card--rose .admin-kpi-sub   { color: #e11d48; }
+.admin-kpi-card--rose .admin-kpi-icon  { background-color: #fecdd3; color: #be123c; }
+
+/* Blue (servis aktif, saldo bersih) */
+.admin-kpi-card--blue {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe;
+}
+.admin-kpi-card--blue .admin-kpi-label { color: #1e40af; }
+.admin-kpi-card--blue .admin-kpi-value { color: #1d4ed8; }
+.admin-kpi-card--blue .admin-kpi-sub   { color: #2563eb; }
+.admin-kpi-card--blue .admin-kpi-icon  { background-color: #bfdbfe; color: #1d4ed8; }
+
+/* Amber/Gold (booking pending, laba kotor) */
+.admin-kpi-card--amber {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+}
+.admin-kpi-card--amber .admin-kpi-label { color: #92400e; }
+.admin-kpi-card--amber .admin-kpi-value { color: #b45309; }
+.admin-kpi-card--amber .admin-kpi-sub   { color: #d97706; }
+.admin-kpi-card--amber .admin-kpi-icon  { background-color: #fde68a; color: #b45309; }
+
+/* Slate (pendapatan hari ini) */
+.admin-kpi-card--slate {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+}
+.admin-kpi-card--slate .admin-kpi-label { color: #334155; }
+.admin-kpi-card--slate .admin-kpi-value { color: #1e293b; }
+.admin-kpi-card--slate .admin-kpi-sub   { color: #475569; }
+.admin-kpi-card--slate .admin-kpi-icon  { background-color: #e2e8f0; color: #334155; }
+
+/* Reports KPI cards — smaller value, lighter font */
+.admin-kpi-value--sm {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  font-size: 1.55rem;
+  margin: 0.5rem 0 0.25rem 0;
+  letter-spacing: -0.02em;
+}
+
+
+/* =============================================
+   ADMIN MODULE — Dashboard Panel Cards
+   ============================================= */
+
+/* Standard admin panel card (booking queue, live WO monitor) */
+.admin-panel-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Panel body with relative positioning (for spinner overlay) */
+.admin-panel-body {
+  position: relative;
+  flex: 1;
+  min-height: 250px;
+}
+
+/* Panel loading state */
+.admin-panel-loading {
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Panel empty state */
+.admin-panel-empty {
+  padding: 5rem 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.admin-panel-empty mat-icon {
+  font-size: 3.5rem;
+  width: auto;
+  height: auto;
+  color: #cbd5e1;
+}
+
+.admin-panel-empty .admin-panel-empty-title {
+  font-weight: var(--fw-semibold);
+  color: #475569;
+}
+
+.admin-panel-empty .admin-panel-empty-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Table scroll container inside panel */
+.admin-panel-table-wrap {
+  overflow-x: auto;
+}
+
+/* Standard mat-table header row */
+.admin-table-header-row {
+  border-bottom: 2px solid #e2e8f0;
+  background-color: #f8fafc;
+}
+
+/* Standard mat-table body row */
+.admin-table-row {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* mat-table th */
+.admin-th {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-bold) !important;
+  padding: 1rem !important;
+  color: #475569 !important;
+}
+
+/* mat-table td */
+.admin-td {
+  font-family: var(--font-body) !important;
+  padding: 1rem !important;
+  color: #334155 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Table cell: date/time stacked */
+.admin-td-date-primary {
+  font-weight: var(--fw-semibold);
+  color: #1e293b;
+}
+
+.admin-td-date-secondary {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+/* Inline plate badge inside table cell */
+.admin-td-plate {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semibold);
+  color: #1e293b;
+  background-color: #f1f5f9;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Pending count badge inside panel header */
+.admin-count-badge--amber {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.admin-count-badge--blue {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+/* Self-service inline badge */
+.badge-self-service {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 0.65rem;
+  background-color: #ecfdf5;
+  color: #059669;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid #a7f3d0;
+  display: inline-block;
+}
+
+/* Ownership conflict warning (plat beda pemilik) */
+.ownership-conflict-warn {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  color: #ef4444;
+  font-weight: var(--fw-semibold);
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ownership-conflict-warn mat-icon {
+  font-size: 0.85rem;
+  width: auto;
+  height: auto;
+}
+
+/* Approve / Cancel action buttons inside table */
+.admin-action-btn-approve {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: auto !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.admin-action-btn-cancel {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: auto !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.admin-action-btn-approve mat-icon,
+.admin-action-btn-cancel mat-icon {
+  font-size: 1.1rem;
+  width: auto;
+  height: auto;
+}
+
+.admin-action-group-center {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Work Status pill (dynamic colors, use with [style.x]) */
+.admin-status-pill {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-semibold);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  display: inline-block;
+}
+
+
+/* =============================================
+   ADMIN MODULE — Finance Chart & Filter Section
+   ============================================= */
+
+/* Chart section card */
+.admin-chart-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Chart header row (title + period toggle) */
+.admin-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-chart-header h4 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #1e293b;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.admin-chart-header p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.15rem 0 0 0;
+}
+
+/* Period toggle group (harian/bulanan) */
+.admin-chart-period-group {
+  display: flex;
+  background-color: #f1f5f9;
+  padding: 0.25rem;
+  border-radius: 8px;
+  gap: 0.25rem;
+}
+
+.admin-chart-period-btn {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-semibold) !important;
+  font-size: 0.75rem !important;
+  border-radius: 6px !important;
+  padding: 0.25rem 0.75rem !important;
+  min-width: auto !important;
+  height: 32px !important;
+  color: #1e293b !important;
+}
+
+/* SVG Chart wrapper */
+.admin-chart-area {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Chart loading overlay */
+.admin-chart-loading {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Chart empty state */
+.admin-chart-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-family: var(--font-body);
+}
+
+.admin-chart-empty mat-icon {
+  font-size: 3rem;
+  width: auto;
+  height: auto;
+  margin-bottom: 0.5rem;
+  color: #cbd5e1;
+}
+
+/* Chart y-axis column */
+.admin-chart-yaxis {
+  width: 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-right: 0.75rem;
+  border-right: 1px solid #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+/* Chart bars columns container */
+.admin-chart-bars {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding-left: 0.75rem;
+  position: relative;
+}
+
+/* Mid gridline */
+.admin-chart-midline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  border-top: 1px dashed #f1f5f9;
+  z-index: 1;
+}
+
+/* Bar column wrapper */
+.admin-chart-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 2;
+  max-width: 80px;
+}
+
+/* Bar pair inner */
+.admin-chart-bar-pair {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Income bar */
+.admin-chart-bar--income {
+  width: 14px;
+  background: linear-gradient(to top, #10b981, #34d399);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease-in-out;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Expense bar */
+.admin-chart-bar--expense {
+  width: 14px;
+  background: linear-gradient(to top, #f43f5e, #fb7185);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease-in-out;
+  cursor: pointer;
+  position: relative;
+}
+
+/* X-axis label under each bar */
+.admin-chart-xlabel {
+  position: absolute;
+  bottom: -20px;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: var(--fw-semibold);
+  color: #64748b;
+  white-space: nowrap;
+  transform: rotate(-15deg);
+  transform-origin: top center;
+}
+
+/* Chart legend row */
+.admin-chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: var(--fw-semibold);
+  color: #475569;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.admin-chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-chart-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.admin-chart-legend-dot--income {
+  background-color: #10b981;
+}
+
+.admin-chart-legend-dot--expense {
+  background-color: #f43f5e;
+}
+
+/* Cashflow type chip (PEMASUKAN/PENGELUARAN) */
+.cashflow-badge--inc {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  font-weight: var(--fw-semibold);
+}
+
+.cashflow-badge--exp {
+  background-color: #ffe4e6;
+  color: #9f1239;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  font-weight: var(--fw-semibold);
+}
+
+/* Auto tag (from transaction) */
+.cashflow-auto-tag {
+  font-family: var(--font-mono);
+  color: #3b82f6;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  font-weight: var(--fw-semibold);
+}
+
+/* Finance filter section card */
+.admin-filter-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Finance filter header */
+.admin-filter-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #fafafa;
+}
+
+.admin-filter-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-filter-header-left mat-icon {
+  color: #64748b;
+}
+
+.admin-filter-header-left span {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #334155;
+  font-size: 1rem;
+}
+
+/* Finance filter body */
+.admin-filter-body {
+  padding: 1.25rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Table section inside filter card */
+.admin-table-section {
+  position: relative;
+  width: 100%;
+}
+
+/* Empty state inside table section */
+.admin-table-empty {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.admin-table-empty mat-icon {
+  font-size: 3rem;
+  width: auto;
+  height: auto;
+  color: #cbd5e1;
+}
+
+
+/* =============================================
+   ADMIN MODULE — Work Order Specific
+   ============================================= */
+
+/* Mechanic assignment grid (3-col: mechanic, notes, save btn) */
+.mechanic-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr auto;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .mechanic-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .mechanic-grid mat-form-field {
+    margin-bottom: 0 !important;
+  }
+
+  .mechanic-grid button {
+    height: 3.25rem !important;
+    width: 100% !important;
+  }
+
+  .estimation-header {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+
+  .estimation-header button {
+    width: 100% !important;
+  }
+
+  .total-panel {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+
+  .total-panel div {
+    text-align: left !important;
+  }
+}
+
+/* Estimation completion preview box */
+.estimation-preview-box {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.estimation-preview-box mat-icon {
+  color: #d97706;
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.estimation-preview-eyebrow {
+  font-size: 0.65rem;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #92400e;
+}
+
+.estimation-preview-value {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #78350f;
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+}
+
+/* Total panel (biaya estimasi total) */
+.total-panel {
+  background-color: #f1f5f9;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  border: 1px solid #cbd5e1;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.total-panel-amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-top: 0.15rem;
+}
+
+/* Completed WO "Menunggu Kasir" info box */
+.wo-completed-info-box {
+  text-align: right;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.35rem;
+}
+
+.wo-completed-info-box-label {
+  font-size: 0.65rem;
+  font-weight: var(--fw-bold);
+  color: #047857;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.wo-completed-info-box-sub {
+  font-size: 0.8rem;
+  font-weight: var(--fw-medium);
+  color: #065f46;
+  margin-top: 0.15rem;
+}
+
+/* WO list item in left panel */
+.wo-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+}
+
+/* Booking card filter row */
+.booking-filter-row {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.booking-filter-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-filter-label mat-icon {
+  color: #1e3a8a;
+}
+
+.booking-filter-label span {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-semibold);
+  color: #475569;
+  font-size: var(--text-sm);
+}
+
+.booking-filter-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Booking paginator styling */
+.booking-paginator {
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Reports module note info box */
+.reports-note-box {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.reports-note-box mat-icon {
+  color: #2563eb;
+  font-size: 1.25rem;
+  width: auto;
+  height: auto;
+}
+
+.reports-note-box h5 {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  color: #1e3a8a;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.reports-note-box p {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: #1e40af;
+  margin: 0.25rem 0 0 0;
+  line-height: 1.4;
+}
+
+/* ===========================================
+   ADMIN MODULES — Shared & View Specific
+   =========================================== */
+
+/* Shared/Utility Admin Styles */
+.btn-admin-manual-cash {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  padding: 0.6rem 1.25rem !important;
+  border-radius: 8px !important;
+  letter-spacing: 0.02em !important;
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.btn-admin-reset {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  color: #64748b !important;
+  padding: 0 0.75rem !important;
+}
+
+.btn-admin-refresh {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: 8px !important;
+  border-color: #cbd5e1 !important;
+  background-color: #ffffff !important;
+}
+
+.btn-admin-print {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  padding: 0.6rem 1.25rem !important;
+  border-radius: 8px !important;
+  letter-spacing: 0.02em !important;
+  background-color: #1e3a8a !important;
+  color: #ffffff !important;
+}
+
+.icon-mr-1 {
+  margin-right: 0.25rem !important;
+}
+
+.admin-kpi-sub-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin-top: 0.35rem;
+}
+
+.admin-table-full {
+  width: 100% !important;
+}
+
+.admin-td-padding {
+  padding: 1rem 1.5rem !important;
+}
+
+.admin-th-padding {
+  padding: 1rem 1.5rem !important;
+}
+
+.admin-td-amount-inc {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  color: #047857;
+}
+
+.admin-td-amount-exp {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  color: #be123c;
+}
+
+.admin-td-desc {
+  padding: 1rem 1.5rem !important;
+  color: #64748b;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.admin-th-center-action {
+  padding: 1rem 1.5rem !important;
+  text-align: center;
+  width: 80px;
+}
+
+.admin-td-center-action {
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+}
+
+.admin-td-action-btn-disabled {
+  color: #cbd5e1 !important;
+}
+
+.admin-td-action-btn-enabled {
+  color: #ef4444 !important;
+}
+
+.admin-paginator-border {
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Dashboard Specific Styles */
+.kpi-badge-ping-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  height: 10px;
+  width: 10px;
+}
+
+.kpi-badge-ping-dot {
+  position: absolute;
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px;
+  background-color: #ef4444;
+  opacity: 0.75;
+}
+
+.kpi-badge-active-dot {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px;
+  height: 10px;
+  width: 10px;
+  background-color: #ef4444;
+}
+
+.flex-align-center-gap-2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.text-heading-bold-slate {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.text-semi-bold-slate {
+  font-weight: 600;
+  color: #334155;
+}
+
+.text-slate-muted-xs {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.text-slate-muted-sm {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.text-slate-muted-xs-ellipsis {
+  color: #64748b;
+  font-size: 0.8rem;
+  max-width: 140px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.th-center-w120 {
+  text-align: center;
+  width: 120px;
+}
+
+.td-padding-sm-center {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.td-padding-md-center {
+  padding: 1rem;
+  text-align: center;
+}
+
+.td-plate-cell {
+  padding: 1rem;
+}
+
+.plate-badge-styled {
+  font-size: 0.9rem;
+  border: 1px solid #cbd5e1;
+}
+
+.icon-engineering-gray {
+  font-size: 1rem;
+  width: auto;
+  height: auto;
+  color: #64748b;
+}
+
+.text-gray-semi-bold-500 {
+  color: #475569;
+  font-weight: 500;
+}
+
+.text-gray-medium {
+  color: #475569;
+}
+
+/* Reports Specific Styles */
+.fullscreen-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.fullscreen-loading-text {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: #475569;
+  margin-top: 1rem;
+}
+
+.admin-kpi-card--purple {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%) !important;
+  border: 1px solid #e9d5ff !important;
+}
+
+.admin-kpi-label--purple {
+  color: #5b21b6 !important;
+}
+
+.admin-kpi-sub-purple {
+  color: #7c3aed !important;
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-tab-group {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+  overflow: hidden !important;
+}
+
+.admin-tab-label-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0 0.5rem;
+}
+
+.tab-content-padding {
+  padding: 2rem !important;
+}
+
+.financial-report-header {
+  border-bottom: 2px solid #334155;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.financial-report-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.financial-report-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+}
+
+.financial-report-currency {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.05em;
+}
+
+.financial-report-table-wrap {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.financial-report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+}
+
+.financial-report-table .section-header-row {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.financial-report-table .section-header-cell {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1.25rem;
+  color: #0f172a;
+  font-size: 0.9rem;
+}
+
+.financial-report-table .item-row {
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.financial-report-table .item-cell-label {
+  padding: 0.75rem 2rem;
+  color: #334155;
+}
+
+.financial-report-table .item-cell-label-flex {
+  padding: 0.75rem 2rem;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.financial-report-table .item-cell-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+}
+
+.financial-report-table .item-cell-value-mono {
+  text-align: right;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.financial-report-table .item-cell-value-mono-neg {
+  text-align: right;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #dc2626;
+}
+
+.financial-report-table .total-gross-row {
+  border-bottom: 1px solid #94a3b8;
+  font-weight: 700;
+}
+
+.financial-report-table .total-gross-label {
+  padding: 0.8rem 1.5rem;
+  color: #1e3a8a;
+  font-family: var(--font-heading);
+}
+
+.financial-report-table .total-gross-value {
+  text-align: right;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #1e3a8a;
+  font-size: 0.95rem;
+}
+
+.financial-report-table .total-cogs-label {
+  padding: 0.8rem 1.5rem;
+  color: #92400e;
+  font-family: var(--font-heading);
+}
+
+.financial-report-table .total-cogs-value {
+  text-align: right;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #b45309;
+  font-size: 0.95rem;
+}
+
+.financial-report-table .gross-profit-row {
+  background-color: #f0fdf4;
+  border-bottom: 2px solid #86efac;
+  border-top: 2px solid #86efac;
+  font-weight: 800;
+}
+
+.financial-report-table .gross-profit-label {
+  padding: 0.9rem 1.25rem;
+  color: #166534;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+}
+
+.financial-report-table .gross-profit-value {
+  text-align: right;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #166534;
+  font-size: 1.05rem;
+}
+
+.financial-report-table .total-expenses-label {
+  padding: 0.8rem 1.5rem;
+  color: #9f1239;
+  font-family: var(--font-heading);
+}
+
+.financial-report-table .total-expenses-value {
+  text-align: right;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-mono);
+  color: #be123c;
+  font-size: 0.95rem;
+}
+
+.financial-report-table .net-profit-row {
+  background-color: #faf5ff;
+  border-bottom: 3px double #d8b4fe;
+  border-top: 2px solid #c084fc;
+  font-weight: 900;
+}
+
+.financial-report-table .net-profit-label {
+  padding: 1rem 1.25rem;
+  color: #6b21a8;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+}
+
+.financial-report-table .net-profit-value {
+  text-align: right;
+  padding: 1rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+}
+
+/* Bar Chart styling */
+.chart-border-area {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 1rem 1rem 0.5rem 1rem;
+}
+
+.chart-yaxis-small {
+  font-size: 0.65rem;
+}
+
+.chart-bar-income-styled {
+  width: 12px;
+  border-radius: 3px 3px 0 0;
+}
+
+.chart-bar-expense-styled {
+  width: 12px;
+  border-radius: 3px 3px 0 0;
+}
+
+.chart-legend-small-bold {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.chart-rincian-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #334155;
+  margin: 2rem 0 0.75rem 0;
+  font-size: 0.95rem;
+}
+
+.chart-table-wrap {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.chart-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+
+.chart-table-thead-row {
+  background-color: #f8fafc;
+  border-bottom: 2px solid #cbd5e1;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #475569;
+  text-align: left;
+}
+
+.chart-table-th {
+  padding: 0.75rem 1.25rem;
+}
+
+.chart-table-th-right {
+  padding: 0.75rem 1.25rem;
+  text-align: right;
+}
+
+.chart-table-tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.chart-table-td-label {
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.chart-table-td-inc {
+  padding: 0.75rem 1.25rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  color: #047857;
+  font-weight: 600;
+}
+
+.chart-table-td-exp {
+  padding: 0.75rem 1.25rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  color: #be123c;
+}
+
+.chart-table-td-net {
+  padding: 0.75rem 1.25rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.chart-table-td-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Donut Chart styling */
+.donut-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.15rem;
+}
+
+.donut-flex-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.donut-wrap {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.donut-loading-box {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inset: 0;
+  background: rgba(255,255,255,0.7);
+  z-index: 5;
+}
+
+.donut-empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  min-height: 220px;
+  font-family: var(--font-body);
+}
+
+.donut-empty-icon {
+  font-size: 3rem;
+  width: auto;
+  height: auto;
+  margin-bottom: 0.5rem;
+  color: #cbd5e1;
+}
+
+.donut-svg-element {
+  transform: rotate(0deg);
+  overflow: visible;
+}
+
+.donut-svg-text-label {
+  font-family: var(--font-heading);
+  font-size: 2.8px;
+  font-weight: 700;
+  fill: #64748b;
+}
+
+.donut-svg-text-val {
+  font-family: var(--font-mono);
+  font-size: 3.2px;
+  font-weight: 800;
+  fill: #be123c;
+}
+
+.donut-legend-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.donut-legend-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #475569;
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.donut-legend-card {
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.donut-legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.donut-legend-left-col {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.donut-legend-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.donut-legend-label {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 0.85rem;
+}
+
+.donut-legend-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.donut-legend-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: #be123c;
+  font-size: 0.9rem;
+}
+
+.donut-legend-pct {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.donut-progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 0.2rem;
+}
+
+.donut-progress-bar-inner {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Printable Section styles */
+.print-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 3px double #0f172a;
+  padding-bottom: 1.5rem;
+}
+
+.print-title {
+  font-family: var(--font-heading);
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0;
+  font-size: 2.2rem;
+  letter-spacing: -0.04em;
+}
+
+.print-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: #334155;
+  margin: 0.35rem 0 0 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.print-date {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.15rem 0 0 0;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  margin-bottom: 3rem;
+}
+
+.print-table-section-row {
+  background-color: #f1f5f9;
+  border-bottom: 2px solid #0f172a;
+}
+
+.print-table-section-th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.print-table-section-th-val {
+  padding: 0.85rem 1rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.print-table-row {
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.print-table-td-label {
+  padding: 0.75rem 1.5rem;
+}
+
+.print-table-td-val {
+  text-align: right;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+}
+
+.print-table-td-val-neg {
+  text-align: right;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  color: #dc2626;
+}
+
+.print-table-total-row {
+  border-bottom: 2px solid #475569;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+.print-table-total-td-label {
+  padding: 0.85rem 1rem;
+}
+
+.print-table-total-td-val {
+  text-align: right;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+}
+
+.print-table-total-td-val-neg {
+  text-align: right;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+  color: #dc2626;
+}
+
+.print-table-gross-profit-row {
+  background-color: #ecfdf5;
+  border-bottom: 2.5px solid #059669;
+  border-top: 2.5px solid #059669;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.print-table-gross-profit-td-label {
+  padding: 1rem;
+  color: #047857;
+  font-family: var(--font-heading);
+}
+
+.print-table-gross-profit-td-val {
+  text-align: right;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  color: #047857;
+}
+
+.print-table-net-profit-row {
+  background-color: #faf5ff;
+  border-bottom: 3.5px double #5b21b6;
+  border-top: 2.5px solid #7c3aed;
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.print-table-net-profit-td-label {
+  padding: 1.15rem 1rem;
+  color: #5b21b6;
+  font-family: var(--font-heading);
+}
+
+.print-table-net-profit-td-val {
+  text-align: right;
+  padding: 1.15rem 1rem;
+  font-family: var(--font-mono);
+}
+
+.print-signature-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5rem;
+  font-family: var(--font-body);
+}
+
+.print-signature-box {
+  width: 200px;
+  text-align: center;
+}
+
+.print-signature-label {
+  margin: 0 0 4.5rem 0;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.print-signature-line {
+  border-top: 1px solid #475569;
+  padding-top: 0.4rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Booking Specific Styles */
+.booking-empty-box {
+  padding: 5rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.booking-empty-icon {
+  font-size: 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  color: #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+.booking-empty-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.booking-card-profile-row {
+  display: flex;
+  gap: 0.875rem;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.75rem;
+}
+
+.booking-card-avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  color: #374151;
+}
+
+.booking-card-name-label {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.booking-card-phone-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.booking-card-badge-align {
+  margin-left: auto;
+}
+
+.booking-card-vehicle-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.35rem;
+}
+
+.booking-card-vehicle-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-card-vehicle-label {
+  font-size: 0.6rem;
+  color: #94a3b8;
+}
+
+.booking-card-vehicle-val {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.booking-card-plate-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.booking-card-datetime-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.booking-card-datetime-icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+  color: #64748b;
+}
+
+.booking-card-complaints-box {
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 0.75rem;
+}
+
+.booking-card-complaints-eyebrow {
+  font-size: 0.6rem;
+}
+
+.booking-card-complaints-text {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.4;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.booking-card-actions-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.booking-card-btn-cancel {
+  flex: 1;
+  font-size: 0.75rem;
+}
+
+.booking-card-btn-confirm {
+  flex: 1.5;
+  font-size: 0.75rem;
+}
+
+/* Work Order Specific Styles */
+.wo-detail-header-border {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+  margin-bottom: 0;
+}
+
+.wo-detail-avatar-gradient {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  border-radius: 0.5rem;
+}
+
+.wo-detail-avatar-icon {
+  font-size: 1.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.wo-detail-plate-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.wo-detail-plate-badge {
+  font-size: 1.25rem;
+  font-weight: 800;
+  padding: 0.2rem 0.625rem;
+}
+
+.wo-detail-vehicle-label {
+  font-size: 1.15rem;
+  color: #475569;
+}
+
+.wo-detail-sub-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.wo-btn-save-assignment {
+  height: 3.25rem;
+  border-color: #cbd5e1;
+}
+
+.wo-duration-grid {
+  margin-top: 1rem;
+}
+
+.wo-estimation-pricing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.wo-estimation-pricing-table-wrap {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: white;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wo-estimation-pricing-empty {
+  padding: 4rem;
+}
+
+.wo-estimation-pricing-empty-icon {
+  color: #cbd5e1;
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.wo-estimation-pricing-empty-p {
+  margin-top: 0.5rem;
+}
+
+.wo-estimation-pricing-cell-code {
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.wo-estimation-pricing-cell-name {
+  font-weight: 500;
+  color: #334155;
+}
+
+.wo-estimation-pricing-cell-qty {
+  text-align: center;
+  font-weight: 600;
+}
+
+.wo-estimation-pricing-cell-subtotal {
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.wo-estimation-pricing-cell-actions {
+  width: 50px;
+}
+
+.wo-estimation-pricing-delete-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.wo-empty-detail-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem;
+  gap: 1rem;
+  color: #94a3b8;
+}
+
+.wo-empty-detail-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #cbd5e1;
+}
+
+.wo-empty-detail-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.admin-chart-main-row {
+  flex: 1 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.admin-field-icon-prefix {
+  color: #64748b !important;
+  margin-right: 0.5rem !important;
+  vertical-align: middle !important;
+}
+
+.admin-td-amount-wrap {
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.5rem !important;
+  font-size: 0.95rem !important;
+}
+
+.admin-kpi-value--lg {
+  font-size: 1.8rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+.icon-amber {
+  color: #d97706 !important;
+}
+
+.icon-blue {
+  color: #3b82f6 !important;
+}
+
+.th-center {
+  text-align: center !important;
+}
+
+.admin-mb-2rem {
+  margin-bottom: 2rem !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
+}
+
+.no-print-section {
+  display: none !important;
+  background: white;
+  padding: 0;
+}
+
+@media print {
+  .no-print-section {
+    display: block !important;
+    background: white !important;
+    padding: 0 !important;
+  }
+}
+
+.donut-empty-legend-box {
+  padding: 2rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.booking-filter-search {
+  flex: 1 !important;
+  min-width: 240px !important;
+}
+
+.booking-filter-select {
+  min-width: 240px !important;
+}
+
+.booking-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  border-top: 4px solid;
+}
+
+.status-badge-pending {
+  background-color: #fffbeb !important;
+  color: #d97706 !important;
+  border-color: #fde68a !important;
+}
+
+.wo-list-panel-wrap {
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.wo-list-header-flex {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  align-items: stretch !important;
+}
+
+.margin-0 {
+  margin: 0 !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.wo-list-scroll-wrap {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  max-height: 580px !important;
+}
+
+.wo-list-item-left-flex {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.15rem !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+.plate-badge-sm-bold {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  align-self: flex-start !important;
+}
+
+.wo-list-item-name {
+  font-weight: 600 !important;
+  color: #334155 !important;
+  font-size: 0.85rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  margin-top: 0.25rem !important;
+}
+
+.text-slate-muted-xxs {
+  font-size: 0.7rem !important;
+  color: #64748b !important;
+}
+
+.wo-list-item-right-flex {
+  text-align: right !important;
+  margin-left: 0.5rem !important;
+  flex-shrink: 0 !important;
+}
+
+.wo-badge-in-progress {
+  background-color: #eff6ff !important;
+  color: #1e40af !important;
+  border-color: #bfdbfe !important;
+}
+
+.wo-badge-completed {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
+}
+
+.wo-detail-panel-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
+}
+
+.wo-action-header-row {
+  display: flex !important;
+  gap: 0.5rem !important;
+}
+
+.wo-assignment-card {
+  background-color: #f8fafc !important;
+  padding: 1.25rem !important;
+  border-color: #e2e8f0 !important;
+}
+
+.wo-assignment-title {
+  margin-bottom: 1rem !important;
+  color: #475569 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.icon-blue-sm {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #3b82f6 !important;
+}
+
+.form-field-negative-margin {
+  margin-bottom: -1.25rem !important;
+}
+
+.wo-no-estimate-label {
+  margin-top: 0.75rem !important;
+  font-size: 0.75rem !important;
+  color: #94a3b8 !important;
+  font-style: italic !important;
+}
+
+.flex-col-1 {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.wo-pricing-title {
+  color: #475569 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.icon-emerald-sm {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  color: #10b981 !important;
+}
+
+.text-xs-button {
+  font-size: 0.75rem !important;
+}
+
+.wo-min-width-560 {
+  min-width: 560px !important;
+}
+
+.wo-estimation-pricing-cell-badge {
+  font-size: 0.55rem !important;
+  padding: 0.1rem 0.35rem !important;
+}
+
+/* =============================================
+   PORTAL LAYOUT & FORM RESPONSIVE UTILITIES
+   ============================================= */
+
+/* Portal Profile Specific Layouts */
+.profile-section-body {
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding-bottom: 0.75rem !important;
+}
+
+.profile-password-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding-top: 1rem !important;
+}
+
+/* Grid Spanning Utilities */
+.grid-span-2 {
+  grid-column: span 2;
+}
+
+.grid-col-full {
+  grid-column: 1 / -1;
+}
+
+/* Margin & Spacing Utilities */
+.portal-mt-sm {
+  margin-top: 0.25rem;
+}
+
+.portal-form-mt {
+  margin-top: 0.85rem;
+}
+
+/* General Layout helpers */
+.portal-heading-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.portal-hint-text {
+  color: #64748b;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.portal-single-col-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Readonly Input styles */
+.input-readonly {
+  color: #64748b !important;
+  background-color: #f8fafc !important;
+}
+
+.no-resize {
+  resize: none;
+}
+
+/* Portal save/action button (dark blue #1e3a8a, auto-width) */
+.btn-portal-save {
+  font-family: var(--font-heading) !important;
+  font-weight: var(--fw-bold) !important;
+  background-color: #1e3a8a !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.75rem !important;
+  font-size: 0.875rem !important;
+  width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Compact Angular Material Form Field Spacing for Portal Inputs (excluding textareas) */
+.portal-form .mat-mdc-form-field:has(input) .mat-mdc-text-field-wrapper {
+  height: 2.625rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.portal-form .mat-mdc-form-field:has(input) .mat-mdc-form-field-flex {
+  align-items: center !important;
+  height: 2.625rem !important;
+}
+
+.portal-form .mat-mdc-form-field:has(input) .mat-mdc-form-field-infix {
+  padding-top: 0.35rem !important;
+  padding-bottom: 0.35rem !important;
+  min-height: auto !important;
+}
+
+.portal-form .mat-mdc-form-field:has(input) input.mat-mdc-input-element {
+  font-size: 0.825rem !important;
+}
+
+/* Adjust prefix/suffix icons inside dense inputs to align properly */
+.portal-form .mat-mdc-form-field:has(input) mat-icon {
+  font-size: 1.1rem !important;
+  width: 1.1rem !important;
+  height: 1.1rem !important;
+}
