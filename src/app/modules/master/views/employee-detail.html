@@ -1,0 +1,73 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">{{ data.mode === 'edit' ? 'edit' : 'badge' }}</mat-icon>
+  {{ data.mode === 'edit' ? 'Ubah Data Karyawan' : 'Tambah Karyawan Baru' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="employeeForm">
+
+    <div class="dialog-section">
+      <!-- Nama Lengkap -->
+      <div class="form-col-wrapper mb-3">
+        <label class="form-label-static">Nama Lengkap <span class="text-danger">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">person</mat-icon>
+          <input matInput formControlName="name" placeholder="Contoh: Budi Mekanik" style="font-family: 'Inter', sans-serif;" />
+          <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">Nama lengkap wajib diisi</mat-error>
+          <mat-error *ngIf="employeeForm.get('name')?.hasError('minlength')">Nama minimal 2 karakter</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Jabatan & No Telepon Grid -->
+      <div class="two-col-grid mb-3">
+        <!-- Jabatan -->
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Jabatan / Posisi <span class="text-danger">*</span></label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
+            <input type="text" matInput formControlName="position" 
+                   [matAutocomplete]="autoPosition" 
+                   #posTrigger="matAutocompleteTrigger" 
+                   (focus)="posTrigger.openPanel()" 
+                   (click)="posTrigger.openPanel()" 
+                   placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;" />
+            <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
+              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName" style="font-family: 'Inter', sans-serif;">
+                {{ role.roleName }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="employeeForm.get('position')?.hasError('required')">Jabatan/posisi wajib diisi</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Nomor Telepon -->
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Nomor Telepon <span class="text-danger">*</span></label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">phone</mat-icon>
+            <input matInput formControlName="phone" placeholder="Contoh: 08123456789" (keypress)="onPhoneKeyPress($event)" style="font-family: 'Inter', sans-serif;" />
+            <mat-error *ngIf="employeeForm.get('phone')?.hasError('required')">Nomor telepon wajib diisi</mat-error>
+            <mat-error *ngIf="employeeForm.get('phone')?.hasError('pattern')">Nomor telepon hanya boleh berisi angka</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Alamat -->
+      <div class="form-col-wrapper mb-2">
+        <label class="form-label-static">Alamat Lengkap</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <textarea matInput formControlName="address" rows="3" placeholder="Contoh: Jl. Raya Otista No. 123" style="font-family: 'Inter', sans-serif; resize: none;"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="employeeForm.invalid || isSaving" class="btn-save">
+    <mat-icon>save</mat-icon>
+    <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'TAMBAH KARYAWAN' }}</span>
+  </button>
+</mat-dialog-actions>

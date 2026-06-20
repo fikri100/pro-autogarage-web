@@ -220,14 +220,14 @@ body {
 /* Page Level Utilities */
 .card-panel {
   background-color: #ffffff;
-  padding: 1.5rem;
+  padding: 1.15rem;
   border-radius: 0.75rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   border: 1px solid #e2e8f0;
 }
 
 .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -496,15 +496,11 @@ body {
 }
 
 .plate-badge {
-  border: 1px solid #cbd5e1;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.25rem;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
   color: #334155;
   display: inline-block;
-  background: #f8fafc;
   letter-spacing: 0.04em;
 }
 
@@ -1268,10 +1264,10 @@ body {
    ================================================ */
 
 .page-container {
-  padding: 1.5rem;
+  padding: 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.15rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -1286,7 +1282,7 @@ body {
 .double-panel-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
 /* Collapse double-panel-grid (tabel+form) to single column on medium screens */
@@ -1300,19 +1296,19 @@ body {
 .responsive-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
 .responsive-details-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
 .checkout-grid {
   display: grid;
   grid-template-columns: 1.8fr 1.2fr;
-  gap: 1.5rem;
+  gap: 1.15rem;
   align-items: stretch;
   height: 100%;
 }
@@ -1342,13 +1338,17 @@ body {
 
   .page-container {
     padding: 0.75rem !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .card-panel {
+    padding: 0.85rem !important;
   }
 
   .page-header {
     flex-direction: column;
     align-items: stretch !important;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .page-header-actions {
@@ -1364,7 +1364,7 @@ body {
 
   .double-panel-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
   .two-col-grid {
@@ -1379,17 +1379,22 @@ body {
 
   .responsive-cards-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
   .responsive-details-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
   .checkout-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .admin-th,
+  .admin-td {
+    padding: 0.5rem 0.75rem !important;
   }
 }
 
@@ -1815,7 +1820,7 @@ table td,
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 /* Portal card (white rounded, for form/history containers) */
@@ -1831,6 +1836,7 @@ table td,
 /* Max-width centered variant (booking/profile form) */
 .portal-card--narrow {
   max-width: 680px;
+  margin: 0 auto;
 }
 
 /* Max-width centered variant for profile */
@@ -1841,7 +1847,7 @@ table td,
 
 /* Portal card header (title + subtitle area) */
 .portal-card-header {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid #f1f5f9;
 }
 
@@ -1862,7 +1868,7 @@ table td,
 
 /* Portal card body padding */
 .portal-card-body {
-  padding: 1.25rem;
+  padding: 1.15rem 1rem;
 }
 
 /* Portal form (vertical flex with consistent gap) */
@@ -1929,9 +1935,9 @@ table td,
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
   border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
 }
 
 .portal-page-header h2 {
@@ -1951,7 +1957,7 @@ table td,
 
 /* Portal action footer (e.g., save button bar) */
 .portal-card-footer {
-  padding: 1rem 1.75rem;
+  padding: 0.85rem 1.25rem;
   background-color: #fafafa;
   border-top: 1px solid #f1f5f9;
   display: flex;
@@ -1970,20 +1976,46 @@ table td,
 .portal-profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.15rem;
+  gap: 0.85rem;
 }
 
 @media (max-width: 768px) {
   .portal-card-header {
-    padding: 1.15rem 1rem !important;
+    padding: 0.85rem 0.75rem !important;
   }
 
   .portal-card-body {
-    padding: 1rem !important;
+    padding: 0.85rem 0.75rem !important;
   }
 
   .portal-card-footer {
-    padding: 0.85rem 1rem !important;
+    padding: 0.65rem 0.75rem !important;
+  }
+
+  .portal-welcome-banner {
+    padding: 1.25rem 1rem !important;
+    gap: 1rem !important;
+  }
+
+  .portal-history-card-header {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .portal-history-card-body {
+    padding: 0.75rem !important;
+    gap: 1rem !important;
+  }
+
+  .portal-history-card-footer {
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .portal-dashboard-wrapper {
+    gap: 1rem !important;
+  }
+
+  .kpi-grid {
+    gap: 0.75rem !important;
   }
 
   .portal-form-grid {
@@ -1993,7 +2025,26 @@ table td,
 
   .portal-profile-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .portal-single-col-grid {
+    gap: 0.75rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .profile-section-body {
+    gap: 0.75rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .profile-password-section {
+    gap: 0.75rem !important;
+    padding-top: 0.6rem !important;
+  }
+
+  .portal-section-heading {
+    margin-bottom: 0.5rem !important;
   }
 
   /* Force grid children to stack as 1 column */
@@ -2066,20 +2117,20 @@ table td,
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 /* Welcome banner gradient */
 .portal-welcome-banner {
   background: linear-gradient(135deg, #1e3a8a, #0f172a);
   border-radius: 1rem;
-  padding: 2rem 2.5rem;
+  padding: 1.5rem 1.75rem;
   color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.25rem;
   box-shadow: 0 4px 15px rgba(30, 58, 138, 0.15);
 }
 
@@ -2109,8 +2160,8 @@ table td,
 /* KPI grid container */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
 /* KPI card (uses .card-panel base) */
@@ -2287,12 +2338,12 @@ table td,
 /* History page header (max-width centered) */
 .portal-history-page-header {
   max-width: 800px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 1.25rem auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* History page empty state (max-width centered) */
@@ -2333,7 +2384,7 @@ table td,
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 /* Individual history booking card */
@@ -2354,22 +2405,22 @@ table td,
 
 /* Card header section (colored left border, status badge) */
 .portal-history-card-header {
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem 1.15rem;
   background-color: #fafafa;
   border-bottom: 1px solid #f1f5f9;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* Card body (info grid) */
 .portal-history-card-body {
-  padding: 1.15rem 1.5rem;
+  padding: 1rem 1.15rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 /* Card body info column */
@@ -2381,7 +2432,7 @@ table td,
 
 /* Card footer */
 .portal-history-card-footer {
-  padding: 0.6rem 1.5rem;
+  padding: 0.5rem 1.15rem;
   border-top: 1px solid #f1f5f9;
   background-color: #fafafa;
   display: flex;
@@ -2452,11 +2503,7 @@ table td,
   font-family: var(--font-mono);
   font-weight: var(--fw-bold);
   color: #0f172a;
-  background-color: #f1f5f9;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
   font-size: 0.9rem;
-  border: 1px solid #cbd5e1;
   display: inline-block;
 }
 
@@ -2516,8 +2563,59 @@ table td,
 /* Vehicles grid */
 .portal-vehicles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* Portal Vehicle Card styling */
+.portal-vehicle-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem !important;
+  border-radius: 12px !important;
+  border-left-width: 5px !important;
+  gap: 0.3rem !important;
+}
+
+.portal-vehicle-card .vehicle-brand-row {
+  margin-bottom: 0.15rem;
+}
+
+.portal-vehicle-card .vehicle-plate-row {
+  margin: 0.35rem 0;
+}
+
+.portal-vehicle-card .vehicle-card-footer {
+  margin-top: 0.35rem !important;
+  padding-top: 0.75rem !important;
+}
+
+@media (max-width: 768px) {
+  .portal-vehicle-card {
+    padding: 0.85rem !important;
+    gap: 0.25rem !important;
+  }
+
+  .portal-vehicle-card .vehicle-brand-row {
+    margin-bottom: 0 !important;
+  }
+
+  .portal-vehicle-card .vehicle-brand-row h3 {
+    font-size: 1rem !important;
+  }
+
+  .portal-vehicle-card .vehicle-plate-row {
+    margin: 0.15rem 0 !important;
+  }
+
+  .portal-vehicle-card .vehicle-plate-row .plate-badge {
+    font-size: 0.95rem !important;
+  }
+
+  .portal-vehicle-card .vehicle-card-footer {
+    margin-top: 0.15rem !important;
+    padding-top: 0.5rem !important;
+  }
 }
 
 /* Transmission badge on vehicle card */
@@ -2842,14 +2940,14 @@ table td,
 .admin-th {
   font-family: var(--font-heading) !important;
   font-weight: var(--fw-bold) !important;
-  padding: 1rem !important;
+  padding: 0.75rem 1rem !important;
   color: #475569 !important;
 }
 
 /* mat-table td */
 .admin-td {
   font-family: var(--font-body) !important;
-  padding: 1rem !important;
+  padding: 0.75rem 1rem !important;
   color: #334155 !important;
   font-size: 0.85rem !important;
 }
@@ -3728,7 +3826,6 @@ table td,
 
 .plate-badge-styled {
   font-size: 0.9rem;
-  border: 1px solid #cbd5e1;
 }
 
 .icon-engineering-gray {
@@ -4962,15 +5059,15 @@ table td,
   border-bottom: 1px solid #f1f5f9;
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
-  padding-bottom: 0.75rem !important;
+  gap: 0.85rem;
+  padding-bottom: 0.65rem !important;
 }
 
 .profile-password-section {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
-  padding-top: 1rem !important;
+  gap: 0.85rem;
+  padding-top: 0.75rem !important;
 }
 
 /* Grid Spanning Utilities */
@@ -4995,7 +5092,7 @@ table td,
 .portal-heading-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
 }
 
 .portal-hint-text {
@@ -5007,8 +5104,8 @@ table td,
 .portal-single-col-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
-  margin-top: 0.5rem;
+  gap: 0.85rem;
+  margin-top: 0.35rem;
 }
 
 /* Readonly Input styles */

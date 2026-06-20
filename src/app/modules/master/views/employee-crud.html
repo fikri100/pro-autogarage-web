@@ -1,176 +1,107 @@
 <div class="page-container">
   
   <!-- Header -->
-  <div class="page-header" style="margin-bottom: 1.5rem;">
+  <div class="page-header" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
     <div>
       <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Master Data — Data Karyawan</h2>
       <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Kelola seluruh data staf, mekanik, kasir, dan personel operasional bengkel.</p>
     </div>
+    <button mat-flat-button color="primary" (click)="showAddDialog()"
+      style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 8px;">
+      <mat-icon style="margin-right: 0.35rem;">add_circle</mat-icon>
+      TAMBAH KARYAWAN
+    </button>
   </div>
 
-  <div class="double-panel-grid">
-    
-    <!-- LEFT PANEL: EMPLOYEES LIST -->
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
-      <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Daftar Karyawan Aktif</span>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 250px;">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
-          <input matInput placeholder="Cari karyawan..." (keyup)="applyFilter($event)">
-        </mat-form-field>
-      </div>
-
-      <div style="position: relative; flex: 1; min-height: 350px;">
-        <div *ngIf="loading" style="padding: 4rem; display: flex; align-items: center; justify-content: center;">
-          <mat-spinner diameter="40"></mat-spinner>
-        </div>
-
-        <div *ngIf="!loading && employees.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
-          <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">badge</mat-icon>
-          <div style="font-weight: 600; color: #475569;">Tidak ada karyawan aktif</div>
-        </div>
-
-        <!-- Table Container with horizontal scrolling and no wrap -->
-        <div *ngIf="!loading && employees.length > 0" style="overflow-x: auto; width: 100%;">
-          <table mat-table [dataSource]="employees" style="width: 100%; border-collapse: collapse; min-width: 600px;">
-            
-            <!-- Column: Nama Karyawan -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Nama Karyawan</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #1e293b; font-weight: 600; font-size: 0.9rem; white-space: nowrap;">
-                {{ row.name }}
-              </td>
-            </ng-container>
-
-            <!-- Column: Jabatan -->
-            <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Jabatan / Posisi</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #475569; font-size: 0.85rem; white-space: nowrap;">
-                <span style="background-color: #f1f5f9; color: #475569; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 500; font-size: 0.8rem;">
-                  {{ row.position }}
-                </span>
-              </td>
-            </ng-container>
-
-            <!-- Column: Phone -->
-            <ng-container matColumnDef="phone">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">No. Telepon</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #0f766e; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
-                {{ row.phone }}
-              </td>
-            </ng-container>
-
-            <!-- Column: Address -->
-            <ng-container matColumnDef="address">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Alamat</th>
-              <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [matTooltip]="row.address">
-                {{ row.address || '-' }}
-              </td>
-            </ng-container>
-
-            <!-- Column: Aksi -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 140px; white-space: nowrap;">Aksi</th>
-              <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center; white-space: nowrap;">
-                <div style="display: flex; gap: 0.5rem; justify-content: center;">
-                  <button mat-icon-button (click)="selectForEdit(row)" matTooltip="Ubah Data Karyawan" style="color: #3b82f6;">
-                    <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">edit</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="deleteEmployee(row)" matTooltip="Hapus Karyawan" style="color: #ef4444;">
-                    <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">delete</mat-icon>
-                  </button>
-                </div>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                class="table-row-hover"
-                [class.selected-row]="isEditMode && editingEmployeeId === row.id"
-                (click)="selectForEdit(row)"
-                style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
-          </table>
-        </div>
-        <mat-paginator 
-          *ngIf="!loading && employees.length > 0" 
-          [length]="totalData" 
-          [pageSize]="pageSize" 
-          [pageSizeOptions]="[5, 10, 25, 50]" 
-          (page)="onPageChange($event)" 
-          style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
-        </mat-paginator>
-      </div>
+  <!-- EMPLOYEES LIST -->
+  <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Daftar Karyawan Aktif</span>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 250px;">
+        <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+        <input matInput placeholder="Cari karyawan..." (keyup)="applyFilter($event)">
+      </mat-form-field>
     </div>
 
-    <!-- RIGHT PANEL: FORM (ADD / EDIT) -->
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem;">
-      <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; margin: 0; font-size: 1.1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;">
-        {{ isEditMode ? 'Ubah Data Karyawan' : 'Tambah Karyawan Baru' }}
-      </h3>
+    <div style="position: relative; flex: 1; min-height: 350px;">
+      <div *ngIf="loading" style="padding: 4rem; display: flex; align-items: center; justify-content: center;">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
 
-      <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 1rem;">
-        
-        <!-- Nama Lengkap -->
-        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nama Lengkap <span class="required">*</span></label>
-          <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">person</mat-icon>
-            <input matInput formControlName="name" placeholder="Contoh: Budi Mekanik" style="font-family: 'Inter', sans-serif;">
-            <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">Nama lengkap wajib diisi</mat-error>
-            <mat-error *ngIf="employeeForm.get('name')?.hasError('minlength')">Nama minimal 2 karakter</mat-error>
-          </mat-form-field>
-        </div>
+      <div *ngIf="!loading && employees.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
+        <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">badge</mat-icon>
+        <div style="font-weight: 600; color: #475569;">Tidak ada karyawan aktif</div>
+      </div>
 
-        <!-- Jabatan -->
-        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Jabatan / Posisi <span class="required">*</span></label>
-          <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
-            <input type="text" matInput formControlName="position" 
-                   [matAutocomplete]="autoPosition" 
-                   #posTrigger="matAutocompleteTrigger" 
-                   (focus)="posTrigger.openPanel()" 
-                   (click)="posTrigger.openPanel()" 
-                   placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;">
-            <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName" style="font-family: 'Inter', sans-serif;">
-                {{ role.roleName }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="employeeForm.get('position')?.hasError('required')">Jabatan/posisi wajib diisi</mat-error>
-          </mat-form-field>
-        </div>
+      <!-- Table Container with horizontal scrolling and no wrap -->
+      <div *ngIf="!loading && employees.length > 0" style="overflow-x: auto; width: 100%;">
+        <table mat-table [dataSource]="employees" style="width: 100%; border-collapse: collapse; min-width: 600px;">
+          
+          <!-- Column: Nama Karyawan -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Nama Karyawan</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #1e293b; font-weight: 600; font-size: 0.9rem; white-space: nowrap;">
+              {{ row.name }}
+            </td>
+          </ng-container>
 
-        <!-- Nomor Telepon -->
-        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Nomor Telepon <span class="required">*</span></label>
-          <mat-form-field appearance="outline" style="width: 100%;">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">phone</mat-icon>
-            <input matInput formControlName="phone" placeholder="Contoh: 08123456789" (keypress)="onPhoneKeyPress($event)" style="font-family: 'Inter', sans-serif;">
-            <mat-error *ngIf="employeeForm.get('phone')?.hasError('required')">Nomor telepon wajib diisi</mat-error>
-            <mat-error *ngIf="employeeForm.get('phone')?.hasError('pattern')">Nomor telepon hanya boleh berisi angka</mat-error>
-          </mat-form-field>
-        </div>
+          <!-- Column: Jabatan -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Jabatan / Posisi</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #475569; font-size: 0.85rem; white-space: nowrap;">
+              <span style="background-color: #f1f5f9; color: #475569; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 500; font-size: 0.8rem;">
+                {{ row.position }}
+              </span>
+            </td>
+          </ng-container>
 
-        <!-- Alamat -->
-        <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-          <label style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 0.85rem; color: #475569;">Alamat Lengkap</label>
-          <mat-form-field appearance="outline" style="width: 100%;">
-            <textarea matInput formControlName="address" rows="3" placeholder="Contoh: Jl. Raya Otista No. 123" style="font-family: 'Inter', sans-serif; resize: none;"></textarea>
-          </mat-form-field>
-        </div>
+          <!-- Column: Phone -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">No. Telepon</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #0f766e; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+              {{ row.phone }}
+            </td>
+          </ng-container>
 
-        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.5rem;">
-          <button mat-stroked-button type="button" *ngIf="isEditMode" (click)="cancelEdit()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">
-            BATAL
-          </button>
-          <button mat-flat-button color="primary" type="submit" [disabled]="employeeForm.invalid || isSaving" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff;">
-            <mat-spinner diameter="20" *ngIf="isSaving" color="warn" style="display: inline-block; margin-right: 0.5rem; vertical-align: middle;"></mat-spinner>
-            <span>{{ isEditMode ? 'SIMPAN PERUBAHAN' : 'TAMBAH KARYAWAN' }}</span>
-          </button>
-        </div>
-      </form>
+          <!-- Column: Address -->
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; white-space: nowrap;">Alamat</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [matTooltip]="row.address">
+              {{ row.address || '-' }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Aksi -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 140px; white-space: nowrap;">Aksi</th>
+            <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center; white-space: nowrap;">
+              <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                <button mat-icon-button (click)="showEditDialog(row); $event.stopPropagation()" matTooltip="Ubah Data Karyawan" style="color: #3b82f6;">
+                  <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteEmployee(row); $event.stopPropagation()" matTooltip="Hapus Karyawan" style="color: #ef4444;">
+                  <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              class="table-row-hover"
+              (click)="showEditDialog(row)"
+              style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
+        </table>
+      </div>
+      <mat-paginator 
+        *ngIf="!loading && employees.length > 0" 
+        [length]="totalData" 
+        [pageSize]="pageSize" 
+        [pageSizeOptions]="[5, 10, 25, 50]" 
+        (page)="onPageChange($event)" 
+        style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
+      </mat-paginator>
     </div>
-
   </div>
+
 </div>

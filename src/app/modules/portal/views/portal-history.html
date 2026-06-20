@@ -40,14 +40,11 @@
       <div [style.border-left]="'4px solid ' + getStatusDetails(b.operationalStatus).color"
            class="portal-history-card-header">
 
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <mat-icon class="input-suffix-icon">event</mat-icon>
-          <div>
-            <span style="font-family: var(--font-heading); font-weight: 700; color: #1e293b; font-size: 0.95rem;">
-              {{ b.bookingDate | date:'dd MMMM yyyy':'':'id-ID' }}
-            </span>
-            <span class="history-time-chip">{{ b.bookingTime }} WIB</span>
-          </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <mat-icon class="input-suffix-icon" style="color: #64748b; font-size: 1.1rem; width: 1.1rem; height: 1.1rem; display: flex; align-items: center;">event</mat-icon>
+          <span style="font-family: var(--font-heading); font-weight: 700; color: #1e293b; font-size: 0.95rem;">
+            {{ b.bookingDate | date:'dd MMMM yyyy':'':'id-ID' }} - {{ b.bookingTime }} WIB
+          </span>
         </div>
 
         <!-- Status Badge -->
@@ -69,11 +66,9 @@
         <div class="portal-history-card-col">
           <span style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Kendaraan Terdaftar</span>
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem; flex-wrap: wrap;">
-            <span style="font-size: 0.9rem; color: #0f172a; font-weight: 700;">
-              {{ b.vehicleBrand }} {{ b.vehicleModel }} ({{ b.transmission === 'AUTOMATIC' ? 'AT' : 'MT' }})
+            <span style="font-size: 0.9rem; color: #0f172a; font-weight: 700; font-family: var(--font-body);">
+              {{ b.vehicleBrand }} {{ b.vehicleModel }} ({{ b.transmission === 'AUTOMATIC' || b.transmission === 'Automatic (AT)' || b.transmission === 'AT' ? 'AT' : 'MT' }}) - <span style="font-family: var(--font-mono);">{{ b.licensePlate }}</span>
             </span>
-            <span style="color: #cbd5e1; font-weight: 600;">—</span>
-            <span class="history-plate-display">{{ b.licensePlate }}</span>
           </div>
           <!-- Estimated Completion Badge -->
           <div *ngIf="b.estimatedCompletion" class="estimation-badge">

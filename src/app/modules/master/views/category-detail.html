@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">{{ data.mode === 'edit' ? 'edit' : 'label' }}</mat-icon>
+  {{ data.mode === 'edit' ? 'Ubah Nama Kategori' : 'Tambah Kategori Baru' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="categoryForm">
+
+    <div class="dialog-section">
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Nama Kategori <span class="text-danger">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">label</mat-icon>
+          <input matInput formControlName="name" placeholder="Contoh: Oli Mesin, Jasa Service" style="font-family: 'Inter', sans-serif;" />
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">Nama kategori wajib diisi</mat-error>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">Nama kategori minimal 3 karakter</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="categoryForm.invalid || isSaving" class="btn-save">
+    <mat-icon>save</mat-icon>
+    <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'TAMBAH KATEGORI' }}</span>
+  </button>
+</mat-dialog-actions>

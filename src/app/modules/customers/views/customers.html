@@ -1,215 +1,114 @@
-<!-- Page Header -->
-<div class="page-header">
-  <div>
-    <h2 class="page-title">Data Pelanggan</h2>
-    <p class="page-subtitle">Kelola informasi pelanggan, aset kendaraan, dan riwayat servis.</p>
-  </div>
-  <div class="page-header-actions">
-    <button mat-stroked-button class="btn-filter">
-      <mat-icon>filter_list</mat-icon>
-      Filter
-    </button>
-    <button mat-flat-button color="primary" class="btn-primary" (click)="showAddModal()">
-      <mat-icon>add</mat-icon>
+<div class="page-container">
+  
+  <!-- Page Header -->
+  <div class="page-header" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Data Pelanggan</h2>
+      <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Kelola informasi pelanggan, aset kendaraan, dan riwayat servis.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="showAddModal()"
+      style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 8px;">
+      <mat-icon style="margin-right: 0.35rem;">add_circle</mat-icon>
       PELANGGAN BARU
     </button>
   </div>
-</div>
 
-<!-- Loading Spinner -->
-<div *ngIf="loading" class="loading-overlay">
-  <mat-spinner diameter="48"></mat-spinner>
-  <p>Memuat data pelanggan...</p>
-</div>
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" style="padding: 4rem 2rem; text-align: center; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
+    <mat-spinner diameter="48" style="margin: 0 auto;"></mat-spinner>
+    <p style="margin-top: 1rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.95rem;">Memuat data pelanggan...</p>
+  </div>
 
-<div class="flex-row-responsive" *ngIf="!loading">
+  <!-- Customers List Table -->
+  <div *ngIf="!loading" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
+    
+    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Daftar Pelanggan Aktif</span>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 280px;">
+        <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+        <input matInput placeholder="Cari pelanggan..." (keyup)="applyFilter($event)" />
+      </mat-form-field>
+    </div>
 
-  <!-- Left Column: Master List -->
-  <div class="col-30">
-    <div class="card-panel h-100" style="padding: 0; overflow: hidden;">
-      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0;">Daftar Pelanggan</h3>
-          <span class="count-badge">{{ totalData }} Total</span>
-        </div>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
-          <input matInput placeholder="Cari pelanggan..." (keyup)="applyFilter($event)">
-        </mat-form-field>
+    <div style="position: relative; flex: 1; min-height: 350px;">
+      <div *ngIf="customers.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
+        <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">people_outline</mat-icon>
+        <div style="font-weight: 600; color: #475569;">Tidak ada data pelanggan</div>
       </div>
 
-      <div class="list-column-labels">
-        <span class="text-xs-caps">ID</span>
-        <span class="text-xs-caps">NAMA / WA</span>
+      <div *ngIf="customers.length > 0" style="overflow-x: auto; width: 100%;">
+        <table mat-table [dataSource]="customers" style="width: 100%; border-collapse: collapse; min-width: 800px;">
+          
+          <!-- Column: ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 100px;">ID Pelanggan</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+              CST-{{ row.id | number:'4.0-0' }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Nama -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Nama Lengkap</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #1e293b; font-weight: 600; font-size: 0.9rem;">
+              {{ row.name }}
+            </td>
+          </ng-container>
+
+          <!-- Column: WA -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 150px;">Nomor WA</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #0f766e; font-size: 0.85rem; font-weight: 600;">
+              {{ row.phone }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Email</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+              {{ row.email || '-' }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Alamat -->
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Alamat</th>
+            <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [matTooltip]="row.address">
+              {{ row.address || '-' }}
+            </td>
+          </ng-container>
+
+          <!-- Column: Aksi -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 120px;">Aksi</th>
+            <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center;">
+              <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                <button mat-icon-button (click)="showEditModal(row); $event.stopPropagation()" matTooltip="Edit & Detail" style="color: #3b82f6;">
+                  <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteCustomer(row); $event.stopPropagation()" matTooltip="Hapus Pelanggan" style="color: #ef4444;">
+                  <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              class="table-row-hover"
+              (click)="showEditModal(row)"
+              style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
+        </table>
       </div>
-
-      <div class="customer-list-scroll">
-        <div *ngIf="customers.length === 0" class="empty-state">
-          <mat-icon>people_outline</mat-icon>
-          <p>Tidak ada pelanggan.</p>
-        </div>
-
-        <div *ngFor="let customer of customers"
-             class="list-item-hover"
-             [class.list-item-active]="selectedCustomer?.id === customer.id"
-             (click)="selectCustomer(customer)"
-             style="display: flex; justify-content: space-between; align-items: center;">
-
-          <span class="customer-id-badge">CST-{{ customer.id | number:'4.0-0' }}</span>
-
-          <div style="text-align: right;">
-            <div style="font-weight: 600; color: #334155;" class="customer-name-text">{{ customer.name }}</div>
-            <div style="color: #64748b; font-family: monospace; margin-top: 0.125rem;" class="customer-phone-text">{{ customer.phone }}</div>
-          </div>
-        </div>
-      </div>
-
+      
       <mat-paginator [length]="totalData" 
                      [pageSize]="pageSize" 
                      [pageSizeOptions]="[10, 25, 50]"
                      (page)="onPageChange($event)"
-                     style="background: transparent;">
+                     style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
       </mat-paginator>
     </div>
   </div>
 
-  <!-- Right Column: Detail View -->
-  <div class="col-70">
-
-    <!-- Detail Panel -->
-    <div class="card-panel h-100" *ngIf="selectedCustomer">
-
-      <!-- Header Profile -->
-      <div class="detail-header">
-        <div class="detail-profile">
-          <div class="avatar-lg">{{ getInitials(selectedCustomer.name) }}</div>
-          <div>
-            <h2 class="detail-name">{{ selectedCustomer.name }}</h2>
-            <div class="detail-meta">
-              <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">location_on</mat-icon>
-              <span>{{ selectedCustomer.address || 'Alamat tidak tersedia' }}</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <button mat-icon-button [matMenuTriggerFor]="customerMenu" aria-label="Customer actions menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #customerMenu="matMenu">
-            <button mat-menu-item (click)="showEditModal(selectedCustomer)">
-              <mat-icon>edit</mat-icon>
-              <span>Edit Profil</span>
-            </button>
-            <button mat-menu-item (click)="deleteCustomer(selectedCustomer)">
-              <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
-              <span style="color: #ef4444;">Hapus Pelanggan</span>
-            </button>
-          </mat-menu>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <mat-tab-group class="detail-tabs" animationDuration="200ms">
-
-        <!-- Tab: Kendaraan -->
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon class="tab-icon">directions_car</mat-icon>
-            Kendaraan Terdaftar ({{ vehicles.length }})
-          </ng-template>
-
-          <div class="tab-content">
-            <div class="tab-content-header">
-              <h3>Daftar Aset Kendaraan</h3>
-              <button mat-stroked-button color="primary" (click)="openAddVehicleDialog()">
-                <mat-icon>add_circle_outline</mat-icon>
-                Tambah Mobil
-              </button>
-            </div>
-
-            <!-- Empty State for Vehicles -->
-            <div *ngIf="vehicles.length === 0" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; margin-bottom: 0.5rem;">minor_crash</mat-icon>
-              <p style="margin: 0; font-size: 0.95rem; font-weight: 500;">Belum ada kendaraan terdaftar untuk pelanggan ini.</p>
-            </div>
-
-            <div class="vehicle-grid" *ngIf="vehicles.length > 0">
-              <div class="car-card" *ngFor="let car of vehicles">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                  <div class="plate-badge">{{ car.licensePlate }}</div>
-                  
-                  <button mat-icon-button [matMenuTriggerFor]="vehicleMenu" style="width: 2rem; height: 2rem; line-height: 2rem;">
-                    <mat-icon style="font-size: 1.1rem; color: #94a3b8;">more_vert</mat-icon>
-                  </button>
-                  <mat-menu #vehicleMenu="matMenu">
-                    <button mat-menu-item (click)="openEditVehicleDialog(car)">
-                      <mat-icon>edit</mat-icon>
-                      <span>Edit Kendaraan</span>
-                    </button>
-                    <button mat-menu-item (click)="deleteVehicle(car.id!)">
-                      <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
-                      <span style="color: #ef4444;">Hapus Kendaraan</span>
-                    </button>
-                  </mat-menu>
-                </div>
-                <h4 class="car-brand">{{ car.brand }} {{ car.model }}</h4>
-                <div class="car-details-grid">
-                  <div>Tahun: <span class="car-value">{{ car.yearMade || '-' }}</span></div>
-                  <div>Transmisi: <span class="car-value">{{ car.transmission || '-' }}</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-tab>
-
-        <!-- Tab: Riwayat Servis -->
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <mat-icon class="tab-icon">history</mat-icon>
-            Riwayat Servis
-          </ng-template>
-
-          <div class="tab-content">
-            <h3>Transaksi Terakhir</h3>
-
-            <table mat-table [dataSource]="transactions" class="mat-elevation-z0 w-full-table">
-
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Tanggal</th>
-                <td mat-cell *matCellDef="let tx" style="font-family: monospace; color: #475569;">{{ tx.date }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="plate">
-                <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Plat / Mobil</th>
-                <td mat-cell *matCellDef="let tx" style="font-weight: 600; color: #1e293b;">{{ tx.plate }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="notes">
-                <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Keluhan Utama</th>
-                <td mat-cell *matCellDef="let tx" style="color: #475569;">{{ tx.notes }}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Status</th>
-                <td mat-cell *matCellDef="let tx">
-                  <span class="status-chip-success">{{ tx.status }}</span>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="txDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: txDisplayedColumns;" class="table-row-hover"></tr>
-            </table>
-          </div>
-        </mat-tab>
-
-      </mat-tab-group>
-    </div>
-
-    <!-- Empty State -->
-    <div class="card-panel h-100 empty-detail-state" *ngIf="!selectedCustomer">
-      <mat-icon>person_search</mat-icon>
-      <p>Pilih pelanggan di daftar sebelah kiri untuk melihat detail.</p>
-    </div>
-
-  </div>
 </div>

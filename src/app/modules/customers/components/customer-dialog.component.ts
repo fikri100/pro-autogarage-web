@@ -1,6 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomerService } from '../customers.service';
+import { Vehicle } from '../models/object';
+import { VehicleDialogComponent } from './vehicle-dialog.component';
 
 export interface CustomerDialogData {
   mode: 'add' | 'edit' | 'confirm';
@@ -17,8 +21,30 @@ export class CustomerDialogComponent implements OnInit {
   customerForm!: FormGroup;
   isSaving = false;
 
+  // State for Vehicles tab (edit mode)
+  vehicles: Vehicle[] = [];
+  loadingVehicles = false;
+
+  // State for Service History tab (edit mode)
+  transactions: any[] = [];
+  loadingHistory = false;
+  txDisplayedColumns: string[] = ['date', 'plate', 'notes', 'status'];
+
+  statusMap: { [key: string]: { label: string; color: string } } = {
+    PENDING: { label: 'Menunggu Persetujuan', color: '#d97706' },
+    CONFIRMED: { label: 'Disetujui', color: '#0284c7' },
+    IN_PROGRESS: { label: 'Sedang Dikerjakan', color: '#3b82f6' },
+    COMPLETED: { label: 'Selesai Servis', color: '#10b981' },
+    CANCELLED: { label: 'Dibatalkan', color: '#ef4444' },
+    PAID: { label: 'Sudah Lunas', color: '#64748b' }
+  };
+
   constructor(
     private fb: FormBuilder,
+    private customerService: CustomerService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
     public dialogRef: MatDialogRef<CustomerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CustomerDialogData
   ) {}
@@ -34,7 +60,139 @@ export class CustomerDialogComponent implements OnInit {
         brand: [null],
         year: [null]
       });
+
+      if (this.data.mode === 'edit' && this.data.customer?.id) {
+        this.loadVehicles(this.data.customer.id);
+        this.loadHistory(this.data.customer.id);
+      }
     }
+  }
+
+  // Vehicle CRUD methods
+  loadVehicles(customerId: number): void {
+    this.loadingVehicles = true;
+    this.cdr.detectChanges();
+    this.customerService.getVehiclesByCustomer(customerId).subscribe({
+      next: (data: Vehicle[]) => {
+        this.vehicles = data || [];
+        this.loadingVehicles = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error loading vehicles:', err);
+        this.snackBar.open('Gagal memuat data kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+        this.loadingVehicles = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  openAddVehicleDialog(): void {
+    if (!this.data.customer?.id) return;
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '620px',
+      data: { mode: 'add', customerId: this.data.customer.id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.createVehicle(result).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil ditambahkan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.data.customer?.id) {
+              this.loadVehicles(this.data.customer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal menambahkan kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  openEditVehicleDialog(vehicle: Vehicle): void {
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '620px',
+      data: { mode: 'edit', vehicle }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.customerService.updateVehicle(vehicle.id!, result).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil diperbarui!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.data.customer?.id) {
+              this.loadVehicles(this.data.customer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal memperbarui kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  deleteVehicle(id: number): void {
+    const dialogRef = this.dialog.open(VehicleDialogComponent, {
+      width: '400px',
+      data: { mode: 'confirm', message: 'Hapus kendaraan dari daftar aset pelanggan?' }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.customerService.deleteVehicle(id).subscribe({
+          next: () => {
+            this.snackBar.open('Kendaraan berhasil dihapus', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            if (this.data.customer?.id) {
+              this.loadVehicles(this.data.customer.id);
+            }
+          },
+          error: () => {
+            this.snackBar.open('Gagal menghapus kendaraan', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
+      }
+    });
+  }
+
+  // History loading method
+  loadHistory(customerId: number): void {
+    this.loadingHistory = true;
+    this.cdr.detectChanges();
+    this.customerService.getBookingsByCustomer(customerId).subscribe({
+      next: (res: any) => {
+        const bookingsList = res.data || [];
+        this.transactions = bookingsList.map((b: any) => ({
+          date: b.bookingDate,
+          plate: `${b.vehicleBrand || ''} ${b.vehicleModel || ''} (${b.licensePlate || ''})`,
+          notes: b.complaints || 'Tidak ada keluhan tertulis',
+          status: b.operationalStatus
+        }));
+        this.loadingHistory = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error loading customer booking history:', err);
+        this.snackBar.open('Gagal memuat riwayat servis', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+        this.loadingHistory = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  getStatusDetails(status: string): { label: string; color: string } {
+    return this.statusMap[status] || { label: status, color: '#64748b' };
+  }
+
+  getInitials(name: string): string {
+    if (!name) return 'C';
+    const parts = name.split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   }
 
   /**
@@ -61,7 +219,6 @@ export class CustomerDialogComponent implements OnInit {
 
   onPhoneKeyPress(event: KeyboardEvent): void {
     const charCode = event.key;
-    // Allow numbers, and control keys like Backspace/Arrow keys (which have longer key names)
     if (!/^[0-9]$/.test(charCode) && charCode.length === 1) {
       event.preventDefault();
     }

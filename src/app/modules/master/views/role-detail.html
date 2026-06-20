@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">{{ data.mode === 'edit' ? 'edit' : 'shield' }}</mat-icon>
+  {{ data.mode === 'edit' ? 'Ubah Nama Role' : 'Tambah Role Baru' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="roleForm">
+
+    <div class="dialog-section">
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Nama Role / Jabatan <span class="text-danger">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">shield</mat-icon>
+          <input matInput formControlName="roleName" placeholder="Contoh: Manager, Junior Mechanic" style="font-family: 'Inter', sans-serif;" />
+          <mat-error *ngIf="roleForm.get('roleName')?.hasError('required')">Nama role wajib diisi</mat-error>
+          <mat-error *ngIf="roleForm.get('roleName')?.hasError('minlength')">Nama role minimal 3 karakter</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="roleForm.invalid || isSaving" class="btn-save">
+    <mat-icon>save</mat-icon>
+    <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'TAMBAH ROLE' }}</span>
+  </button>
+</mat-dialog-actions>

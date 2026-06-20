@@ -24,51 +24,47 @@
   <mat-dialog-content class="dialog-content">
     <form [formGroup]="vehicleForm">
       <div class="dialog-section">
-        <div class="dialog-section-header">
-          <mat-icon>directions_car</mat-icon>
-          <span>Detail Kendaraan</span>
-        </div>
 
         <div class="form-col-wrapper">
           <label class="form-label-static">Plat Nomor <span class="required">*</span></label>
           <mat-form-field appearance="outline" class="full-width">
-          
-          <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
-                 placeholder="Contoh: B 1234 ABC"
-                 style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;" />
-          <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
-            Plat nomor wajib diisi
-          </mat-error>
-          <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('pattern')">
-            Format salah. Contoh: B 1234 ABC atau AE 7887 RK
-          </mat-error>
-        </mat-form-field>
+
+            <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
+              placeholder="Contoh: B 1234 ABC"
+              style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
+              Plat nomor wajib diisi
+            </mat-error>
+            <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('pattern')">
+              Format salah. Contoh: B 1234 ABC atau AE 7887 RK
+            </mat-error>
+          </mat-form-field>
         </div>
 
         <div class="two-col-grid">
           <div class="form-col-wrapper">
             <label class="form-label-static">Brand / Merk <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input matInput formControlName="brand" placeholder="e.g. Honda" />
-            <mat-icon matSuffix>directions_car</mat-icon>
-            <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
-              Brand wajib diisi
-            </mat-error>
-          </mat-form-field>
+
+              <input matInput formControlName="brand" placeholder="e.g. Honda" />
+              <mat-icon matSuffix>directions_car</mat-icon>
+              <mat-error *ngIf="vehicleForm.get('brand')?.hasError('required')">
+                Brand wajib diisi
+              </mat-error>
+            </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
             <label class="form-label-static">Model / Seri <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input matInput formControlName="model" placeholder="e.g. Jazz GE8" />
-            <mat-icon matSuffix>minor_crash</mat-icon>
-            <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
-              Model wajib diisi
-            </mat-error>
-          </mat-form-field>
+
+              <input matInput formControlName="model" placeholder="e.g. Jazz GE8" />
+              <mat-icon matSuffix>minor_crash</mat-icon>
+              <mat-error *ngIf="vehicleForm.get('model')?.hasError('required')">
+                Model wajib diisi
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
 
@@ -76,21 +72,23 @@
           <div class="form-col-wrapper">
             <label class="form-label-static">Tahun Pembuatan</label>
             <mat-form-field appearance="outline">
-            
-            <input matInput type="number" formControlName="yearMade" placeholder="e.g. 2013" min="1900" max="2100" />
-            <mat-icon matSuffix>calendar_today</mat-icon>
-          </mat-form-field>
+
+              <input matInput type="number" formControlName="yearMade" placeholder="e.g. 2013" min="1900" max="2100" />
+              <mat-icon matSuffix>calendar_today</mat-icon>
+            </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
             <label class="form-label-static">Transmisi</label>
             <mat-form-field appearance="outline">
-            
-            <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto" placeholder="Ketik transmisi..." />
-            <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
-              <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.value">{{ t.label }}</mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+
+              <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto"
+                placeholder="Ketik transmisi..." />
+              <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
+                <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.value">{{ t.label
+                  }}</mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -99,7 +97,8 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving" class="btn-save">
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving"
+      class="btn-save">
       <mat-icon>save</mat-icon>
       {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN KENDARAAN' }}
     </button>

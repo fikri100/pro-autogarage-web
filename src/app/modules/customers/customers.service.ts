@@ -46,6 +46,10 @@ export class CustomerService {
     return this.http.get<Vehicle[]>(`${this.vehicleUrl}?customerId=${customerId}`);
   }
 
+  getBookingsByCustomer(customerId: number): Observable<any> {
+    return this.http.get<any>(`/api/bookings?customerId=${customerId}&limit=100`);
+  }
+
   createVehicle(vehicle: Vehicle): Observable<any> {
     return this.http.post<any>(this.vehicleUrl, vehicle);
   }

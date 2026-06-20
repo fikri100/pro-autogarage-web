@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { CashierComponent } from './components/cashier.component';
+import { CashierDetailComponent } from './components/cashier-detail.component';
 import { InvoicePrintDialogComponent } from './components/invoice-print-dialog.component';
 import { routes } from './cashier.routes';
 
@@ -19,10 +20,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     CashierComponent,
+    CashierDetailComponent,
     InvoicePrintDialogComponent
   ],
   imports: [
@@ -40,7 +43,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSelectModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTabsModule
   ]
 })
 export class CashierModule { }

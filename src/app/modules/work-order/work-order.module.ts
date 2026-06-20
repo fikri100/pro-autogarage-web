@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { WorkOrderComponent } from './components/work-order.component';
 import { EstimateDialogComponent } from './components/estimate-dialog.component';
+import { WorkOrderDetailComponent } from './components/work-order-detail.component';
 import { routes } from './work-order.routes';
 
 // Angular Material
@@ -24,7 +25,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 @NgModule({
   declarations: [
     WorkOrderComponent,
-    EstimateDialogComponent
+    EstimateDialogComponent,
+    WorkOrderDetailComponent
   ],
   imports: [
     CommonModule,

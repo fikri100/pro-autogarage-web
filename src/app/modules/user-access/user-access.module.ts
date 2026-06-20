@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { UserAccessComponent } from './components/user-access.component';
-import { UserDialogComponent } from './components/user-dialog.component';
+import { UserDetailComponent } from './components/user-detail.component';
 import { routes } from './user-access.routes';
 
 // Angular Material
@@ -23,11 +23,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     UserAccessComponent,
-    UserDialogComponent
+    UserDetailComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +49,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSortModule,
     MatDialogModule,
     MatAutocompleteModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTabsModule
   ]
 })
 export class UserAccessModule { }

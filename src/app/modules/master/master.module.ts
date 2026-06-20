@@ -18,6 +18,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { RoleCrudComponent } from './components/role-crud.component';
 import { CategoryCrudComponent } from './components/category-crud.component';
 import { EmployeeCrudComponent } from './components/employee-crud.component';
+import { RoleDetailComponent } from './components/role-detail.component';
+import { CategoryDetailComponent } from './components/category-detail.component';
+import { EmployeeDetailComponent } from './components/employee-detail.component';
 import { routes } from './master.routes';
 import { SharedModule } from '../shared.module';
 
@@ -25,7 +28,10 @@ import { SharedModule } from '../shared.module';
   declarations: [
     RoleCrudComponent,
     CategoryCrudComponent,
-    EmployeeCrudComponent
+    EmployeeCrudComponent,
+    RoleDetailComponent,
+    CategoryDetailComponent,
+    EmployeeDetailComponent
   ],
   imports: [
     CommonModule,

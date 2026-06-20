@@ -4,11 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 
 import { UserAccessService } from '../user-access.service';
-import { User, Role, Employee } from '../models/object';
-import { FormControl, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { UserDialogComponent } from './user-dialog.component';
+import { User, Role } from '../models/object';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { UserDetailComponent } from './user-detail.component';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -20,13 +19,10 @@ export class UserAccessComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
   roles: Role[] = [];
-  employees: Employee[] = [];
 
   selectedUser: User | null = null;
   selectedRole: Role | null = null;
-
-  roleControl = new FormControl<number | null>(null, [Validators.required]);
-  filteredRoles$!: Observable<Role[]>;
+  selectedMappingRoleId: number | null = null;
 
   systemMenus: any[] = [];
   fullMenuTree: any[] = [];
@@ -54,7 +50,6 @@ export class UserAccessComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.setupAutocomplete();
 
     this.searchSubject.pipe(
       debounceTime(1000),
@@ -64,37 +59,6 @@ export class UserAccessComponent implements OnInit {
       this.currentPage = 1;
       this.loadUsers();
     });
-  }
-
-  private setupAutocomplete(): void {
-    this.filteredRoles$ = this.roleControl.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : (this.getRoleName(value) || '');
-        return name ? this._filterRoles(name) : this.roles.slice();
-      })
-    );
-
-    this.roleControl.valueChanges.subscribe(value => {
-      if (typeof value === 'number') {
-        this.onRoleChange(value);
-      }
-    });
-  }
-
-  private _filterRoles(name: string): Role[] {
-    const filterValue = name.toLowerCase();
-    return this.roles.filter(role => role.roleName.toLowerCase().includes(filterValue));
-  }
-
-  getRoleName(id: number | null): string {
-    if (!id) return '';
-    const role = this.roles.find(r => r.id === id);
-    return role ? role.roleName : '';
-  }
-
-  displayRole = (id: number): string => {
-    return this.getRoleName(id);
   }
 
   loadData(): void {
@@ -109,6 +73,9 @@ export class UserAccessComponent implements OnInit {
 
     this.api.getRoles().subscribe((roles: Role[]) => {
       this.roles = roles;
+      if (this.roles.length > 0) {
+        this.onMappingRoleChange(this.roles[0].id);
+      }
       this.cdr.detectChanges();
     });
 
@@ -124,13 +91,6 @@ export class UserAccessComponent implements OnInit {
         this.users = response.data || [];
         this.filteredUsers = [...this.users];
         this.totalData = response.pageResponse?.total || 0;
-        if (this.users.length > 0) {
-          this.selectUser(this.users[0]);
-        } else {
-          this.selectedUser = null;
-          this.selectedRole = null;
-          this.roleControl.setValue(null, { emitEvent: false });
-        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -175,48 +135,65 @@ export class UserAccessComponent implements OnInit {
     this.loadUsers();
   }
 
-  selectUser(user: any): void {
-    this.selectedUser = user as User;
-    this.selectedRole = this.roles.find(r => r.id === this.selectedUser!.roleId) || null;
-    if (this.selectedUser && this.selectedUser.roleId) {
-      this.roleControl.setValue(this.selectedUser.roleId, { emitEvent: false });
-      this.loadRoleMenus(this.selectedUser.roleId);
-    } else {
-      this.roleControl.setValue(null, { emitEvent: false });
-    }
-  }
-
-  onRoleChange(roleId: number): void {
+  onMappingRoleChange(roleId: number): void {
+    this.selectedMappingRoleId = roleId;
     this.selectedRole = this.roles.find(r => r.id === roleId) || null;
-    if (this.selectedUser) {
-      this.selectedUser.roleId = roleId;
-      this.api.updateUser(this.selectedUser.id!, this.selectedUser).subscribe({
-        next: () => this.snackBar.open('Role pengguna berhasil diperbarui!', 'OK', { duration: 3000, panelClass: 'snack-success' }),
-        error: () => this.snackBar.open('Gagal memperbarui role pengguna', 'Tutup', { duration: 3000, panelClass: 'snack-error' })
-      });
+    if (this.selectedRole) {
       this.loadRoleMenus(roleId);
     }
   }
 
-
   openAddUserDialog(): void {
-    const dialogRef = this.dialog.open(UserDialogComponent, {
+    const dialogRef = this.dialog.open(UserDetailComponent, {
       width: '520px',
       data: {
-        roles: this.roles,
-        employees: this.employees
+        mode: 'add',
+        roles: this.roles
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.loading = true;
+        this.cdr.detectChanges();
         this.api.createUser(result).subscribe({
           next: () => {
             this.snackBar.open('Pengguna baru berhasil ditambahkan!', 'OK', { duration: 3000, panelClass: 'snack-success' });
-            this.loadData();
+            this.loadUsers();
           },
           error: () => {
             this.snackBar.open('Gagal menambahkan pengguna baru', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+            this.loading = false;
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
+  openEditUserDialog(user: User): void {
+    const dialogRef = this.dialog.open(UserDetailComponent, {
+      width: '520px',
+      data: {
+        mode: 'edit',
+        roles: this.roles,
+        user
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.cdr.detectChanges();
+        this.api.updateUser(user.id!, result).subscribe({
+          next: () => {
+            this.snackBar.open('Hak akses pengguna berhasil diperbarui!', 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.loadUsers();
+          },
+          error: () => {
+            this.snackBar.open('Gagal memperbarui hak akses pengguna', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+            this.loading = false;
+            this.cdr.detectChanges();
           }
         });
       }

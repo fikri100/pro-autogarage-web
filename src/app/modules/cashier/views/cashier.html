@@ -1,261 +1,129 @@
 <!-- Page Header -->
-<div class="page-header">
+<div class="page-header" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
   <div>
-    <h2 class="page-title">Pembayaran & Kasir</h2>
-    <p class="page-subtitle">Proses pembayaran tagihan servis kendaraan, kalkulasi reaktif PPN/Diskon, dan pencetakan struk kasir.</p>
+    <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Pembayaran &amp; Kasir</h2>
+    <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Proses pembayaran tagihan servis kendaraan, kalkulasi reaktif PPN/Diskon, dan pencetakan struk kasir.</p>
   </div>
 </div>
 
 <!-- Loading Spinner -->
-<div *ngIf="loading && !submitting" class="loading-overlay">
-  <mat-spinner diameter="48"></mat-spinner>
-  <p>Memuat data kasir...</p>
+<div *ngIf="loading" style="padding: 4rem 2rem; text-align: center; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
+  <mat-spinner diameter="48" style="margin: 0 auto;"></mat-spinner>
+  <p style="margin-top: 1rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.95rem;">Memuat daftar kasir...</p>
 </div>
 
-<div class="flex-row-responsive" style="align-items: stretch;" *ngIf="!loading">
+<!-- Main Table Card -->
+<div *ngIf="!loading" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
 
-  <!-- Left Column: COMPLETED Work Orders waiting to pay -->
-  <div class="col-30">
-    <div class="card-panel h-100" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <div class="list-header" style="display: flex; flex-direction: column; gap: 0.75rem; align-items: stretch;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0;">Menunggu Pembayaran</h3>
-          <span class="count-badge warn">{{ filteredReadyWOs.length }} Unit</span>
-        </div>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 100%;">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
-          <input matInput placeholder="Cari WO / tagihan..." (keyup)="applyFilter($event)">
-        </mat-form-field>
-      </div>
+  <!-- Header Filter Panel -->
+  <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; background-color: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Antrian Pembayaran</span>
+      <span style="background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; padding: 0.2rem 0.6rem; border-radius: 9999px; font-weight: 700; font-family: 'Inter', sans-serif; font-size: 0.72rem;">
+        {{ totalData }} Unit
+      </span>
+    </div>
 
-      <div class="list-column-labels">
-        <span class="text-xs-caps">KENDARAAN / OWNER</span>
-        <span class="text-xs-caps" style="text-align: right;">STATUS</span>
-      </div>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 280px;">
+      <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+      <input matInput placeholder="Cari invoice / nomor polisi..." (keyup)="applyFilter($event)" />
+    </mat-form-field>
+  </div>
 
-      <div class="customer-list-scroll" style="flex: 1; overflow-y: auto; max-height: 580px;">
-        <div *ngIf="filteredReadyWOs.length === 0" class="empty-state" style="padding: 4rem 2rem;">
-          <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem; color: #cbd5e1;">credit_card_off</mat-icon>
-          <p style="margin-top: 0.5rem;">Tidak ada tagihan yang menunggu pembayaran.</p>
-        </div>
+  <!-- Content Table -->
+  <div style="position: relative; flex: 1; min-height: 350px;">
 
-        <div *ngFor="let wo of filteredReadyWOs"
-             class="list-item-hover"
-             [class.list-item-active]="selectedWO?.id === wo.id"
-             (click)="selectWorkOrder(wo)"
-             style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem;">
-          
-          <div style="display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; flex: 1;">
-            <div class="plate-badge" style="font-size: 0.8rem; font-weight: 700; align-self: flex-start;">
-              {{ wo.licensePlate }}
-            </div>
-            <div style="font-weight: 600; color: #334155; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 0.25rem;">
-              {{ wo.customerName }}
-            </div>
-            <span style="font-size: 0.7rem; color: #64748b;">Mekanik: {{ wo.mechanicName || '-' }}</span>
-          </div>
+    <!-- Empty State -->
+    <div *ngIf="readyWOs.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
+      <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">credit_card_off</mat-icon>
+      <div style="font-weight: 600; color: #475569;">Tidak ada tagihan yang menunggu pembayaran</div>
+      <div style="font-size: 0.85rem; margin-top: 0.25rem;">Tagihan baru akan muncul setelah mekanik menyelesaikan servis.</div>
+    </div>
 
-          <div style="text-align: right; margin-left: 0.5rem; flex-shrink: 0;">
-            <span class="status-badge-inactive" style="background-color: #fffbeb; color: #d97706; border-color: #fde68a; font-size: 0.55rem; padding: 0.15rem 0.4rem;">
+    <!-- Table -->
+    <div *ngIf="readyWOs.length > 0" style="overflow-x: auto; width: 100%;">
+      <table mat-table [dataSource]="readyWOs" style="width: 100%; border-collapse: collapse; min-width: 860px;">
+
+        <!-- Column: No. Invoice -->
+        <ng-container matColumnDef="invoice">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem; width: 160px;">No. Invoice</th>
+          <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #1e3a8a; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.03em;">
+            {{ row.invoiceNumber || ('TRX-' + row.id) }}
+          </td>
+        </ng-container>
+
+        <!-- Column: Plat Nomor -->
+        <ng-container matColumnDef="plate">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem; width: 130px;">Plat Nomor</th>
+          <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #0f172a; font-weight: 800; font-size: 0.95rem; letter-spacing: 0.08em;">
+            {{ row.licensePlate }}
+          </td>
+        </ng-container>
+
+        <!-- Column: Pelanggan -->
+        <ng-container matColumnDef="customer">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem;">Pelanggan</th>
+          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #1e293b; font-weight: 600; font-size: 0.9rem;">
+            {{ row.customerName }}
+          </td>
+        </ng-container>
+
+        <!-- Column: Kendaraan -->
+        <ng-container matColumnDef="vehicle">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem;">Kendaraan</th>
+          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+            {{ row.vehicleBrand }} {{ row.vehicleModel }}
+          </td>
+        </ng-container>
+
+        <!-- Column: Mekanik -->
+        <ng-container matColumnDef="mechanic">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem;">Mekanik</th>
+          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem; font-weight: 500;">
+            {{ row.mechanicName || '-' }}
+          </td>
+        </ng-container>
+
+        <!-- Column: Status -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem; width: 130px;">Status</th>
+          <td mat-cell *matCellDef="let row" style="padding: 1rem;">
+            <span style="background-color: #fffbeb; color: #d97706; border: 1px solid #fde68a; padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: 700; font-family: 'Inter', sans-serif; font-size: 0.72rem; display: inline-block; white-space: nowrap;">
               SIAP BAYAR
             </span>
-          </div>
-        </div>
-      </div>
+          </td>
+        </ng-container>
 
-      <mat-paginator [length]="totalData"
-                     [pageSize]="pageSize"
-                     [pageSizeOptions]="[5, 10, 20]"
-                     (page)="onPageChange($event)"
-                     aria-label="Pilih halaman cashier"
-                     style="border-top: 1px solid #e2e8f0;">
-      </mat-paginator>
-    </div>
-  </div>
-
-  <!-- Right Column: Interactive Checkout Area -->
-  <div class="col-70 h-100" style="display: flex; flex-direction: column;" *ngIf="transaction">
-    <div class="checkout-grid" style="flex: 1;">
-    
-    <!-- Item details table (final edits) -->
-    <div class="card-panel" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <!-- Card Header -->
-      <div class="list-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem;">
-        <div>
-          <h3 class="text-xs-caps" style="color: #475569; font-size: 0.75rem; margin: 0;">Faktur Transaksi</h3>
-          <span style="font-family: monospace; font-weight: 700; font-size: 0.82rem; color: #1e3a8a;">
-            {{ transaction.invoiceNumber }}
-          </span>
-        </div>
-        
-        <div style="text-align: right;">
-          <span class="text-xs-caps" style="font-size: 0.58rem;">Mobil</span>
-          <div style="font-weight: 600; font-size: 0.75rem; color: #334155;">{{ selectedWO.vehicleBrand }} ({{ selectedWO.licensePlate }})</div>
-        </div>
-      </div>
-
-      <!-- Items List: scrollable body -->
-      <div class="invoice-table-container" style="flex: 1; overflow-y: auto; overflow-x: auto;">
-        <div *ngIf="transaction.details.length === 0" class="empty-state" style="padding: 3rem 2rem;">
-          <mat-icon style="color: #cbd5e1; font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">remove_shopping_cart</mat-icon>
-          <p style="margin-top: 0.5rem;">Tidak ada item di tagihan ini.</p>
-        </div>
-
-        <table mat-table [dataSource]="transaction.details" class="mat-elevation-z0 w-full-table" *ngIf="transaction.details.length > 0">
-          
-          <ng-container matColumnDef="code">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Kode</th>
-            <td mat-cell *matCellDef="let d" style="font-family: monospace; font-weight: 600; font-size: 0.8rem;">{{ d.productCode }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Item / Layanan</th>
-            <td mat-cell *matCellDef="let d" style="font-weight: 500; color: #334155; font-size: 0.8rem;">{{ d.productName }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="qty">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="text-align: center; width: 110px;">Qty</th>
-            <td mat-cell *matCellDef="let d; let i = index" style="text-align: center;">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
-                <button mat-icon-button style="width: 1.5rem; height: 1.5rem; line-height: 1.5rem;" (click)="decreaseQty(i)">
-                  <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #64748b;">remove_circle_outline</mat-icon>
-                </button>
-                <span style="font-weight: 700; font-size: 0.85rem; min-width: 1.5rem; display: inline-block;">{{ d.quantity }}</span>
-                <button mat-icon-button style="width: 1.5rem; height: 1.5rem; line-height: 1.5rem;" (click)="increaseQty(i)">
-                  <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem; color: #64748b;">add_circle_outline</mat-icon>
-                </button>
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Harga</th>
-            <td mat-cell *matCellDef="let d" style="font-size: 0.8rem;">{{ d.priceAtTransaction | currency:'IDR':'Rp ':'1.0-0' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="subtotal">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps">Subtotal</th>
-            <td mat-cell *matCellDef="let d" style="font-weight: 700; color: #1e3a8a; font-size: 0.8rem;">
-              {{ (d.quantity * d.priceAtTransaction) | currency:'IDR':'Rp ':'1.0-0' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="text-xs-caps" style="width: 40px;"></th>
-            <td mat-cell *matCellDef="let d; let i = index">
-              <button mat-icon-button color="warn" (click)="deleteItem(i)" matTooltip="Hapus Item">
-                <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">delete_outline</mat-icon>
+        <!-- Column: Aksi -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; font-size: 0.8rem; text-align: center; width: 100px;">Aksi</th>
+          <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <button mat-stroked-button (click)="openCashierDetail(row); $event.stopPropagation()"
+                matTooltip="Proses Pembayaran"
+                style="color: #d97706; background-color: #fffbeb; border-color: #fde68a; border-radius: 8px; width: 2.25rem; height: 2.25rem; min-width: 2.25rem; padding: 0; display: flex; align-items: center; justify-content: center;">
+                <mat-icon style="font-size: 1.15rem; width: 1.15rem; height: 1.15rem; line-height: 1.15rem;">point_of_sale</mat-icon>
               </button>
-            </td>
-          </ng-container>
+            </div>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover"></tr>
-        </table>
-      </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="table-row-hover"
+            (click)="openCashierDetail(row)"
+            style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
+      </table>
     </div>
 
-    <!-- Calculations, discount, PPN, pay inputs -->
-    <div class="card-panel" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      <!-- Card Header -->
-      <div class="list-header" style="padding: 0.75rem 1rem;">
-        <h3 style="display: flex; align-items: center; gap: 0.35rem; margin: 0; font-size: var(--text-lg);">
-          <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; color: #10b981;">payments</mat-icon>
-          Pembayaran
-        </h3>
-      </div>
-      <!-- Scrollable payment body -->
-      <div style="flex: 1; overflow-y: auto; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+    <mat-paginator [length]="totalData"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 20]"
+                   (page)="onPageChange($event)"
+                   aria-label="Pilih halaman kasir"
+                   style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
+    </mat-paginator>
 
-      <!-- Pricing Summary Grid -->
-      <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; color: #475569;">
-        <div class="payment-row">
-          <span>Subtotal Item:</span>
-          <span class="value">{{ subtotal | currency:'IDR':'Rp ':'1.0-0' }}</span>
-        </div>
-
-        <!-- Input Diskon -->
-        <mat-form-field appearance="outline" class="full-width" style="margin-top: 0.25rem; margin-bottom: -1rem;">
-          <mat-label>Potongan Diskon (Rp)</mat-label>
-          <span matTextPrefix>Rp&nbsp;</span>
-          <input matInput type="number" [(ngModel)]="discount" min="0" [max]="subtotal" (input)="onDiscountChange()" />
-        </mat-form-field>
-
-        <div class="payment-row" style="margin-top: 1rem;">
-          <span>PPN (11%):</span>
-          <span class="value">{{ taxAmount | currency:'IDR':'Rp ':'1.0-0' }}</span>
-        </div>
-
-        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem 0.75rem; border-radius: 0.35rem; margin-top: 0.25rem;">
-          <span class="text-xs-caps" style="font-size: 0.6rem; color: #1e40af;">Total Tagihan Kasir:</span>
-          <div style="font-size: 1.1rem; font-weight: 800; color: #1e3a8a; margin-top: 0.1rem; line-height: 1;">
-            {{ grandTotal | currency:'IDR':'Rp ':'1.0-0' }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Payment Methods -->
-      <div style="display: flex; flex-direction: column; gap: 0.35rem;">
-        <span class="text-xs-caps" style="font-size: 0.65rem; color: #64748b;">Metode Pembayaran:</span>
-        <div class="payment-methods-container">
-          <button mat-stroked-button style="flex: 1; font-size: 0.7rem; padding: 0; min-width: 0; font-weight: 600;"
-                  [style.background-color]="paymentMethod === 'Tunai' ? '#ecfdf5' : 'white'"
-                  [style.color]="paymentMethod === 'Tunai' ? '#047857' : '#475569'"
-                  [style.border-color]="paymentMethod === 'Tunai' ? '#10b981' : '#e2e8f0'"
-                  (click)="changePaymentMethod('Tunai')">
-            TUNAI
-          </button>
-          <button mat-stroked-button style="flex: 1.2; font-size: 0.7rem; padding: 0; min-width: 0; font-weight: 600;"
-                  [style.background-color]="paymentMethod === 'Transfer Bank' ? '#eff6ff' : 'white'"
-                  [style.color]="paymentMethod === 'Transfer Bank' ? '#1e40af' : '#475569'"
-                  [style.border-color]="paymentMethod === 'Transfer Bank' ? '#3b82f6' : '#e2e8f0'"
-                  (click)="changePaymentMethod('Transfer Bank')">
-            TRANSFER
-          </button>
-          <button mat-stroked-button style="flex: 1; font-size: 0.7rem; padding: 0; min-width: 0; font-weight: 600;"
-                  [style.background-color]="paymentMethod === 'QRIS' ? '#f5f3ff' : 'white'"
-                  [style.color]="paymentMethod === 'QRIS' ? '#6d28d9' : '#475569'"
-                  [style.border-color]="paymentMethod === 'QRIS' ? '#8b5cf6' : '#e2e8f0'"
-                  (click)="changePaymentMethod('QRIS')">
-            QRIS
-          </button>
-        </div>
-      </div>
-
-      <!-- Cash Received (Only for Tunai method) -->
-      <div *ngIf="paymentMethod === 'Tunai'" style="display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px dashed #cbd5e1; padding-top: 0.6rem; margin-top: 0;">
-        <mat-form-field appearance="outline" class="full-width" style="margin-bottom: -1.25rem;">
-          <mat-label>Uang Tunai Diterima <span class="required">*</span></mat-label>
-          <span matTextPrefix>Rp&nbsp;</span>
-          <input matInput type="number" [(ngModel)]="cashAmount" min="0" (input)="onCashAmountChange()" />
-        </mat-form-field>
-
-        <div class="change-amount-box">
-          <span class="text-xs-caps">Uang Kembalian:</span>
-          <span class="change-value">
-            {{ changeAmount | currency:'IDR':'Rp ':'1.0-0' }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Finalize checkout action -->
-      <button mat-flat-button color="primary" style="height: 2.75rem; margin-top: 0.25rem; font-weight: 700; letter-spacing: 0.05em;" 
-              [disabled]="submitting || (paymentMethod === 'Tunai' && cashAmount < grandTotal) || transaction.details.length === 0" 
-              (click)="payAndPrint()">
-        <mat-icon>print</mat-icon>
-        {{ submitting ? 'MEMPROSES...' : 'BAYAR & CETAK STRUK' }}
-      </button>
-      </div><!-- end scrollable body -->
-    </div><!-- end payment card -->
-    </div><!-- end checkout-grid -->
-  </div><!-- end col-70 -->
-
-  <!-- Empty state for cashier when no active unit selected -->
-  <div class="col-70" *ngIf="!transaction">
-    <div class="card-panel h-100" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5rem; gap: 1rem; color: #94a3b8;">
-      <mat-icon style="font-size: 3.5rem; width: 3.5rem; height: 3.5rem; color: #cbd5e1;">point_of_sale</mat-icon>
-      <p style="font-size: 1rem; font-weight: 500;">Pilih unit kendaraan yang siap dibayar di daftar sebelah kiri untuk memproses kasir.</p>
-    </div>
   </div>
-
 </div>

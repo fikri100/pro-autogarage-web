@@ -34,10 +34,10 @@
   <div *ngIf="!loading && vehicles.length > 0" class="portal-vehicles-grid">
 
     <!-- Vehicle Card -->
-    <div *ngFor="let v of vehicles" class="car-card" style="position: relative; overflow: hidden; padding: 1.5rem; border-radius: 12px; border-left-width: 5px;">
+    <div *ngFor="let v of vehicles" class="car-card portal-vehicle-card">
 
       <!-- Brand & Model -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+      <div class="vehicle-brand-row" style="display: flex; justify-content: space-between; align-items: flex-start;">
         <h3 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; font-size: 1.1rem; margin: 0;">
           {{ v.brand }} {{ v.model }}
         </h3>
@@ -52,8 +52,8 @@
       <span style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Tahun Pembuatan: {{ v.yearMade || 'Tidak tercatat' }}</span>
 
       <!-- Monospace License Plate -->
-      <div style="margin: 1rem 0;">
-        <span class="plate-badge" style="font-size: 0.95rem; padding: 0.3rem 0.75rem; border-radius: 6px; letter-spacing: 0.08em; display: inline-block;">
+      <div class="vehicle-plate-row">
+        <span class="plate-badge" style="font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; color: #1e3a8a;">
           {{ v.licensePlate }}
         </span>
       </div>

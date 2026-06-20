@@ -7,17 +7,18 @@ import { map, startWith } from 'rxjs/operators';
 import { User, Role, Employee } from '../models/object';
 import { UserAccessService } from '../user-access.service';
 
-export interface UserDialogData {
+export interface UserDetailData {
+  mode: 'add' | 'edit';
   roles: Role[];
-  employees: Employee[];
+  user?: User;
 }
 
 @Component({
-  selector: 'app-user-dialog',
-  templateUrl: '../views/user-dialog.html',
+  selector: 'app-user-detail',
+  templateUrl: '../views/user-detail.html',
   standalone: false
 })
-export class UserDialogComponent implements OnInit {
+export class UserDetailComponent implements OnInit {
   @ViewChild('empTrigger', { read: MatAutocompleteTrigger }) empTrigger!: MatAutocompleteTrigger;
 
   userForm!: FormGroup;
@@ -32,25 +33,44 @@ export class UserDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userAccessService: UserAccessService,
-    public dialogRef: MatDialogRef<UserDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: UserDialogData
+    public dialogRef: MatDialogRef<UserDetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: UserDetailData
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.setupAutocomplete();
+
+    if (this.data.mode === 'edit' && this.data.user) {
+      // If edit mode, populate the employees array with a single dummy entry so displayEmployee displays the correct text!
+      this.employees = [{
+        id: this.data.user.employeeId,
+        name: this.data.user.employeeName || 'Karyawan',
+        position: ''
+      }];
+      this.employeesLoaded = true;
+      
+      // Update form values
+      this.userForm.patchValue({
+        employeeId: this.data.user.employeeId,
+        username: this.data.user.username,
+        roleId: this.data.user.roleId
+      });
+    }
   }
 
   private initForm(): void {
+    const isEdit = this.data.mode === 'edit';
     this.userForm = this.fb.group({
-      employeeId: [null, [Validators.required]],
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      employeeId: [{ value: null, disabled: isEdit }, [Validators.required]],
+      username: [{ value: '', disabled: isEdit }, [Validators.required, Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
+      password: [{ value: '', disabled: isEdit }, isEdit ? [] : [Validators.required, Validators.minLength(6)]],
       roleId: [null, [Validators.required]]
     });
   }
 
   onEmployeeFocus(): void {
+    if (this.data.mode === 'edit') return;
     if (!this.employeesLoaded) {
       this.employeesLoaded = true;
       this.userAccessService.getEmployees().subscribe((res: any) => {
@@ -103,7 +123,8 @@ export class UserDialogComponent implements OnInit {
   getEmployeeName(id: number | null): string {
     if (!id) return '';
     const emp = this.employees.find(e => e.id === id);
-    return emp ? `${emp.name} - ${emp.position}` : '';
+    if (!emp) return '';
+    return emp.position ? `${emp.name} - ${emp.position}` : emp.name;
   }
 
   getRoleName(id: number | null): string {
@@ -131,7 +152,8 @@ export class UserDialogComponent implements OnInit {
     }
     this.isSaving = true;
     
-    const formVal = { ...this.userForm.value };
+    // Get raw value because some inputs might be disabled
+    const formVal = this.userForm.getRawValue();
     formVal.username = formVal.username.trim().toLowerCase();
     
     this.dialogRef.close(formVal);

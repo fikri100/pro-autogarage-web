@@ -1,0 +1,89 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">{{ data.mode === 'edit' ? 'edit' : 'person_add' }}</mat-icon>
+  {{ data.mode === 'edit' ? 'Ubah Hak Akses User' : 'Tambah Pengguna Baru' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="userForm">
+    <div class="dialog-section">
+      <div class="dialog-section-header">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Detail Akun Sistem</span>
+      </div>
+
+      <!-- Karyawan (Nama - Posisi) Dropdown -->
+      <div class="form-col-wrapper">
+        <label class="form-label-static">Karyawan <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input type="text" matInput formControlName="employeeId" 
+                 [matAutocomplete]="empAuto" 
+                 #empTrigger="matAutocompleteTrigger"
+                 (focus)="onEmployeeFocus()"
+                 (click)="onEmployeeFocus()"
+                 placeholder="Ketik nama karyawan..." />
+          <mat-autocomplete #empAuto="matAutocomplete" [displayWith]="displayEmployee">
+            <mat-option *ngFor="let emp of filteredEmployees$ | async" [value]="emp.id">
+              {{ emp.name }} <span *ngIf="emp.position">- {{ emp.position }}</span>
+            </mat-option>
+          </mat-autocomplete>
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="userForm.get('employeeId')?.hasError('required')">
+            Karyawan wajib dipilih
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Username -->
+      <div class="form-col-wrapper" style="margin-top: 0.5rem;">
+        <label class="form-label-static">Username <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput formControlName="username" placeholder="e.g. joni.bengkel" />
+          <mat-icon matSuffix>alternate_email</mat-icon>
+          <mat-error *ngIf="userForm.get('username')?.hasError('required')">
+            Username wajib diisi
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Password (Hanya saat tambah user) -->
+      <div class="form-col-wrapper" style="margin-top: 0.5rem;" *ngIf="data.mode === 'add'">
+        <label class="form-label-static">Password <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput type="password" formControlName="password" placeholder="Min 6 karakter" />
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+            Password wajib diisi
+          </mat-error>
+          <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">
+            Password minimal 6 karakter
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Role Select -->
+      <div class="form-col-wrapper" style="margin-top: 0.5rem;">
+        <label class="form-label-static">Role Hak Akses <span class="required">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input type="text" matInput formControlName="roleId" [matAutocomplete]="roleAuto" placeholder="Ketik role..." />
+          <mat-autocomplete #roleAuto="matAutocomplete" [displayWith]="displayRole">
+            <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.id">
+              {{ role.roleName }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-icon matSuffix>admin_panel_settings</mat-icon>
+          <mat-error *ngIf="userForm.get('roleId')?.hasError('required')">
+            Role wajib dipilih
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="userForm.invalid || isSaving" class="btn-save btn-primary-custom">
+    <mat-icon>save</mat-icon>
+    <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'SIMPAN USER' }}</span>
+  </button>
+</mat-dialog-actions>
