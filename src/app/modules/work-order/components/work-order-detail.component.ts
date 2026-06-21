@@ -26,6 +26,7 @@ export class WorkOrderDetailComponent implements OnInit {
   loading = false;
   isSaving = false;
   isChanged = false; // Flag to tell list to reload when closed
+  selectedTabIndex = 0;
 
   mechanics: any[] = [];
   mechanicsLoaded = false;
@@ -73,6 +74,17 @@ export class WorkOrderDetailComponent implements OnInit {
       this.computeEstimatedCompletion(this.workOrder);
       this.loadEstimationDetails(this.workOrder.id!);
       this.setupMechanicAutocomplete();
+
+      // Handle closing via backdrop click or ESC key to return correct reload status
+      this.dialogRef.backdropClick().subscribe(() => {
+        this.dialogRef.close({ reload: this.isChanged });
+      });
+
+      this.dialogRef.keydownEvents().subscribe(event => {
+        if (event.key === 'Escape') {
+          this.dialogRef.close({ reload: this.isChanged });
+        }
+      });
     }
   }
 
@@ -143,7 +155,7 @@ export class WorkOrderDetailComponent implements OnInit {
     this.woService.getEstimation(woId).subscribe({
       next: (data: any) => {
         if (data && data.details) {
-          this.estimationDetails = data.details;
+          this.estimationDetails = [...data.details];
           this.calculateTotal();
         } else {
           this.estimationDetails = [];
@@ -224,6 +236,8 @@ export class WorkOrderDetailComponent implements OnInit {
           this.estimationDetails.push(item);
         }
 
+        // Trigger change detection for mat-table by creating a new array reference
+        this.estimationDetails = [...this.estimationDetails];
         this.calculateTotal();
         this.saveEstimationToBackend();
       }
@@ -232,6 +246,7 @@ export class WorkOrderDetailComponent implements OnInit {
 
   deleteItem(index: number): void {
     this.estimationDetails.splice(index, 1);
+    this.estimationDetails = [...this.estimationDetails]; // Trigger change detection
     this.calculateTotal();
     this.saveEstimationToBackend();
   }

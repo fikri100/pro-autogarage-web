@@ -227,16 +227,6 @@
             <span>Jumlah yang harus dibayar: <strong>{{ grandTotal | currency:'IDR':'Rp ':'1.0-0' }}</strong></span>
           </div>
 
-          <!-- Pay Button inside Pembayaran Tab -->
-          <div style="padding-top: 0.5rem; flex-shrink: 0;">
-            <button mat-flat-button style="width: 100%; height: 46px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; border-radius: 8px; background-color: #10b981; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 0.5rem; letter-spacing: 0.03em;"
-              [disabled]="submitting || !transaction || transaction?.details?.length === 0 || (paymentMethod === 'Tunai' && cashAmount < grandTotal)"
-              (click)="payAndPrint()">
-              <mat-icon style="font-size: 1.15rem; width: auto; height: auto;">print</mat-icon>
-              {{ submitting ? 'MEMPROSES...' : 'BAYAR &amp; CETAK STRUK' }}
-            </button>
-          </div>
-
         </div>
       </mat-tab>
 
@@ -256,9 +246,18 @@
 
   <!-- Muncul hanya saat Tab Faktur aktif -->
   <button mat-flat-button *ngIf="selectedTabIndex === 0"
-    style="font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; border-radius: 6px; background-color: #0f172a; color: #ffffff; padding: 0 1.25rem;"
+    style="font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #ffffff; padding: 0 1.25rem;"
     (click)="goToPayment()">
     Lanjut ke Pembayaran
     <mat-icon style="font-size: 1rem; width: auto; height: auto; margin-left: 0.35rem;">arrow_forward</mat-icon>
+  </button>
+
+  <!-- Muncul hanya saat Tab Pembayaran aktif -->
+  <button mat-flat-button *ngIf="selectedTabIndex === 1"
+    style="font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #10b981; color: #ffffff; padding: 0 1.25rem;"
+    [disabled]="submitting || !transaction || transaction?.details?.length === 0 || (paymentMethod === 'Tunai' && cashAmount < grandTotal)"
+    (click)="payAndPrint()">
+    <mat-icon style="margin-right: 0.35rem; font-size: 1.15rem; width: auto; height: auto; display: inline-flex; align-items: center; justify-content: center;">print</mat-icon>
+    <span>{{ submitting ? 'MEMPROSES...' : 'BAYAR &amp; CETAK STRUK' }}</span>
   </button>
 </mat-dialog-actions>

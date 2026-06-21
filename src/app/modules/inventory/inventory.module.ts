@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { InventoryComponent } from './components/inventory.component';
 import { ProductDialogComponent } from './components/product-dialog.component';
 import { RestockDialogComponent } from './components/restock-dialog.component';
+import { ProductDetailDialogComponent } from './components/product-detail-dialog.component';
 import { routes } from './inventory.routes';
 
 // Angular Material
@@ -24,12 +25,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     InventoryComponent,
     ProductDialogComponent,
-    RestockDialogComponent
+    RestockDialogComponent,
+    ProductDetailDialogComponent
   ],
   imports: [
     CommonModule,
@@ -50,7 +53,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatMenuModule,
     MatCheckboxModule,
     MatAutocompleteModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTabsModule
   ]
 })
 export class InventoryModule { }

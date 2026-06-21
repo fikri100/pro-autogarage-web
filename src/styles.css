@@ -678,6 +678,145 @@ body {
   background: white !important;
 }
 
+/* ================================================
+   ANGULAR MATERIAL BUTTON COLOR FIXES
+   ================================================ */
+
+/* Primary Solid Buttons */
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-fab.mat-primary,
+.mat-mdc-mini-fab.mat-primary,
+.mat-unelevated-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary {
+  background-color: #1e3a8a !important;
+  color: #ffffff !important;
+}
+.mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-raised-button.mat-primary:hover,
+.mat-mdc-fab.mat-primary:hover,
+.mat-mdc-mini-fab.mat-primary:hover,
+.mat-unelevated-button.mat-primary:hover,
+.mat-raised-button.mat-primary:hover,
+.mat-fab.mat-primary:hover,
+.mat-mini-fab.mat-primary:hover {
+  background-color: #1e40af !important;
+}
+
+/* Primary Transparent / Outlined / Icon Buttons */
+.mat-mdc-button.mat-primary,
+.mat-mdc-outlined-button.mat-primary,
+.mat-mdc-icon-button.mat-primary,
+.mat-button.mat-primary,
+.mat-outlined-button.mat-primary,
+.mat-icon-button.mat-primary {
+  color: #1e3a8a !important;
+}
+.mat-mdc-outlined-button.mat-primary,
+.mat-outlined-button.mat-primary {
+  border-color: #1e3a8a !important;
+}
+.mat-mdc-button.mat-primary mat-icon,
+.mat-mdc-outlined-button.mat-primary mat-icon,
+.mat-mdc-icon-button.mat-primary mat-icon,
+.mat-button.mat-primary mat-icon,
+.mat-outlined-button.mat-primary mat-icon,
+.mat-icon-button.mat-primary mat-icon {
+  color: inherit !important;
+}
+
+/* Accent Solid Buttons */
+.mat-mdc-unelevated-button.mat-accent,
+.mat-mdc-raised-button.mat-accent,
+.mat-mdc-fab.mat-accent,
+.mat-mdc-mini-fab.mat-accent,
+.mat-unelevated-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+.mat-mdc-unelevated-button.mat-accent:hover,
+.mat-mdc-raised-button.mat-accent:hover,
+.mat-mdc-fab.mat-accent:hover,
+.mat-mdc-mini-fab.mat-accent:hover,
+.mat-unelevated-button.mat-accent:hover,
+.mat-raised-button.mat-accent:hover,
+.mat-fab.mat-accent:hover,
+.mat-mini-fab.mat-accent:hover {
+  background-color: #2563eb !important;
+}
+
+/* Accent Transparent / Outlined / Icon Buttons */
+.mat-mdc-button.mat-accent,
+.mat-mdc-outlined-button.mat-accent,
+.mat-mdc-icon-button.mat-accent,
+.mat-button.mat-accent,
+.mat-outlined-button.mat-accent,
+.mat-icon-button.mat-accent {
+  color: #3b82f6 !important;
+}
+.mat-mdc-outlined-button.mat-accent,
+.mat-outlined-button.mat-accent {
+  border-color: #3b82f6 !important;
+}
+.mat-mdc-button.mat-accent mat-icon,
+.mat-mdc-outlined-button.mat-accent mat-icon,
+.mat-mdc-icon-button.mat-accent mat-icon,
+.mat-button.mat-accent mat-icon,
+.mat-outlined-button.mat-accent mat-icon,
+.mat-icon-button.mat-accent mat-icon {
+  color: inherit !important;
+}
+
+/* Warn Solid Buttons */
+.mat-mdc-unelevated-button.mat-warn,
+.mat-mdc-raised-button.mat-warn,
+.mat-mdc-fab.mat-warn,
+.mat-mdc-mini-fab.mat-warn,
+.mat-unelevated-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+.mat-mdc-unelevated-button.mat-warn:hover,
+.mat-mdc-raised-button.mat-warn:hover,
+.mat-mdc-fab.mat-warn:hover,
+.mat-mdc-mini-fab.mat-warn:hover,
+.mat-unelevated-button.mat-warn:hover,
+.mat-raised-button.mat-warn:hover,
+.mat-fab.mat-warn:hover,
+.mat-mini-fab.mat-warn:hover {
+  background-color: #dc2626 !important;
+}
+
+/* Warn Transparent / Outlined / Icon Buttons */
+.mat-mdc-button.mat-warn,
+.mat-mdc-outlined-button.mat-warn,
+.mat-mdc-icon-button.mat-warn,
+.mat-button.mat-warn,
+.mat-outlined-button.mat-warn,
+.mat-icon-button.mat-warn {
+  color: #ef4444 !important;
+}
+.mat-mdc-outlined-button.mat-warn,
+.mat-outlined-button.mat-warn {
+  border-color: #fecaca !important;
+}
+.mat-mdc-button.mat-warn mat-icon,
+.mat-mdc-outlined-button.mat-warn mat-icon,
+.mat-mdc-icon-button.mat-warn mat-icon,
+.mat-button.mat-warn mat-icon,
+.mat-outlined-button.mat-warn mat-icon,
+.mat-icon-button.mat-warn mat-icon {
+  color: inherit !important;
+}
+
 /* Enlarge form dialogs globally */
 .cdk-overlay-pane:has(.dialog-content) {
   width: 760px !important;
@@ -1513,10 +1652,48 @@ table td,
     gap: 0.5rem !important;
   }
 
+  .card-header-responsive .dense-search-input {
+    width: 100% !important;
+  }
+
   .flex-responsive-stack {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 0.2rem !important;
+  }
+}
+
+/* Flex header responsive utility */
+.flex-header-responsive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .flex-header-responsive {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+  .flex-header-responsive .dense-search-input {
+    width: 100% !important;
+  }
+}
+
+/* Work Order Assign responsive grid utility */
+.wo-assign-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .wo-assign-grid {
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
   }
 }
 
@@ -5159,4 +5336,62 @@ table td,
   font-size: 1.1rem !important;
   width: 1.1rem !important;
   height: 1.1rem !important;
+}
+
+/* =============================================
+   MOBILE RESPONSIVE UTILITIES FOR INVENTORY PAGE
+   ============================================= */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+  
+  .page-header-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+  }
+  
+  .page-header-actions button {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .card-header-responsive {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+  }
+
+  .card-header-responsive .filters-wrapper {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .card-header-responsive .search-wrapper {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .card-header-responsive .search-wrapper .dense-search-input {
+    width: 100% !important;
+  }
+}
+
+/* Dialog & Form Responsive helpers */
+.form-col-50 {
+  width: 50% !important;
+}
+
+@media (max-width: 768px) {
+  .form-col-50 {
+    width: 100% !important;
+  }
+  .two-col-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
 }

@@ -1,0 +1,460 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">inventory_2</mat-icon>
+  Detail Item &amp; Inventaris
+</h2>
+
+<mat-dialog-content class="dialog-content"
+  style="width: 100%; max-width: 100%; height: 500px; min-height: 500px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto; padding: 1.5rem !important;">
+
+  <div *ngIf="product" style="display: flex; flex-direction: column; gap: 1rem;">
+
+    <!-- Detail Profile Header -->
+    <div class="detail-header"
+      style="display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+      <div>
+        <h3
+          style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <span>{{ product.name }}</span>
+        </h3>
+        <div
+          style="display: flex; gap: 0.75rem; margin-top: 0.25rem; font-family: var(--font-body); font-size: 0.8rem; color: #64748b; align-items: center; flex-wrap: wrap;">
+          <span class="plate-badge"
+            style="font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.4rem; background-color: #f1f5f9; border-radius: 4px;">{{
+            product.code }}</span>
+          <span>•</span>
+          <span class="role-badge" [style.background-color]="product.itemType === 'SPR' ? '#eff6ff' : '#ecfdf5'"
+            [style.color]="product.itemType === 'SPR' ? '#1e40af' : '#047857'"
+            style="font-size: 0.7rem; font-weight: 600; padding: 0.1rem 0.4rem; border-radius: 9999px; text-transform: uppercase;">
+            {{ product.itemType === 'SPR' ? 'Sparepart' : 'Jasa / Layanan' }}
+          </span>
+          <span *ngIf="product.category" style="color: #64748b;">
+            Kategori: <strong>{{ product.category }}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Group -->
+    <mat-tab-group animationDuration="200ms" [(selectedIndex)]="selectedTabIndex"
+      style="display: flex; flex-direction: column; overflow: hidden;">
+
+      <!-- Tab 1: Manajemen Stock -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon style="margin-right: 0.4rem; font-size: 1.15rem; width: auto; height: auto;">inventory</mat-icon>
+          Manajemen Stock
+        </ng-template>
+
+        <div style="padding-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+
+          <div class="two-col-grid">
+
+            <!-- Panel Stok Kontrol (Hanya Sparepart) -->
+            <div class="card-panel" *ngIf="product.itemType === 'SPR'"
+              style="border: 1px solid #e2e8f0; border-radius: 8px; border-left: 4px solid; background-color: #f8fafc; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"
+              [style.border-left-color]="getStockStatus() === 'danger' ? '#ef4444' : (getStockStatus() === 'warning' ? '#f59e0b' : '#10b981')">
+              <h4 class="text-xs-caps"
+                style="margin: 0; color: #475569; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em;">KONTROL
+                & STATUS STOK</h4>
+
+              <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.25rem;">
+                <span style="font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1;">
+                  {{ product.stockQuantity }}
+                </span>
+                <span style="font-weight: 600; color: #64748b; font-size: 0.85rem;">Pcs</span>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.25rem; flex-wrap: wrap;">
+                <span *ngIf="getStockStatus() === 'danger'" class="status-badge-inactive"
+                  style="font-size: 0.65rem; padding: 0.15rem 0.5rem; background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 4px; font-weight: 600;">
+                  RE-STOCK WAJIB
+                </span>
+                <span *ngIf="getStockStatus() === 'warning'" class="status-badge-inactive"
+                  style="font-size: 0.65rem; padding: 0.15rem 0.5rem; background-color: #fffbeb; color: #d97706; border: 1px solid #fde68a; border-radius: 4px; font-weight: 600;">
+                  STOK MENIPIS
+                </span>
+                <span *ngIf="getStockStatus() === 'success'" class="status-badge-active"
+                  style="font-size: 0.65rem; padding: 0.15rem 0.5rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; border-radius: 4px; font-weight: 600;">
+                  STOK AMAN
+                </span>
+
+                <button mat-flat-button color="primary" (click)="showRestock()" [disabled]="!editMode"
+                  style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.65rem; font-weight: 600; height: 26px; line-height: 26px; border-radius: 6px; padding: 0 0.5rem; background-color: #3b82f6; display: flex; align-items: center; gap: 0.2rem; min-width: auto; margin-left: auto;">
+                  <mat-icon
+                    style="font-size: 1rem; width: 1rem; height: 1rem; display: flex; align-items: center; justify-content: center; margin: 0;">add_box</mat-icon>
+                  <span>RESTOCK</span>
+                </button>
+              </div>
+
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem; font-size: 0.75rem;">
+                <div>
+                  <span style="color: #64748b;">Batas Minimum</span>
+                  <div style="font-weight: 700; color: #334155;">{{ product.minStockLimit }} Pcs</div>
+                </div>
+                <div>
+                  <span style="color: #64748b;">Kebutuhan Restock</span>
+                  <div style="font-weight: 700;"
+                    [style.color]="product.stockQuantity! <= product.minStockLimit! ? '#ef4444' : '#10b981'">
+                    {{ product.stockQuantity! <= product.minStockLimit! ? '⚠️ Butuh Restock' : '✓ Cukup' }} </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel Jasa Info -->
+              <div class="card-panel" *ngIf="product.itemType === 'SRV'"
+                style="grid-column: span 2; border: 1px solid #e2e8f0; border-radius: 8px; border-left: 4px solid #10b981; background-color: #f8fafc; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <h4 class="text-xs-caps"
+                  style="margin: 0; color: #475569; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em;">
+                  INFORMASI JASA & LAYANAN</h4>
+                <p style="color: #64748b; font-size: 0.8rem; margin: 0.25rem 0;">
+                  Item ini tergolong sebagai Jasa/Layanan servis. Tipe jasa tidak memiliki kontrol stok fisik maupun HPP
+                  beli. Harga tarif jasa bersifat flat dan langsung diterapkan saat penagihan.
+                </p>
+                <div
+                  style="display: flex; gap: 2rem; margin-top: 0.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
+                  <div>
+                    <span
+                      style="font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Tarif
+                      Jasa</span>
+                    <div style="font-size: 1.35rem; font-weight: 800; color: #1e3a8a; margin-top: 0.15rem;">
+                      {{ product.salePrice | currency:'IDR':'Rp ':'1.0-0' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel Keuangan / Pricing (Untuk Sparepart) -->
+              <div class="card-panel" *ngIf="product.itemType === 'SPR'"
+                style="border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <h4 class="text-xs-caps"
+                  style="margin: 0; color: #475569; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em;">
+                  STRUKTUR HARGA & MARGIN</h4>
+
+                <div
+                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.75rem; margin-top: 0.25rem;">
+                  <div>
+                    <span style="color: #64748b;">Harga Beli (HPP)</span>
+                    <div style="font-weight: 700; font-size: 0.9rem; color: #ef4444; margin-top: 0.1rem;">
+                      {{ product.purchasePrice | currency:'IDR':'Rp ':'1.0-0' }}
+                    </div>
+                  </div>
+                  <div>
+                    <span style="color: #64748b;">Harga Jual</span>
+                    <div style="font-weight: 700; font-size: 0.9rem; color: #10b981; margin-top: 0.1rem;">
+                      {{ product.salePrice | currency:'IDR':'Rp ':'1.0-0' }}
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style="margin-top: 0.5rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem;">
+                  <div>
+                    <span style="color: #64748b;">Margin Bersih</span>
+                    <div style="font-weight: 800; font-size: 0.95rem; color: #1e3a8a; margin-top: 0.1rem;">
+                      {{ (product.salePrice - (product.purchasePrice ?? 0)) | currency:'IDR':'Rp ':'1.0-0' }}
+                    </div>
+                  </div>
+                  <div style="text-align: right;">
+                    <span style="color: #64748b;">Markup</span>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: #2563eb; margin-top: 0.1rem;"
+                      *ngIf="product.purchasePrice! > 0">
+                      {{ ((product.salePrice - product.purchasePrice!) / product.purchasePrice! * 100) | number:'1.0-1'
+                      }}%
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.85rem; color: #2563eb; margin-top: 0.1rem;"
+                      *ngIf="!product.purchasePrice! || product.purchasePrice! <= 0">
+                      -
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Audit Trails Info Card -->
+            <div class="card-panel"
+              style="border: 1px solid #f1f5f9; border-radius: 8px; background-color: #ffffff; padding: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;">
+              <h4 class="text-xs-caps"
+                style="margin: 0; color: #94a3b8; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.05em;">AUDIT
+                TRAIL SYSTEM</h4>
+              <div class="two-col-grid"
+                style="gap: 0.75rem; font-size: 0.75rem; color: #64748b;">
+                <div>
+                  Dibuat oleh: <span style="font-weight: 600; color: #334155;">{{ product.createdBy || 'system'
+                    }}</span>
+                  <br />
+                  Pada Tanggal: <span style="font-weight: 500;">{{ product.createdAt | date:'dd MMM yyyy, HH:mm'
+                    }}</span>
+                </div>
+                <div>
+                  Terakhir Update: <span style="font-weight: 600; color: #334155;">{{ product.updatedBy || 'system'
+                    }}</span>
+                  <br />
+                  Pada Tanggal: <span style="font-weight: 500;">{{ product.updatedAt | date:'dd MMM yyyy, HH:mm'
+                    }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+      </mat-tab>
+
+      <!-- Tab 2: Detail / Edit Item -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon style="margin-right: 0.4rem; font-size: 1.15rem; width: auto; height: auto;">{{ editMode ? 'edit' :
+            'visibility' }}</mat-icon>
+          {{ editMode ? 'Edit Item' : 'Detail Item' }}
+        </ng-template>
+
+        <div style="padding-top: 1rem;">
+          <form [formGroup]="productForm" *ngIf="productForm" style="display: flex; flex-direction: column; gap: 1rem;">
+
+            <!-- Section: Klasifikasi Item -->
+            <div
+              style="display: flex; flex-direction: column; gap: 0.75rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
+              <h4 class="text-xs-caps"
+                style="margin: 0; color: #475569; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; gap: 0.35rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.25rem;">
+                <mat-icon
+                  style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; display: flex; align-items: center;">settings</mat-icon>
+                KLASIFIKASI ITEM
+              </h4>
+
+              <div class="two-col-grid">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Tipe
+                    Item <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <input type="text" matInput formControlName="itemType" [matAutocomplete]="typeAuto"
+                      placeholder="Ketik tipe item..." />
+                    <mat-autocomplete #typeAuto="matAutocomplete" [displayWith]="displayItemType">
+                      <mat-option *ngFor="let t of filteredItemTypes$ | async" [value]="t.value">{{ t.label
+                        }}</mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Kode
+                    Unik <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <input matInput formControlName="code" placeholder="e.g. OLI-HX7"
+                      style="font-family: monospace; font-weight: 600;" readonly />
+                    <mat-icon matSuffix style="font-size: 1.1rem; width: auto; height: auto;">qr_code</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <label
+                  style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Nama
+                  Item / Jasa <span style="color: #ef4444;">*</span></label>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                  <input matInput formControlName="name" placeholder="e.g. Shell Helix HX7 1L / Spooring Balancing" />
+                  <mat-icon matSuffix style="font-size: 1.1rem; width: auto; height: auto;">inventory_2</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <div class="form-col-50" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <label
+                  style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Kategori
+                  <span style="color: #ef4444;">*</span></label>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                  <input type="text" matInput formControlName="category" [matAutocomplete]="catAuto"
+                    placeholder="Ketik kategori..." />
+                  <mat-autocomplete #catAuto="matAutocomplete" [displayWith]="displayCategory">
+                    <mat-option *ngFor="let cat of filteredCategories$ | async" [value]="cat">{{ cat }}</mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Section: Harga & Stok Kontrol -->
+            <div
+              style="display: flex; flex-direction: column; gap: 0.75rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
+              <h4 class="text-xs-caps"
+                style="margin: 0; color: #475569; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; gap: 0.35rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 0.25rem;">
+                <mat-icon
+                  style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; display: flex; align-items: center;">payments</mat-icon>
+                HARGA &amp; STOK KONTROL
+              </h4>
+
+              <!-- Sparepart Pricing -->
+              <div class="two-col-grid"
+                *ngIf="productForm.get('itemType')?.value === 'SPR'">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Harga
+                    Beli (HPP) <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <span matTextPrefix style="font-size: 0.85rem;">Rp&nbsp;</span>
+                    <input matInput type="number" formControlName="purchasePrice" min="0" placeholder="0" />
+                  </mat-form-field>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Harga
+                    Jual <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <span matTextPrefix style="font-size: 0.85rem;">Rp&nbsp;</span>
+                    <input matInput type="number" formControlName="salePrice" min="0" placeholder="0" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Jasa Pricing -->
+              <div class="form-col-50" style="display: flex; flex-direction: column; gap: 0.25rem;"
+                *ngIf="productForm.get('itemType')?.value === 'SRV'">
+                <label
+                  style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Harga
+                  Jasa <span style="color: #ef4444;">*</span></label>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                  <span matTextPrefix style="font-size: 0.85rem;">Rp&nbsp;</span>
+                  <input matInput type="number" formControlName="salePrice" min="0" placeholder="0" />
+                </mat-form-field>
+              </div>
+
+              <!-- Stok & Limit (Sparepart only) -->
+              <div class="two-col-grid"
+                *ngIf="productForm.get('itemType')?.value === 'SPR'">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Jumlah
+                    Stok <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <input matInput type="number" formControlName="stockQuantity" min="0" placeholder="0" />
+                    <mat-icon matSuffix style="font-size: 1.1rem; width: auto; height: auto;">tag</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                  <label
+                    style="font-family: var(--font-heading); font-weight: 600; font-size: 0.75rem; color: #475569;">Batas
+                    Stok Minimum <span style="color: #ef4444;">*</span></label>
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width: 100%;">
+                    <input matInput type="number" formControlName="minStockLimit" min="0" placeholder="5" />
+                    <mat-icon matSuffix style="font-size: 1.1rem; width: auto; height: auto;">error_outline</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- Tab 3: Riwayat Stock -->
+      <mat-tab *ngIf="product.itemType === 'SPR'">
+        <ng-template mat-tab-label>
+          <mat-icon style="margin-right: 0.4rem; font-size: 1.15rem; width: auto; height: auto;">history</mat-icon>
+          Riwayat Stock
+        </ng-template>
+
+        <div style="padding-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem;">
+            <h4 class="text-xs-caps"
+              style="color: #475569; margin: 0; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; gap: 0.35rem; letter-spacing: 0.04em;">
+              <mat-icon
+                style="color: #3b82f6; font-size: 1.1rem; width: 1.1rem; height: 1.1rem; display: flex; align-items: center;">history</mat-icon>
+              Riwayat Mutasi Stok
+            </h4>
+            <span class="role-badge"
+              style="background-color: #f1f5f9; color: #475569; font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.35rem; border-radius: 9999px;">
+              {{ stockLogs.length }} Catatan
+            </span>
+          </div>
+
+          <!-- Spinner Loading Logs -->
+          <div *ngIf="logsLoading" style="padding: 3rem; display: flex; align-items: center; justify-content: center;">
+            <mat-spinner diameter="32"></mat-spinner>
+          </div>
+
+          <!-- Empty Logs State -->
+          <div *ngIf="!logsLoading && stockLogs.length === 0"
+            style="padding: 3rem 1.5rem; text-align: center; color: #94a3b8; font-family: var(--font-body); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;">
+            <mat-icon
+              style="font-size: 2.2rem; width: 2.2rem; height: 2.2rem; color: #cbd5e1; display: block;">analytics</mat-icon>
+            <span style="font-size: 0.8rem; font-weight: 500;">Belum ada riwayat mutasi stok untuk barang ini</span>
+          </div>
+
+          <!-- Stock Logs Table -->
+          <div *ngIf="!logsLoading && stockLogs.length > 0"
+            style="overflow-y: auto; max-height: 250px; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <table
+              style="width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 0.75rem; text-align: left;">
+              <thead>
+                <tr
+                  style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc; font-weight: 700; color: #475569; position: sticky; top: 0; z-index: 1;">
+                  <th style="padding: 0.5rem 0.75rem;">Tanggal</th>
+                  <th style="padding: 0.5rem 0.75rem;">Tipe Mutasi</th>
+                  <th style="padding: 0.5rem 0.75rem;">Jumlah</th>
+                  <th style="padding: 0.5rem 0.75rem;">No. Referensi (PO/Invoice)</th>
+                  <th style="padding: 0.5rem 0.75rem;">Operator</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let log of stockLogs"
+                  style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s;"
+                  onmouseover="this.style.backgroundColor='#f8fafc'"
+                  onmouseout="this.style.backgroundColor='transparent'">
+                  <td style="padding: 0.5rem 0.75rem; color: #475569;">
+                    {{ log.createdAt | date:'dd MMM yyyy, HH:mm' }}
+                  </td>
+                  <td style="padding: 0.5rem 0.75rem;">
+                    <span *ngIf="log.logType === 'IN'"
+                      style="background-color: #d1fae5; color: #065f46; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700; font-size: 0.6rem; font-family: var(--font-heading);">
+                      MASUK (IN)
+                    </span>
+                    <span *ngIf="log.logType === 'OUT'"
+                      style="background-color: #ffe4e6; color: #9f1239; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 700; font-size: 0.6rem; font-family: var(--font-heading);">
+                      KELUAR (OUT)
+                    </span>
+                  </td>
+                  <td style="padding: 0.5rem 0.75rem; font-weight: 700; font-family: var(--font-mono);"
+                    [style.color]="log.logType === 'IN' ? '#047857' : '#be123c'">
+                    {{ log.logType === 'IN' ? '+' : '-' }}{{ log.quantity }} Pcs
+                  </td>
+                  <td style="padding: 0.5rem 0.75rem; font-family: var(--font-mono); font-weight: 600; color: #2563eb;">
+                    {{ log.referenceId }}
+                  </td>
+                  <td style="padding: 0.5rem 0.75rem; color: #64748b; font-weight: 500;">
+                    {{ log.createdBy || 'system' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </mat-tab>
+
+      <!-- Fallback tab for Jasa/Layanan (No stock logs) -->
+      <mat-tab *ngIf="product.itemType === 'SRV'" disabled>
+        <ng-template mat-tab-label>
+          <mat-icon
+            style="margin-right: 0.4rem; font-size: 1.15rem; width: auto; height: auto; color: #cbd5e1;">history</mat-icon>
+          <span style="color: #cbd5e1;">Riwayat Stock (N/A)</span>
+        </ng-template>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions" style="padding: 0.75rem 1.5rem 1.25rem !important;">
+  <button mat-stroked-button (click)="onClose()" class="btn-cancel" style="font-weight: 600;">TUTUP</button>
+
+  <button mat-flat-button color="primary" (click)="onSaveEdit()" *ngIf="editMode && selectedTabIndex === 1"
+    [disabled]="productForm.invalid || isSaving"
+    style="font-weight: 700; background-color: #10b981; color: #ffffff; padding: 0 1rem; border-radius: 9999px;">
+    <mat-icon style="margin-right: 0.25rem; font-size: 1.1rem; width: auto; height: auto;">save</mat-icon>
+    <span>SIMPAN</span>
+  </button>
+</mat-dialog-actions>
