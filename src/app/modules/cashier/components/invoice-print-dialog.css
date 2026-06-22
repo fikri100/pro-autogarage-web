@@ -1,11 +1,36 @@
 @media print {
-  body * {
+  body.printing-invoice * {
     visibility: hidden !important;
   }
-  #print-dialog-root, #print-dialog-root * {
+
+  body.printing-invoice #print-dialog-root,
+  body.printing-invoice #print-dialog-root * {
     visibility: visible !important;
   }
-  #print-dialog-root {
+
+  body.printing-invoice .cdk-overlay-container,
+  body.printing-invoice .cdk-global-overlay-wrapper,
+  body.printing-invoice .cdk-overlay-pane,
+  body.printing-invoice mat-dialog-container,
+  body.printing-invoice mat-dialog-content {
+    visibility: visible !important;
+    position: static !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    transform: none !important;
+  }
+
+  body.printing-invoice #print-dialog-root {
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
@@ -16,10 +41,12 @@
     background: white !important;
     box-shadow: none !important;
   }
-  .no-print {
+
+  body.printing-invoice .no-print {
     display: none !important;
   }
-  mat-dialog-actions {
+
+  body.printing-invoice mat-dialog-actions {
     display: none !important;
   }
 }
