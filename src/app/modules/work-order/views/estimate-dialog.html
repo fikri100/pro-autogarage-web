@@ -41,12 +41,12 @@
       </div>
 
       <!-- Detail Snapshot Card -->
-      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 0.35rem; padding: 0.75rem; margin-bottom: 1rem;">
-        <div style="font-weight: 700; color: #1e3a8a; font-size: 0.9rem;">{{ selectedProduct.name }}</div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+      <div class="dialog-snapshot-card">
+        <div class="dialog-snapshot-card-title">{{ selectedProduct.name }}</div>
+        <div class="dialog-snapshot-card-row">
           <span>Harga: <b>{{ selectedProduct.salePrice | currency:'IDR':'Rp ':'1.0-0' }}</b></span>
           <span *ngIf="selectedProduct.itemType === 'SPR'">
-            Stok Tersedia: <b [style.color]="selectedProduct.stockQuantity <= 0 ? '#ef4444' : '#10b981'">{{ selectedProduct.stockQuantity }} Pcs</b>
+            Stok Tersedia: <b [class.text-danger]="selectedProduct.stockQuantity <= 0" [class.text-success]="selectedProduct.stockQuantity > 0">{{ selectedProduct.stockQuantity }} Pcs</b>
           </span>
         </div>
       </div>
@@ -69,9 +69,9 @@
         </mat-form-field>
         </div>
 
-        <div style="display: flex; flex-direction: column; justify-content: center; padding-left: 0.5rem;">
-          <span class="text-xs-caps" style="font-size: 0.65rem; color: #94a3b8;">Total Biaya Item:</span>
-          <span style="font-size: 1.2rem; font-weight: 800; color: #10b981; margin-top: 0.15rem;">
+        <div class="col-center-pl-2">
+          <span class="text-sub-label">Total Biaya Item:</span>
+          <span class="text-total-cost">
             {{ (itemForm.get('quantity')?.value * selectedProduct.salePrice) | currency:'IDR':'Rp ':'1.0-0' }}
           </span>
         </div>

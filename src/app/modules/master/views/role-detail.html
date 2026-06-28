@@ -10,8 +10,8 @@
       <div class="form-col-wrapper">
         <label class="form-label-static">Nama Role / Jabatan <span class="text-danger">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">shield</mat-icon>
-          <input matInput formControlName="roleName" placeholder="Contoh: Manager, Junior Mechanic" style="font-family: 'Inter', sans-serif;" />
+          <mat-icon matPrefix class="icon-prefix-slate">shield</mat-icon>
+          <input matInput formControlName="roleName" placeholder="Contoh: Manager, Junior Mechanic" />
           <mat-error *ngIf="roleForm.get('roleName')?.hasError('required')">Nama role wajib diisi</mat-error>
           <mat-error *ngIf="roleForm.get('roleName')?.hasError('minlength')">Nama role minimal 3 karakter</mat-error>
         </mat-form-field>

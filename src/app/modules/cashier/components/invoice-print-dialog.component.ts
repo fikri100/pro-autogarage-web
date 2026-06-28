@@ -10,7 +10,6 @@ export interface PrintDialogData {
 @Component({
   selector: 'app-invoice-print-dialog',
   templateUrl: '../views/invoice-print-dialog.html',
-  styleUrls: ['./invoice-print-dialog.css'],
   standalone: false,
   encapsulation: ViewEncapsulation.None
 })

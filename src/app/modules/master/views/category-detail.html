@@ -10,8 +10,8 @@
       <div class="form-col-wrapper">
         <label class="form-label-static">Nama Kategori <span class="text-danger">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">label</mat-icon>
-          <input matInput formControlName="name" placeholder="Contoh: Oli Mesin, Jasa Service" style="font-family: 'Inter', sans-serif;" />
+          <mat-icon matPrefix class="icon-prefix-slate">label</mat-icon>
+          <input matInput formControlName="name" placeholder="Contoh: Oli Mesin, Jasa Service" />
           <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">Nama kategori wajib diisi</mat-error>
           <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">Nama kategori minimal 3 karakter</mat-error>
         </mat-form-field>

@@ -1,103 +1,100 @@
 <!-- Page Header -->
-<div class="page-header" style="margin-bottom: 1.5rem;">
+<div class="page-header">
   <div>
-    <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">Monitoring Servis &amp; Work Order</h2>
-    <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Pantau proses pengerjaan servis mekanik, keluhan pelanggan, dan rincian biaya.</p>
+    <h2 class="page-title">Monitoring Servis &amp; Work Order</h2>
+    <p class="page-subtitle">Pantau proses pengerjaan servis mekanik, keluhan pelanggan, dan rincian biaya.</p>
   </div>
 </div>
 
 <!-- Loading Spinner -->
-<div *ngIf="loading" style="padding: 4rem 2rem; text-align: center; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
+<div *ngIf="loading" class="admin-loading-card">
   <mat-spinner diameter="48" style="margin: 0 auto;"></mat-spinner>
-  <p style="margin-top: 1rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.95rem;">Memuat data Work Order...</p>
+  <p class="fullscreen-loading-text">Memuat data Work Order...</p>
 </div>
 
 <!-- Main Table Card -->
-<div *ngIf="!loading" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); display: flex; flex-direction: column;">
+<div *ngIf="!loading" class="admin-panel-card flex flex-col">
   
   <!-- Header Filter Panel -->
   <div class="card-header-responsive">
-    <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Antrean Servis Aktif</span>
+    <span class="card-header-title">Antrean Servis Aktif</span>
     
-    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 280px;">
-      <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input search-field-lg">
+      <mat-icon matPrefix class="icon-search-prefix">search</mat-icon>
       <input matInput placeholder="Cari nomor polisi atau nama..." (keyup)="applyFilter($event)" />
     </mat-form-field>
   </div>
 
   <!-- Content Table -->
-  <div style="position: relative; flex: 1; min-height: 350px;">
+  <div class="admin-table-container">
     
-    <div *ngIf="filteredWorkOrders.length === 0" style="padding: 5rem 2rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
-      <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">build_circle</mat-icon>
-      <div style="font-weight: 600; color: #475569;">Tidak ada antrean pengerjaan aktif</div>
+    <div *ngIf="filteredWorkOrders.length === 0" class="table-empty-state">
+      <mat-icon class="table-empty-state-icon">build_circle</mat-icon>
+      <div class="table-empty-state-title">Tidak ada antrean pengerjaan aktif</div>
     </div>
 
-    <div *ngIf="filteredWorkOrders.length > 0" style="overflow-x: auto; width: 100%;">
-      <table mat-table [dataSource]="filteredWorkOrders" style="width: 100%; border-collapse: collapse; min-width: 900px;">
+    <div *ngIf="filteredWorkOrders.length > 0" class="table-responsive">
+      <table mat-table [dataSource]="filteredWorkOrders" class="w-full-table table-min-900">
         
         <!-- Column: ID -->
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 100px;">No. WO</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 100px;">No. WO</th>
+          <td mat-cell *matCellDef="let row" class="admin-td admin-td-code">
             WO-{{ row.id | number:'4.0-0' }}
           </td>
         </ng-container>
 
         <!-- Column: Plat Nomor -->
         <ng-container matColumnDef="plate">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 140px;">Plat Nomor</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'JetBrains Mono', monospace; padding: 1rem; color: #1e3a8a; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 140px;">Plat Nomor</th>
+          <td mat-cell *matCellDef="let row" class="admin-td admin-td-plate-no-bg">
             {{ row.licensePlate }}
           </td>
         </ng-container>
 
         <!-- Column: Pelanggan -->
         <ng-container matColumnDef="customer">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Pelanggan</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #1e293b; font-weight: 600; font-size: 0.9rem;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th">Pelanggan</th>
+          <td mat-cell *matCellDef="let row" class="admin-td admin-td-bold">
             {{ row.customerName }}
           </td>
         </ng-container>
 
         <!-- Column: Kendaraan -->
         <ng-container matColumnDef="vehicle">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Kendaraan</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th">Kendaraan</th>
+          <td mat-cell *matCellDef="let row" class="admin-td text-slate-500">
             {{ row.vehicleBrand }} {{ row.vehicleModel }}
           </td>
         </ng-container>
 
         <!-- Column: Mulai Servis -->
         <ng-container matColumnDef="startTime">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Mulai Servis</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #64748b; font-size: 0.85rem;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th">Mulai Servis</th>
+          <td mat-cell *matCellDef="let row" class="admin-td text-slate-500">
             {{ row.startTime | date:'dd MMM yyyy, HH:mm' }} WIB
           </td>
         </ng-container>
 
         <!-- Column: Mekanik -->
         <ng-container matColumnDef="mechanic">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Mekanik</th>
-          <td mat-cell *matCellDef="let row" style="font-family: 'Inter', sans-serif; padding: 1rem; color: #334155; font-size: 0.85rem; font-weight: 500;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th">Mekanik</th>
+          <td mat-cell *matCellDef="let row" class="admin-td">
             {{ row.mechanicName || 'Belum ditunjuk' }}
           </td>
         </ng-container>
 
         <!-- Column: Status -->
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; width: 120px;">Status</th>
-          <td mat-cell *matCellDef="let row" style="padding: 1rem;">
-            <span *ngIf="row.workStatus === 'IN_PROGRESS'" 
-                  style="background-color: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.75rem; display: inline-block;">
+          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 120px;">Status</th>
+          <td mat-cell *matCellDef="let row" class="admin-td">
+            <span *ngIf="row.workStatus === 'IN_PROGRESS'" class="status-badge status-badge--progress">
               SERVIS
             </span>
-            <span *ngIf="row.workStatus === 'COMPLETED'" 
-                  style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.75rem; display: inline-block;">
+            <span *ngIf="row.workStatus === 'COMPLETED'" class="status-badge status-badge--completed">
               SELESAI
             </span>
-            <span *ngIf="row.workStatus === 'PAID'" 
-                  style="background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.75rem; display: inline-block;">
+            <span *ngIf="row.workStatus === 'PAID'" class="status-badge status-badge--paid">
               LUNAS
             </span>
           </td>
@@ -105,21 +102,19 @@
 
         <!-- Column: Aksi -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 120px;">Aksi</th>
-          <td mat-cell *matCellDef="let row" style="padding: 0.5rem; text-align: center;">
-            <div style="display: flex; gap: 0.5rem; justify-content: center;">
-              <button mat-icon-button (click)="openWorkOrderDetail(row); $event.stopPropagation()" matTooltip="Proses Pengerjaan & Detail" style="color: #3b82f6;">
-                <mat-icon style="font-size: 1.25rem; width: auto; height: auto;">engineering</mat-icon>
+          <th mat-header-cell *matHeaderCellDef class="admin-th th-center" style="width: 120px;">Aksi</th>
+          <td mat-cell *matCellDef="let row" class="admin-td-actions">
+            <div class="actions-wrapper">
+              <button mat-icon-button (click)="openWorkOrderDetail(row); $event.stopPropagation()" matTooltip="Proses Pengerjaan & Detail" class="btn-icon-blue">
+                <mat-icon class="icon-1-25">engineering</mat-icon>
               </button>
             </div>
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            class="table-row-hover"
-            (click)="openWorkOrderDetail(row)"
-            style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover cursor-pointer"
+          (click)="openWorkOrderDetail(row)"></tr>
       </table>
     </div>
 
@@ -127,6 +122,7 @@
                    [pageSize]="pageSize" 
                    [pageSizeOptions]="[5, 10, 20]"
                    (page)="onPageChange($event)"
+                   class="cursor-pointer"
                    style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
     </mat-paginator>
 

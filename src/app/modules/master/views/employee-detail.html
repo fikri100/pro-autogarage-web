@@ -11,8 +11,8 @@
       <div class="form-col-wrapper mb-3">
         <label class="form-label-static">Nama Lengkap <span class="text-danger">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">person</mat-icon>
-          <input matInput formControlName="name" placeholder="Contoh: Budi Mekanik" style="font-family: 'Inter', sans-serif;" />
+          <mat-icon matPrefix class="icon-prefix-slate">person</mat-icon>
+          <input matInput formControlName="name" placeholder="Contoh: Budi Mekanik" />
           <mat-error *ngIf="employeeForm.get('name')?.hasError('required')">Nama lengkap wajib diisi</mat-error>
           <mat-error *ngIf="employeeForm.get('name')?.hasError('minlength')">Nama minimal 2 karakter</mat-error>
         </mat-form-field>
@@ -24,15 +24,15 @@
         <div class="form-col-wrapper">
           <label class="form-label-static">Jabatan / Posisi <span class="text-danger">*</span></label>
           <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">badge</mat-icon>
+            <mat-icon matPrefix class="icon-prefix-slate">badge</mat-icon>
             <input type="text" matInput formControlName="position" 
                    [matAutocomplete]="autoPosition" 
                    #posTrigger="matAutocompleteTrigger" 
                    (focus)="posTrigger.openPanel()" 
                    (click)="posTrigger.openPanel()" 
-                   placeholder="Pilih Jabatan (Role)" style="font-family: 'Inter', sans-serif;" />
+                   placeholder="Pilih Jabatan (Role)" />
             <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName" style="font-family: 'Inter', sans-serif;">
+              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName">
                 {{ role.roleName }}
               </mat-option>
             </mat-autocomplete>
@@ -44,8 +44,8 @@
         <div class="form-col-wrapper">
           <label class="form-label-static">Nomor Telepon <span class="text-danger">*</span></label>
           <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">phone</mat-icon>
-            <input matInput formControlName="phone" placeholder="Contoh: 08123456789" (keypress)="onPhoneKeyPress($event)" style="font-family: 'Inter', sans-serif;" />
+            <mat-icon matPrefix class="icon-prefix-slate">phone</mat-icon>
+            <input matInput formControlName="phone" placeholder="Contoh: 08123456789" (keypress)="onPhoneKeyPress($event)" />
             <mat-error *ngIf="employeeForm.get('phone')?.hasError('required')">Nomor telepon wajib diisi</mat-error>
             <mat-error *ngIf="employeeForm.get('phone')?.hasError('pattern')">Nomor telepon hanya boleh berisi angka</mat-error>
           </mat-form-field>
@@ -56,7 +56,7 @@
       <div class="form-col-wrapper mb-2">
         <label class="form-label-static">Alamat Lengkap</label>
         <mat-form-field appearance="outline" class="full-width">
-          <textarea matInput formControlName="address" rows="3" placeholder="Contoh: Jl. Raya Otista No. 123" style="font-family: 'Inter', sans-serif; resize: none;"></textarea>
+          <textarea matInput formControlName="address" rows="3" placeholder="Contoh: Jl. Raya Otista No. 123" class="no-resize"></textarea>
         </mat-form-field>
       </div>
     </div>
