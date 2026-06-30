@@ -1,54 +1,52 @@
 <div class="page-container">
   <!-- Page Header -->
-  <div class="page-header" style="margin-bottom: 1.5rem;">
+  <div class="page-header mb-1-5">
     <div>
-      <h2 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.75rem; letter-spacing: -0.02em;">User Access Management</h2>
-      <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.9rem;">Kelola role, hak akses, dan pemetaan karyawan sistem.</p>
+      <h2 class="page-title">User Access Management</h2>
+      <p class="page-subtitle">Kelola role, hak akses, dan pemetaan karyawan sistem.</p>
     </div>
-    <button mat-flat-button color="primary" (click)="openAddUserDialog()"
-      style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.25rem; border-radius: 8px;">
-      <mat-icon style="margin-right: 0.35rem;">person_add</mat-icon>
+    <button mat-flat-button color="primary" (click)="openAddUserDialog()" class="btn-primary">
+      <mat-icon class="icon-mr-sm">person_add</mat-icon>
       TAMBAH USER
     </button>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" style="padding: 4rem 2rem; text-align: center; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;">
-    <mat-spinner diameter="48" style="margin: 0 auto;"></mat-spinner>
-    <p style="margin-top: 1rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.95rem;">Memuat data pengguna...</p>
+  <div *ngIf="loading" class="loading-box-centered">
+    <mat-spinner diameter="48" class="margin-auto"></mat-spinner>
+    <p class="loading-text-desc">Memuat data pengguna...</p>
   </div>
 
-  <mat-tab-group *ngIf="!loading" animationDuration="200ms" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05); padding: 1.25rem;">
+  <mat-tab-group *ngIf="!loading" animationDuration="200ms" class="panel-tab-group-container">
     <!-- Tab 1: Manajemen Akun Pengguna -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon style="margin-right: 0.5rem; font-size: 1.25rem; width: auto; height: auto;">manage_accounts</mat-icon>
+        <mat-icon class="icon-tab-label-lg">manage_accounts</mat-icon>
         Daftar Akun Pengguna
       </ng-template>
-      
-      <div style="padding-top: 1.5rem;">
-        <div class="flex-header-responsive" style="margin-bottom: 1.25rem;">
-          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #334155; font-size: 1rem;">Daftar Akun Aktif</span>
-          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input" style="width: 280px;">
-            <mat-icon matPrefix style="color: #64748b; margin-right: 0.5rem;">search</mat-icon>
+
+      <div class="pt-1-5">
+        <div class="flex-header-responsive mb-1-25">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input w-280">
+            <mat-icon matPrefix class="icon-mr-2" style="color: #64748b;">search</mat-icon>
             <input matInput placeholder="Cari pengguna..." (keyup)="applyFilter($event)" />
           </mat-form-field>
         </div>
 
-        <div style="overflow-x: auto; width: 100%;">
-          <table mat-table [dataSource]="filteredUsers" style="width: 100%;">
+        <div class="overflow-x-auto-w-full">
+          <table mat-table [dataSource]="filteredUsers" class="w-full">
 
             <!-- Name / Username Column -->
             <ng-container matColumnDef="employeeName">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Nama / Username</th>
-              <td mat-cell *matCellDef="let user" style="padding: 0.75rem 1rem;">
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                  <div style="width: 32px; height: 32px; border-radius: 9999px; background-color: #eff6ff; color: #1e40af; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem;">
+              <th mat-header-cell *matHeaderCellDef class="th-header-custom">Nama / Username</th>
+              <td mat-cell *matCellDef="let user" class="td-cell-padding">
+                <div class="flex-center-gap-3">
+                  <div class="avatar-initial-blue">
                     {{ user.employeeName?.charAt(0) ?? 'U' }}
                   </div>
                   <div>
-                    <div style="font-weight: 600; color: #1e293b; font-family: 'Inter', sans-serif; font-size: 0.9rem;">{{ user.employeeName }}</div>
-                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #64748b;">{{ user.username }}</div>
+                    <div class="text-semibold-dark">{{ user.employeeName }}</div>
+                    <div class="text-mono-slate-xs">{{ user.username }}</div>
                   </div>
                 </div>
               </td>
@@ -56,9 +54,9 @@
 
             <!-- Role Column -->
             <ng-container matColumnDef="role">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Role</th>
-              <td mat-cell *matCellDef="let user" style="padding: 0.75rem 1rem;">
-                <span style="background-color: #f1f5f9; color: #475569; padding: 0.25rem 0.6rem; border-radius: 9999px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 0.8rem;">
+              <th mat-header-cell *matHeaderCellDef class="th-header-custom">Role</th>
+              <td mat-cell *matCellDef="let user" class="td-cell-padding">
+                <span class="badge-role-slate">
                   {{ user.roleName }}
                 </span>
               </td>
@@ -66,11 +64,11 @@
 
             <!-- Status Column -->
             <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569;">Status</th>
-              <td mat-cell *matCellDef="let user" style="padding: 0.75rem 1rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <div style="width: 8px; height: 8px; border-radius: 9999px;" [style.background-color]="user.status === 'Y' ? '#10b981' : '#cbd5e1'"></div>
-                  <span style="font-size: 0.85rem; font-weight: 500; font-family: 'Inter', sans-serif;" [style.color]="user.status === 'Y' ? '#047857' : '#64748b'">
+              <th mat-header-cell *matHeaderCellDef class="th-header-custom">Status</th>
+              <td mat-cell *matCellDef="let user" class="td-cell-padding">
+                <div class="flex-center-gap-2">
+                  <div class="status-dot" [style.background-color]="user.status === 'Y' ? '#10b981' : '#cbd5e1'"></div>
+                  <span class="status-text" [style.color]="user.status === 'Y' ? '#047857' : '#64748b'">
                     {{ user.status === 'Y' ? 'Active' : 'Inactive' }}
                   </span>
                 </div>
@@ -79,32 +77,28 @@
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 1rem; color: #475569; text-align: center; width: 100px;">Aksi</th>
-              <td mat-cell *matCellDef="let user" style="padding: 0.5rem; text-align: center;">
-                <button mat-icon-button (click)="openEditUserDialog(user); $event.stopPropagation()" matTooltip="Ubah Hak Akses User" style="color: #3b82f6;">
-                  <mat-icon style="font-size: 1.2rem; width: auto; height: auto;">edit</mat-icon>
+              <th mat-header-cell *matHeaderCellDef class="th-header-custom th-center w-100-px">Aksi</th>
+              <td mat-cell *matCellDef="let user" class="td-cell-padding text-center">
+                <button mat-icon-button (click)="openEditUserDialog(user); $event.stopPropagation()"
+                  matTooltip="Ubah Hak Akses User" class="btn-icon-blue">
+                  <mat-icon class="icon-inline-md">edit</mat-icon>
                 </button>
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                class="table-row-hover"
-                (click)="openEditUserDialog(row)"
-                style="border-bottom: 1px solid #f1f5f9; cursor: pointer;"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="tr-header-custom"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover tr-row-clickable"
+              (click)="openEditUserDialog(row)"></tr>
           </table>
         </div>
 
-        <mat-paginator [length]="totalData"
-                       [pageSize]="pageSize"
-                       [pageSizeOptions]="[5, 10, 20]"
-                       (page)="onPageChange($event)"
-                       style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
+        <mat-paginator [length]="totalData" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
+          (page)="onPageChange($event)" class="paginator-border-font">
         </mat-paginator>
 
-        <div *ngIf="filteredUsers.length === 0" style="padding: 4rem; text-align: center; color: #94a3b8; font-family: 'Inter', sans-serif;">
-          <mat-icon style="font-size: 3rem; width: auto; height: auto; color: #cbd5e1; margin-bottom: 0.5rem;">manage_accounts</mat-icon>
-          <div style="font-weight: 600; color: #475569;">Tidak ada pengguna ditemukan</div>
+        <div *ngIf="filteredUsers.length === 0" class="empty-state-p4">
+          <mat-icon class="empty-state-icon-lg">manage_accounts</mat-icon>
+          <div class="empty-state-title">Tidak ada pengguna ditemukan</div>
         </div>
       </div>
     </mat-tab>
@@ -112,64 +106,67 @@
     <!-- Tab 2: Pemetaan Hak Akses Menu -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon style="margin-right: 0.5rem; font-size: 1.25rem; width: auto; height: auto;">admin_panel_settings</mat-icon>
+        <mat-icon class="icon-tab-label-lg">admin_panel_settings</mat-icon>
         Pemetaan Hak Akses Menu
       </ng-template>
 
-      <div style="padding-top: 1.5rem; max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="permission-mapping-wrapper">
         <div class="form-col-wrapper">
           <label class="form-label-static">Pilih Role Hak Akses</label>
           <mat-form-field appearance="outline" class="full-width">
-            <mat-select [value]="selectedMappingRoleId" (selectionChange)="onMappingRoleChange($event.value)" style="font-family: 'Inter', sans-serif;">
-              <mat-option *ngFor="let role of roles" [value]="role.id" style="font-family: 'Inter', sans-serif;">
+            <mat-select [value]="selectedMappingRoleId" (selectionChange)="onMappingRoleChange($event.value)"
+              class="font-body-select">
+              <mat-option *ngFor="let role of roles" [value]="role.id" class="font-body-option">
                 {{ role.roleName }}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
-        <div *ngIf="selectedRole" style="display: flex; flex-direction: column; gap: 0.75rem;">
-          <p style="font-family: 'Inter', sans-serif; color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;">
-            Pilih menu navigasi yang dapat diakses oleh role 
+        <div *ngIf="selectedRole" class="flex-col-gap-3">
+          <p class="permission-desc-text">
+            Pilih menu navigasi yang dapat diakses oleh role
             <strong style="color: #1e3a8a;">{{ selectedRole.roleName }}</strong>
           </p>
 
-          <div style="max-height: 380px; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #fafafa;">
-            <div *ngFor="let parent of fullMenuTree" style="display: flex; flex-direction: column; gap: 0.25rem;">
-              
+          <div class="permission-tree-container">
+            <div *ngFor="let parent of fullMenuTree" class="flex-col-gap-xs">
+
               <!-- Parent Menu Option -->
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; background-color: #ffffff; border-radius: 6px; border: 1px solid #e2e8f0; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; flex-grow: 1;" (click)="toggleMenuAccordion(parent)">
-                  <mat-icon style="color: #64748b; font-size: 1.25rem; height: 1.25rem; width: 1.25rem; display: flex; align-items: center; justify-content: center; margin-right: -0.25rem;" *ngIf="parent.children && parent.children.length > 0">
+              <div class="tree-parent-row">
+                <div class="tree-row-click-target" (click)="toggleMenuAccordion(parent)">
+                  <mat-icon class="accordion-chevron-icon" *ngIf="parent.children && parent.children.length > 0">
                     {{ parent.isOpen ? 'expand_more' : 'chevron_right' }}
                   </mat-icon>
-                  <div *ngIf="!parent.children || parent.children.length === 0" style="width: 1rem;"></div>
-                  <i [class]="parent.icon" style="color: #64748b; font-size: 1.1rem;"></i>
-                  <span style="font-size: 0.875rem; color: #1e293b;">{{ parent.label }}</span>
+                  <div *ngIf="!parent.children || parent.children.length === 0" class="w-16-px"></div>
+                  <i [class]="parent.icon" class="parent-menu-icon"></i>
+                  <span class="parent-menu-label">{{ parent.label }}</span>
                 </div>
-                <mat-checkbox [checked]="isMenuChecked(parent.id)" (change)="toggleMenu(parent.id)" color="primary"></mat-checkbox>
+                <mat-checkbox [checked]="isMenuChecked(parent.id)" (change)="toggleMenu(parent.id)"
+                  color="primary"></mat-checkbox>
               </div>
 
               <!-- Child Menu Options -->
               <ng-container *ngIf="parent.isOpen">
-                <div *ngFor="let child of parent.children" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.75rem 0.4rem 1rem; margin-left: 3.5rem; background-color: #f8fafc; border-radius: 6px; border-left: 3px solid #cbd5e1; font-weight: 500; font-family: 'Inter', sans-serif;">
-                  <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <i [class]="child.icon" style="color: #94a3b8; font-size: 0.95rem;"></i>
-                    <span style="font-size: 0.8rem; color: #334155;">{{ child.label }}</span>
-                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #94a3b8; margin-left: 0.5rem;">({{ child.routerLink }})</span>
+                <div *ngFor="let child of parent.children" class="tree-child-row">
+                  <div class="flex-center-gap-2">
+                    <i [class]="child.icon" class="child-menu-icon"></i>
+                    <span class="child-menu-label">{{ child.label }}</span>
+                    <span class="child-menu-link-mono">({{ child.routerLink }})</span>
                   </div>
-                  <mat-checkbox [checked]="isMenuChecked(child.id)" (change)="toggleMenu(child.id)" color="primary"></mat-checkbox>
+                  <mat-checkbox [checked]="isMenuChecked(child.id)" (change)="toggleMenu(child.id)"
+                    color="primary"></mat-checkbox>
                 </div>
               </ng-container>
 
             </div>
           </div>
 
-          <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
-            <button mat-stroked-button (click)="loadRoleMenus(selectedRole.id)" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">BATAL</button>
+          <div class="permission-actions-row">
+            <button mat-stroked-button (click)="loadRoleMenus(selectedRole.id)" class="btn-font-heading">BATAL</button>
             <button mat-flat-button color="primary" [disabled]="isSavingMenus" (click)="saveMenuPermissions()"
-              style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; background-color: #1e3a8a; color: #ffffff;">
-              <mat-icon style="margin-right: 0.35rem;">save</mat-icon>
+              class="btn-primary">
+              <mat-icon class="icon-mr-1">save</mat-icon>
               {{ isSavingMenus ? 'MENYIMPAN...' : 'SIMPAN HAK AKSES' }}
             </button>
           </div>

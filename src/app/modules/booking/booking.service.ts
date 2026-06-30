@@ -51,4 +51,12 @@ export class BookingService {
     }
     return this.http.get<any[]>(this.vehiclesUrl, { params });
   }
+
+  getBookedSlots(date: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.bookingsUrl}/booked-slots?date=${date}`);
+  }
+
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
 }

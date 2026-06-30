@@ -2,14 +2,12 @@
   <mat-sidenav-container class="layout-wrapper" autosize>
 
     <!-- Sidebar -->
-    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="layout-sidebar"
-      style="width: 16rem; border-right: 1px solid #e2e8f0; background-color: #f8fafc;">
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="layout-sidebar app-sidebar">
       <!-- Logo -->
-      <div class="sidebar-logo-container"
-        style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+      <div class="sidebar-logo-container app-sidebar-logo-container">
         <div>
-          <h1 class="sidebar-logo" style="margin: 0;">Bengkel Pro</h1>
-          <span class="sidebar-subtitle" style="display: block; margin-top: 0.15rem;">Professional Edition</span>
+          <h1 class="sidebar-logo margin-0">Bengkel Pro</h1>
+          <span class="sidebar-subtitle block-mt-xs">Professional Edition</span>
         </div>
       </div>
 
@@ -28,22 +26,18 @@
 
             <!-- Item with children -->
             <div *ngIf="item.children && item.children.length > 0" class="sidebar-menu-group">
-              <a (click)="item.isOpen = !item.isOpen" class="sidebar-menu-item"
-                style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding-right: 1.25rem;">
-                <div style="display: flex; align-items: center; gap: 0.875rem;">
+              <a (click)="item.isOpen = !item.isOpen" class="sidebar-menu-item sidebar-menu-parent-item">
+                <div class="flex-center-gap-xs">
                   <i [class]="item.icon"></i>
                   <span>{{ item.label }}</span>
                 </div>
-                <mat-icon
-                  style="font-size: 1.15rem; width: 1.15rem; height: 1.15rem; margin: 0; transition: transform 0.2s;"
-                  [style.transform]="item.isOpen ? 'rotate(90deg)' : 'rotate(0deg)'">
+                <mat-icon class="submenu-chevron" [style.transform]="item.isOpen ? 'rotate(90deg)' : 'rotate(0deg)'">
                   chevron_right
                 </mat-icon>
               </a>
 
               <!-- Child Menu List -->
-              <ul *ngIf="item.isOpen" class="sidebar-submenu"
-                style="list-style: none; padding: 0.25rem 0 0.5rem 0; display: flex; flex-direction: column; gap: 0.25rem;">
+              <ul *ngIf="item.isOpen" class="sidebar-submenu sidebar-submenu-list">
                 <li *ngFor="let child of item.children">
                   <a [routerLink]="child.routerLink" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
                     (click)="isMobile ? sidenav.close() : null" class="sidebar-menu-item submenu-item">
@@ -60,44 +54,41 @@
     </mat-sidenav>
 
     <!-- Main Content -->
-    <mat-sidenav-content class="layout-main" style="background-color: #f1f5f9;">
+    <mat-sidenav-content class="layout-main app-main-content">
       <!-- Topbar -->
-      <mat-toolbar class="layout-topbar"
-        style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 1.5rem; justify-content: space-between;">
+      <mat-toolbar class="layout-topbar">
 
-        <div style="display: flex; align-items: center;">
+        <div class="topbar-left">
           <!-- Hamburger Menu (Always Visible for Hide/Show Sidebar) -->
-          <button mat-icon-button (click)="sidenav.toggle()" style="margin-right: 1rem; color: #64748b;"
-            title="Tampilkan/Sembunyikan Sidebar">
+          <button mat-icon-button (click)="sidenav.toggle()" class="mr-1-color-slate" title="Tampilkan/Sembunyikan Sidebar">
             <mat-icon>menu</mat-icon>
           </button>
         </div>
 
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <button mat-icon-button style="color: #94a3b8;">
-            <i class="pi pi-bell" style="font-size: 1.25rem;"></i>
+        <div class="topbar-right">
+          <button mat-icon-button class="btn-bell-cog">
+            <i class="pi pi-bell icon-bell-cog"></i>
           </button>
-          <button mat-icon-button style="color: #94a3b8;">
-            <i class="pi pi-cog" style="font-size: 1.25rem;"></i>
+          <button mat-icon-button class="btn-bell-cog">
+            <i class="pi pi-cog icon-bell-cog"></i>
           </button>
 
           <!-- Profile Avatar with Menu -->
-          <div class="profile-avatar" style="margin-left: 0.5rem;" [matMenuTriggerFor]="profileMenu">
+          <div class="profile-avatar ml-0-5" [matMenuTriggerFor]="profileMenu">
             {{ getUserInitials() }}
           </div>
           <mat-menu #profileMenu="matMenu">
-            <div
-              style="padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 0.2rem; min-width: 160px;">
-              <span style="font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; color: #1e293b;">
+            <div class="portal-profile-menu-header">
+              <span class="portal-profile-menu-name">
                 {{ getEmployeeName() }}
               </span>
-              <span style="font-size: 0.65rem; color: #64748b;" class="text-xs-caps">
+              <span class="text-xxs-muted text-xs-caps">
                 {{ getRoleName() }}
               </span>
             </div>
             <button mat-menu-item (click)="logout()">
-              <mat-icon style="color: #ef4444;">logout</mat-icon>
-              <span style="color: #ef4444; font-weight: 600;">LOGOUT</span>
+              <mat-icon class="icon-color-warn">logout</mat-icon>
+              <span class="text-semibold-warn">LOGOUT</span>
             </button>
           </mat-menu>
         </div>

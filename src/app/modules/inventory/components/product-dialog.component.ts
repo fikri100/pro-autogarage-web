@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Product } from '../models/object';
+import { InventoryService } from '../inventory.service';
 
 export interface ProductDialogData {
   mode: 'add' | 'edit' | 'confirm';
@@ -20,22 +21,20 @@ export class ProductDialogComponent implements OnInit {
   productForm!: FormGroup;
   isSaving = false;
 
-  itemTypes = [
-    { value: 'SPR', label: 'Sparepart' },
-    { value: 'SRV', label: 'Jasa / Servis' }
-  ];
+  itemTypes: { value: string; label: string }[] = [];
   filteredItemTypes$!: Observable<any[]>;
   filteredCategories$!: Observable<any[]>;
 
-  categories = {
-    SPR: ['Oli', 'Filter', 'Busi', 'Aki', 'Rem', 'Ban', 'Suspensi', 'Lampu', 'Kelistrikan', 'Lainnya'],
-    SRV: ['Servis Ringan', 'Tune Up', 'Servis Berkala', 'Spooring & Balancing', 'Sistem Rem', 'Kaki-kaki', 'Sistem AC', 'Turun Mesin (Overhaul)', 'Lainnya']
+  categories: { [key: string]: string[] } = {
+    SPR: [],
+    SRV: []
   };
 
   currentCategories: string[] = [];
 
   constructor(
     private fb: FormBuilder,
+    private inventoryService: InventoryService,
     public dialogRef: MatDialogRef<ProductDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProductDialogData
   ) {}
@@ -54,16 +53,31 @@ export class ProductDialogComponent implements OnInit {
         minStockLimit: [p?.minStockLimit ?? 5, [Validators.min(0)]]
       });
 
-      this.updateFormValidation(p?.itemType ?? 'SPR');
-      
-      // Watch for changes in itemType to dynamically toggle fields and categories
-      this.productForm.get('itemType')?.valueChanges.subscribe((type: 'SPR' | 'SRV' | string) => {
-        if (type === 'SPR' || type === 'SRV') {
-          this.updateFormValidation(type as 'SPR' | 'SRV');
-        }
+      this.inventoryService.getParamsByGroup('ITEM_TYPE').subscribe(typeData => {
+        this.itemTypes = (typeData || []).map(t => ({
+          value: t.kode_param,
+          label: t.nama_param
+        }));
+
+        this.inventoryService.getParamsByGroup('PRODUCT_CATEGORY_SPR').subscribe(sprData => {
+          this.categories['SPR'] = (sprData || []).map(c => c.kode_param);
+
+          this.inventoryService.getParamsByGroup('PRODUCT_CATEGORY_SRV').subscribe(srvData => {
+            this.categories['SRV'] = (srvData || []).map(c => c.kode_param);
+
+            this.updateFormValidation(p?.itemType ?? 'SPR');
+
+            // Watch for changes in itemType to dynamically toggle fields and categories
+            this.productForm.get('itemType')?.valueChanges.subscribe((type: 'SPR' | 'SRV' | string) => {
+              if (type === 'SPR' || type === 'SRV') {
+                this.updateFormValidation(type as 'SPR' | 'SRV');
+              }
+            });
+
+            this.setupAutocomplete();
+          });
+        });
       });
-      
-      this.setupAutocomplete();
     }
   }
 

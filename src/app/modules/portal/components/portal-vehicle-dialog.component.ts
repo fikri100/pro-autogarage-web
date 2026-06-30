@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { PortalService } from '../services/portal.service';
 
 export interface PortalVehicleDialogData {
   mode: 'add' | 'edit';
@@ -18,21 +19,32 @@ export class PortalVehicleDialogComponent implements OnInit {
   vehicleForm!: FormGroup;
   isSaving = false;
 
-  brands = ['Honda', 'Toyota', 'Daihatsu', 'Suzuki', 'Mitsubishi', 'Nissan', 'Mazda', 'Hyundai', 'Wuling', 'Lainnya'];
+  brands: string[] = [];
   filteredBrands$!: Observable<string[]>;
 
-  transmissions = [{id: 'AUTOMATIC', label: 'Automatic (AT)'}, {id: 'MANUAL', label: 'Manual (MT)'}];
+  transmissions: any[] = [];
   filteredTransmissions$!: Observable<any[]>;
 
   constructor(
     private fb: FormBuilder,
+    private portalService: PortalService,
     public dialogRef: MatDialogRef<PortalVehicleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: PortalVehicleDialogData
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.setupAutocomplete();
+    this.portalService.getParamsByGroup('VEHICLE_BRAND').subscribe(brandData => {
+      this.brands = (brandData || []).map(p => p.kode_param);
+      
+      this.portalService.getParamsByGroup('VEHICLE_TRANSMISSION').subscribe(transData => {
+        this.transmissions = (transData || []).map(p => ({
+          id: p.kode_param,
+          label: p.nama_param
+        }));
+        this.setupAutocomplete();
+      });
+    });
   }
 
   setupAutocomplete(): void {

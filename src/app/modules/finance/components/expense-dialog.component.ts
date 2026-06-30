@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { FinanceService } from '../services/finance.service';
 
 export interface ExpenseDialogData {
   mode: 'add';
@@ -17,37 +18,25 @@ export class ExpenseDialogComponent implements OnInit {
   expenseForm!: FormGroup;
   isSaving = false;
 
-  cashflowTypes = [
-    { value: 'EXP', label: 'Pengeluaran (Expense)' },
-    { value: 'INC', label: 'Pemasukan (Income)' }
-  ];
+  cashflowTypes: { value: string; label: string }[] = [];
   filteredCashflowTypes$!: Observable<any[]>;
   filteredCategories$!: Observable<any[]>;
 
   categories: { value: string; label: string }[] = [];
 
   allCategories: { [key: string]: { value: string; label: string }[] } = {
-    EXP: [
-      { value: 'SALARY', label: 'Gaji Karyawan' },
-      { value: 'ELECTRICITY', label: 'Listrik & Air' },
-      { value: 'STOCK', label: 'Pembelian Stok' },
-      { value: 'RENT', label: 'Sewa Tempat' },
-      { value: 'OTHER', label: 'Lain-lain' }
-    ],
-    INC: [
-      { value: 'SERVICE', label: 'Pemasukan Jasa' },
-      { value: 'OTHER', label: 'Lain-lain' }
-    ]
+    EXP: [],
+    INC: []
   };
 
   constructor(
     private fb: FormBuilder,
+    private financeService: FinanceService,
     public dialogRef: MatDialogRef<ExpenseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ExpenseDialogData
   ) {}
 
   ngOnInit(): void {
-    // Current date formatted as YYYY-MM-DD
     const today = new Date();
     
     this.expenseForm = this.fb.group({
@@ -60,18 +49,47 @@ export class ExpenseDialogComponent implements OnInit {
 
     this.categories = [];
 
-    // Watch type change to update categories
-    this.expenseForm.get('cashflowType')?.valueChanges.subscribe(type => {
-      if (type === 'EXP' || type === 'INC') {
-        this.updateCategories(type);
-      } else {
-        this.categories = [];
-        this.expenseForm.get('category')?.setValue(null);
-      }
-      this.expenseForm.get('category')?.updateValueAndValidity();
-    });
+    this.financeService.getParamsByGroup('CASHFLOW_TYPE').subscribe(typeData => {
+      this.cashflowTypes = (typeData || []).map(p => ({
+        value: p.kode_param,
+        label: p.kode_param === 'INC' ? 'Pemasukan (Income)' : p.kode_param === 'EXP' ? 'Pengeluaran (Expense)' : p.nama_param
+      }));
 
-    this.setupAutocomplete();
+      this.financeService.getParamsByGroup('CASHFLOW_CATEGORY').subscribe(catData => {
+        const expList: { value: string; label: string }[] = [];
+        const incList: { value: string; label: string }[] = [];
+
+        (catData || []).forEach(p => {
+          const item = { value: p.kode_param, label: p.nama_param };
+          if (p.kode_param === 'SERVICE') {
+            incList.push(item);
+          } else if (p.kode_param === 'OTHER') {
+            incList.push(item);
+            expList.push(item);
+          } else {
+            expList.push(item);
+          }
+        });
+
+        this.allCategories = {
+          EXP: expList,
+          INC: incList
+        };
+
+        // Watch type change to update categories
+        this.expenseForm.get('cashflowType')?.valueChanges.subscribe(type => {
+          if (type) {
+            this.updateCategories(type);
+          } else {
+            this.categories = [];
+            this.expenseForm.get('category')?.setValue(null);
+          }
+          this.expenseForm.get('category')?.updateValueAndValidity();
+        });
+
+        this.setupAutocomplete();
+      });
+    });
   }
 
   setupAutocomplete(): void {

@@ -53,32 +53,10 @@ export class FinanceComponent implements OnInit, OnDestroy {
   filteredTypeOptions$!: Observable<any[]>;
   filteredCategoryOptions$!: Observable<any[]>;
 
-  typeOptions = [
-    { value: '', label: 'Semua Tipe' },
-    { value: 'INC', label: 'Pemasukan (Kas Masuk)' },
-    { value: 'EXP', label: 'Pengeluaran (Kas Keluar)' }
-  ];
-
-  categoryOptions = [
-    { value: '', label: 'Semua Kategori' },
-    { value: 'SERVICE', label: 'Pemasukan Jasa' },
-    { value: 'SALARY', label: 'Gaji Karyawan' },
-    { value: 'ELECTRICITY', label: 'Listrik & Air' },
-    { value: 'STOCK', label: 'Pembelian Stok' },
-    { value: 'RENT', label: 'Sewa Tempat' },
-    { value: 'OTHER', label: 'Lain-lain' }
-  ];
-
+  typeOptions: { value: string; label: string }[] = [{ value: '', label: 'Semua Tipe' }];
+  categoryOptions: { value: string; label: string }[] = [{ value: '', label: 'Semua Kategori' }];
   displayedColumns = ['flowDate', 'cashflowType', 'category', 'amount', 'description', 'actions'];
-
-  categoryMap: { [key: string]: string } = {
-    SALARY: 'Gaji Karyawan',
-    ELECTRICITY: 'Listrik & Air',
-    STOCK: 'Stok Sparepart',
-    RENT: 'Sewa Tempat',
-    SERVICE: 'Pemasukan Servis',
-    OTHER: 'Lain-lain'
-  };
+  categoryMap: { [key: string]: string } = {};
 
   constructor(
     private financeService: FinanceService,
@@ -95,9 +73,36 @@ export class FinanceComponent implements OnInit, OnDestroy {
       this.currentPage = 1;
       this.loadCashflows();
     });
-    this.setupAutocomplete();
-    setTimeout(() => {
-      this.loadAllData();
+    this.financeService.getParamsByGroup('CASHFLOW_TYPE').subscribe(typeData => {
+      const dbTypes = (typeData || []).map(p => ({
+        value: p.kode_param,
+        label: p.kode_param === 'INC' ? 'Pemasukan (Kas Masuk)' : p.kode_param === 'EXP' ? 'Pengeluaran (Kas Keluar)' : p.nama_param
+      }));
+      this.typeOptions = [
+        { value: '', label: 'Semua Tipe' },
+        ...dbTypes
+      ];
+
+      this.financeService.getParamsByGroup('CASHFLOW_CATEGORY').subscribe(catData => {
+        const dbCats = (catData || []).map(p => ({
+          value: p.kode_param,
+          label: p.nama_param
+        }));
+        this.categoryOptions = [
+          { value: '', label: 'Semua Kategori' },
+          ...dbCats
+        ];
+        
+        // Build categoryMap dynamically
+        const newMap: { [key: string]: string } = {};
+        (catData || []).forEach(p => {
+          newMap[p.kode_param] = p.nama_param;
+        });
+        this.categoryMap = newMap;
+
+        this.setupAutocomplete();
+        this.loadAllData();
+      });
     });
   }
 

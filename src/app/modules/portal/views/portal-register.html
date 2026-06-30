@@ -2,20 +2,20 @@
   <div class="auth-card auth-card--wide">
 
     <!-- Header -->
-    <div class="auth-card-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem;">
-      <h2 style="font-size: 1.4rem;">Pendaftaran Mandiri</h2>
-      <p style="font-size: 0.8rem; margin: 0.25rem 0 0 0;">Daftarkan diri Anda untuk menikmati kemudahan
+    <div class="auth-card-header portal-auth-card-header">
+      <h2 class="portal-auth-header-title">Pendaftaran Mandiri</h2>
+      <p class="portal-auth-header-desc">Daftarkan diri Anda untuk menikmati kemudahan
         reservasi servis mobil.</p>
     </div>
 
     <!-- Forms Container -->
-    <div class="auth-card-body" style="padding: 1.5rem 1.5rem 2rem 1.5rem;">
+    <div class="auth-card-body portal-auth-card-body">
 
-      <mat-stepper [linear]="true" [selectedIndex]="step - 1" #stepper style="background: transparent;">
+      <mat-stepper [linear]="true" [selectedIndex]="step - 1" #stepper class="bg-transparent">
 
         <!-- STEP 1: Verifikasi WA -->
         <mat-step [stepControl]="step1Form" label="Verifikasi WA">
-          <form [formGroup]="step1Form" class="auth-form" style="gap: 1rem; padding-top: 1rem;">
+          <form [formGroup]="step1Form" class="auth-form portal-register-form">
 
             <!-- Name -->
             <div class="form-col-wrapper">
@@ -31,9 +31,9 @@
             <!-- Phone -->
             <div class="form-col-wrapper">
               <label class="form-label-static">Nomor WhatsApp</label>
-              <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
-                <mat-form-field appearance="outline" style="flex: 1;">
-                  <span matPrefix class="phone-prefix" style="padding-left: 16px;">+62</span>
+              <div class="flex-gap-2-align-start">
+                <mat-form-field appearance="outline" class="flex-1">
+                  <span matPrefix class="phone-prefix pl-16-px">+62</span>
                   <input matInput formControlName="phone" placeholder="8123456789" [readonly]="otpSent" class="input-body">
                   <mat-error *ngIf="step1Form.get('phone')?.hasError('required')">Nomor WhatsApp wajib diisi</mat-error>
                   <mat-error *ngIf="step1Form.get('phone')?.hasError('pattern')">Format nomor tidak valid (angka saja, tanpa angka 0 di depan)</mat-error>
@@ -51,7 +51,7 @@
             </div>
 
             <!-- OTP Input -->
-            <div *ngIf="otpSent" class="form-col-wrapper" style="margin-top: 0.5rem;">
+            <div *ngIf="otpSent" class="form-col-wrapper mt-0-5">
               <label class="form-label-static">Kode Verifikasi OTP</label>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-icon matPrefix class="input-prefix-icon">sms</mat-icon>
@@ -75,7 +75,7 @@
         <!-- STEP 2: Set Akun -->
         <mat-step [stepControl]="step2Form" label="Set Akun">
           <form [formGroup]="step2Form" (ngSubmit)="onSubmitRegister()"
-            class="auth-form" style="gap: 1rem; padding-top: 1rem;">
+            class="auth-form portal-register-form">
 
             <div class="phone-verified-banner">
               <mat-icon>check_circle</mat-icon>
@@ -115,7 +115,7 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-icon matPrefix class="input-prefix-icon">home</mat-icon>
                 <textarea matInput formControlName="address" placeholder="Masukkan alamat lengkap tinggal Anda" rows="2"
-                  class="input-body" style="resize: none;"></textarea>
+                  class="input-body resize-none"></textarea>
                 <mat-error *ngIf="step2Form.get('address')?.hasError('required')">Alamat wajib diisi</mat-error>
                 <mat-error *ngIf="step2Form.get('address')?.hasError('minlength')">Alamat minimal 5 karakter</mat-error>
               </mat-form-field>
@@ -134,7 +134,7 @@
       </mat-stepper>
 
       <!-- Footer Link -->
-      <div class="auth-footer-divider" style="margin-top: 1.5rem; padding-top: 1.25rem;">
+      <div class="auth-footer-divider portal-auth-footer-divider-custom">
         <span>Sudah punya akun? </span>
         <a routerLink="/portal/login">Masuk Ke Portal</a>
       </div>

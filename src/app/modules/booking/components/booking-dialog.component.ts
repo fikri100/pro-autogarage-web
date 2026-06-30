@@ -29,10 +29,9 @@ export class BookingDialogComponent implements OnInit {
   filteredCustomers$!: Observable<any[]>;
   filteredVehicles$!: Observable<any[]>;
 
-  bookingTimes = [
-    '08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'
-  ];
+  bookingTimes: string[] = [];
   filteredBookingTimes$!: Observable<string[]>;
+  bookedTimes: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -49,6 +48,10 @@ export class BookingDialogComponent implements OnInit {
         bookingDate: [null, [Validators.required]],
         bookingTime: [null, [Validators.required]],
         complaints: [null]
+      });
+
+      this.bookingForm.get('bookingDate')?.valueChanges.subscribe(date => {
+        this.loadBookedSlots(date);
       });
 
       this.loadCustomersAndVehicles();
@@ -76,7 +79,10 @@ export class BookingDialogComponent implements OnInit {
         this.bookingForm.get('vehicleId')?.updateValueAndValidity({ emitEvent: false });
       });
 
-      this.setupAutocomplete();
+      this.bookingService.getParamsByGroup('BOOKING_TIME').subscribe(data => {
+        this.bookingTimes = (data || []).map(p => p.kode_param);
+        this.setupAutocomplete();
+      });
     }
   }
 
@@ -100,7 +106,8 @@ export class BookingDialogComponent implements OnInit {
     this.filteredBookingTimes$ = this.bookingForm.get('bookingTime')!.valueChanges.pipe(
       startWith(this.bookingForm.get('bookingTime')!.value || ''),
       map(value => {
-        return value ? this.bookingTimes.filter(t => t.includes(value)) : this.bookingTimes.slice();
+        const available = this.bookingTimes.filter(t => !this.bookedTimes.includes(t));
+        return value ? available.filter(t => t.includes(value)) : available.slice();
       })
     );
   }
@@ -165,5 +172,37 @@ export class BookingDialogComponent implements OnInit {
 
   onConfirm(): void {
     this.dialogRef.close(true);
+  }
+
+  loadBookedSlots(dateVal: any): void {
+    if (!dateVal) {
+      this.bookedTimes = [];
+      this.bookingForm.get('bookingTime')?.setValue(null, { emitEvent: true });
+      return;
+    }
+    let dateStr = '';
+    if (dateVal instanceof Date) {
+      const year = dateVal.getFullYear();
+      const month = String(dateVal.getMonth() + 1).padStart(2, '0');
+      const day = String(dateVal.getDate()).padStart(2, '0');
+      dateStr = `${year}-${month}-${day}`;
+    } else {
+      dateStr = String(dateVal);
+    }
+
+    this.bookingService.getBookedSlots(dateStr).subscribe({
+      next: (slots) => {
+        this.bookedTimes = slots || [];
+        const current = this.bookingForm.get('bookingTime')?.value;
+        this.bookingForm.get('bookingTime')?.setValue(current, { emitEvent: true });
+        
+        if (current && this.bookedTimes.includes(current)) {
+          this.bookingForm.get('bookingTime')?.setValue(null);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load booked slots:', err);
+      }
+    });
   }
 }

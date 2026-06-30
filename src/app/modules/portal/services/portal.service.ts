@@ -109,4 +109,12 @@ export class PortalService {
     const headers = this.getAuthHeaders();
     return this.http.put<any>(`/api/portal/bookings/${id}/cancel`, {}, { headers });
   }
+
+  getBookedSlots(date: string): Observable<string[]> {
+    return this.http.get<string[]>(`/api/bookings/booked-slots?date=${date}`);
+  }
+
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
 }

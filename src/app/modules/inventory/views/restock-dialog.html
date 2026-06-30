@@ -3,25 +3,25 @@
   <span>Proses Restock Barang (Purchase Order)</span>
 </h2>
 
-<mat-dialog-content class="dialog-content" style="padding-top: 1rem;">
+<mat-dialog-content class="dialog-content pt-1-rem">
   <!-- Product Info Bar -->
-  <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+  <div class="dialog-info-bar-primary">
     <div>
-      <span class="text-xs-caps" style="font-size: 0.65rem; color: #1e40af; font-weight: 700;">PRODUK SPAREPART</span>
-      <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e3a8a; margin: 0.15rem 0 0 0; font-size: 0.95rem;">
+      <span class="text-xs-caps badge-sub-primary">PRODUK SPAREPART</span>
+      <h4 class="info-bar-title-primary">
         {{ product.name }}
       </h4>
     </div>
-    <div style="display: flex; gap: 1.5rem; text-align: right;">
+    <div class="flex-gap-1-5-right">
       <div>
-        <span class="text-xs-caps" style="font-size: 0.6rem; color: #64748b;">STOK SAAT INI</span>
-        <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #334155; font-size: 0.85rem;">
+        <span class="text-xs-caps text-xxs-muted">STOK SAAT INI</span>
+        <div class="text-mono-bold-dark-sm">
           {{ product.stockQuantity }} Pcs
         </div>
       </div>
       <div>
-        <span class="text-xs-caps" style="font-size: 0.6rem; color: #64748b;">HPP BELI (MA)</span>
-        <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #334155; font-size: 0.85rem;">
+        <span class="text-xs-caps text-xxs-muted">HPP BELI (MA)</span>
+        <div class="text-mono-bold-dark-sm">
           Rp {{ (product.purchasePrice || 0) | number:'1.0-0':'id-ID' }}
         </div>
       </div>
@@ -29,7 +29,7 @@
   </div>
 
   <form [formGroup]="restockForm">
-    <div class="dialog-section" style="margin-bottom: 0;">
+    <div class="dialog-section mb-0">
       <div class="dialog-section-header">
         <mat-icon>shopping_cart</mat-icon>
         <span>Detail Restock Barang</span>
@@ -41,7 +41,7 @@
           <label class="form-label-static">Jumlah Barang Masuk (Pcs) <span class="required">*</span></label>
           <mat-form-field appearance="outline">
           
-          <input matInput type="number" formControlName="quantity" placeholder="e.g. 10" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
+          <input matInput type="number" formControlName="quantity" placeholder="e.g. 10" class="input-mono-semibold" />
           <mat-icon matSuffix>add_shopping_cart</mat-icon>
           <mat-error *ngIf="restockForm.get('quantity')?.hasError('required')">
             Jumlah barang masuk wajib diisi
@@ -57,7 +57,7 @@
           <label class="form-label-static">Harga Beli Baru per Pcs (Rp) <span class="required">*</span></label>
           <mat-form-field appearance="outline">
           
-          <input matInput type="number" formControlName="purchasePrice" placeholder="e.g. 75000" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
+          <input matInput type="number" formControlName="purchasePrice" placeholder="e.g. 75000" class="input-mono-semibold" />
           <mat-icon matSuffix>payments</mat-icon>
           <mat-error *ngIf="restockForm.get('purchasePrice')?.hasError('required')">
             Harga beli baru wajib diisi
@@ -74,7 +74,7 @@
         <label class="form-label-static">Nomor Referensi / PO <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
         
-        <input matInput formControlName="referenceId" placeholder="e.g. PO-20260527-01" style="font-family: 'JetBrains Mono', monospace; font-weight: 600;" />
+        <input matInput formControlName="referenceId" placeholder="e.g. PO-20260527-01" class="input-mono-semibold" />
         <mat-icon matSuffix>tag</mat-icon>
         <mat-error *ngIf="restockForm.get('referenceId')?.hasError('required')">
           Nomor referensi / PO wajib diisi
@@ -86,12 +86,12 @@
       </div>
 
       <!-- Keuangan Checkbox Integrasi -->
-      <div style="background-color: #fafafa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.5rem;">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <mat-icon style="color: #64748b;">account_balance_wallet</mat-icon>
-          <div style="display: flex; flex-direction: column; gap: 0.15rem;">
-            <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; font-size: 0.825rem;">Catat Pengeluaran Otomatis</span>
-            <span style="font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 0.725rem;">Kirim jurnal pengeluaran ke modul Cashflow/Finance</span>
+      <div class="finance-integration-box">
+        <div class="flex-center-gap-3">
+          <mat-icon class="icon-prefix-slate">account_balance_wallet</mat-icon>
+          <div class="flex-col-gap-xs">
+            <span class="integration-title">Catat Pengeluaran Otomatis</span>
+            <span class="integration-desc">Kirim jurnal pengeluaran ke modul Cashflow/Finance</span>
           </div>
         </div>
         <mat-checkbox formControlName="recordExpense" color="primary"></mat-checkbox>
@@ -101,9 +101,9 @@
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end" class="dialog-actions" style="border-top: 1px solid #f1f5f9; padding: 1rem 1.5rem;">
-  <button mat-stroked-button (click)="onCancel()" class="btn-cancel" style="font-family: 'Plus Jakarta Sans', sans-serif;">BATAL</button>
-  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save" style="font-family: 'Plus Jakarta Sans', sans-serif; background-color: #3b82f6;">
+<mat-dialog-actions align="end" class="dialog-actions dialog-actions-bordered">
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel btn-font-heading">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save btn-accent-rect">
     <mat-icon>check_circle</mat-icon>
     <span>PROSES RESTOCK</span>
   </button>

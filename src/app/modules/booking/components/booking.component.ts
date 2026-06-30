@@ -31,10 +31,7 @@ export class BookingComponent implements OnInit, OnDestroy {
 
   statusControl = new FormControl('ALL');
   statusOptions = [
-    { value: 'ALL', label: 'Semua Status' },
-    { value: 'PENDING', label: 'Menunggu Konfirmasi' },
-    { value: 'CONFIRMED', label: 'Dikonfirmasi' },
-    { value: 'CANCELLED', label: 'Dibatalkan' }
+    { value: 'ALL', label: 'Semua Status' }
   ];
 
   constructor(
@@ -54,6 +51,7 @@ export class BookingComponent implements OnInit, OnDestroy {
     });
     this.setupAutocomplete();
     this.loadBookings();
+    this.loadStatusOptions();
   }
 
   ngOnDestroy(): void {
@@ -67,6 +65,19 @@ export class BookingComponent implements OnInit, OnDestroy {
        if (val) {
          this.filterByStatus(val as any);
        }
+    });
+  }
+
+  loadStatusOptions(): void {
+    this.bookingService.getParamsByGroup('BOOKING_STATUS').subscribe(data => {
+      const dbOptions = (data || []).map(p => ({
+        value: p.kode_param,
+        label: p.nama_param
+      }));
+      this.statusOptions = [
+        { value: 'ALL', label: 'Semua Status' },
+        ...dbOptions
+      ];
     });
   }
 

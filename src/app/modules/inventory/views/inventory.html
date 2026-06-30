@@ -63,7 +63,7 @@
 
         <!-- Column: Code -->
         <ng-container matColumnDef="code">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 130px;">Kode</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-130-px">Kode</th>
           <td mat-cell *matCellDef="let row" class="admin-td admin-td-code">
             {{ row.code }}
           </td>
@@ -79,7 +79,7 @@
 
         <!-- Column: Category -->
         <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 150px;">Kategori</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-150-px">Kategori</th>
           <td mat-cell *matCellDef="let row" class="admin-td text-slate-500">
             {{ row.category || '-' }}
           </td>
@@ -87,7 +87,7 @@
 
         <!-- Column: Type -->
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 140px;">Tipe</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-140-px">Tipe</th>
           <td mat-cell *matCellDef="let row" class="admin-td">
             <span class="item-type-badge" 
                   [class.item-type-badge--sparepart]="row.itemType === 'SPR'" 
@@ -99,7 +99,7 @@
 
         <!-- Column: Stock -->
         <ng-container matColumnDef="stock">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 150px;">Stok / Limit</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-150-px">Stok / Limit</th>
           <td mat-cell *matCellDef="let row" class="admin-td">
             <ng-container *ngIf="row.itemType === 'SPR'; else jasaStock">
               <div class="admin-td-stock-qty"
@@ -118,7 +118,7 @@
 
         <!-- Column: Purchase Price -->
         <ng-container matColumnDef="purchasePrice">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 140px;">Harga Beli (HPP)</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-140-px">Harga Beli (HPP)</th>
           <td mat-cell *matCellDef="let row" class="admin-td text-slate-500">
             <span *ngIf="row.itemType === 'SPR'; else dash">
               {{ row.purchasePrice | currency:'IDR':'Rp ':'1.0-0' }}
@@ -131,7 +131,7 @@
 
         <!-- Column: Sale Price -->
         <ng-container matColumnDef="salePrice">
-          <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 140px;">Harga Jual</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th w-140-px">Harga Jual</th>
           <td mat-cell *matCellDef="let row" class="admin-td admin-td-sale-price">
             {{ row.salePrice | currency:'IDR':'Rp ':'1.0-0' }}
           </td>
@@ -139,7 +139,7 @@
 
         <!-- Column: Actions -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="admin-th th-center" style="width: 140px;">Aksi</th>
+          <th mat-header-cell *matHeaderCellDef class="admin-th th-center w-140-px">Aksi</th>
           <td mat-cell *matCellDef="let row" class="admin-td-actions">
             <div class="actions-wrapper">
               <!-- Info/Detail Button -->
@@ -170,7 +170,7 @@
     </div>
 
     <mat-paginator [length]="totalData" [pageSize]="pageSize" [pageSizeOptions]="[10, 25, 50]"
-      (page)="onPageChange($event)" class="cursor-pointer" style="border-top: 1px solid #f1f5f9; font-family: 'Inter', sans-serif;">
+      (page)="onPageChange($event)" class="cursor-pointer paginator-border-font">
     </mat-paginator>
 
   </div>

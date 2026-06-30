@@ -34,7 +34,7 @@
       </div>
 
       <!-- Username -->
-      <div class="form-col-wrapper" style="margin-top: 0.5rem;">
+      <div class="form-col-wrapper mt-0-5">
         <label class="form-label-static">Username <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
           <input matInput formControlName="username" placeholder="e.g. joni.bengkel" />
@@ -46,7 +46,7 @@
       </div>
 
       <!-- Password (Hanya saat tambah user) -->
-      <div class="form-col-wrapper" style="margin-top: 0.5rem;" *ngIf="data.mode === 'add'">
+      <div class="form-col-wrapper mt-0-5" *ngIf="data.mode === 'add'">
         <label class="form-label-static">Password <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
           <input matInput type="password" formControlName="password" placeholder="Min 6 karakter" />
@@ -61,7 +61,7 @@
       </div>
 
       <!-- Role Select -->
-      <div class="form-col-wrapper" style="margin-top: 0.5rem;">
+      <div class="form-col-wrapper mt-0-5">
         <label class="form-label-static">Role Hak Akses <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
           <input type="text" matInput formControlName="roleId" [matAutocomplete]="roleAuto" placeholder="Ketik role..." />

@@ -93,7 +93,7 @@
             <mat-form-field appearance="outline" class="full-width">
               <input matInput formControlName="plate" (input)="onPlateInput($event)"
                 placeholder="Contoh: B 1234 ABC"
-                style="font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: 0.08em;" />
+                class="input-plate-monospace" />
               <mat-icon matSuffix>badge</mat-icon>
               <mat-hint>Ketik saja — format otomatis: B 6877 XYZ atau AE 7887 RK</mat-hint>
               <mat-error *ngIf="customerForm.get('plate')?.hasError('pattern')">
@@ -137,18 +137,18 @@
     Edit & Detail Pelanggan
   </h2>
 
-  <mat-dialog-content class="dialog-content" style="width: 100%; max-width: 100%; height: 520px; min-height: 520px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto;">
+  <mat-dialog-content class="dialog-content dialog-content-scrollable">
     
     <!-- Profile summary at the top -->
-    <div class="detail-header" style="display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.25rem; margin-bottom: 1rem;">
-      <div class="avatar-lg" style="width: 56px; height: 56px; border-radius: 9999px; background-color: #eff6ff; color: #1e40af; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <div class="detail-header dialog-profile-header-summary">
+      <div class="avatar-lg dialog-avatar-large-custom">
         {{ getInitials(data.customer.name) }}
       </div>
       <div>
-        <h3 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0; font-size: 1.25rem;">{{ data.customer.name }}</h3>
-        <div style="display: flex; gap: 1rem; margin-top: 0.25rem; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #64748b;">
-          <span style="display: flex; align-items: center; gap: 0.25rem;"><mat-icon style="font-size: 1rem; width: auto; height: auto;">phone</mat-icon>{{ data.customer.phone }}</span>
-          <span *ngIf="data.customer.email" style="display: flex; align-items: center; gap: 0.25rem;"><mat-icon style="font-size: 1rem; width: auto; height: auto;">email</mat-icon>{{ data.customer.email }}</span>
+        <h3 class="dialog-profile-name">{{ data.customer.name }}</h3>
+        <div class="dialog-profile-meta">
+          <span class="flex-center-gap-1"><mat-icon class="icon-inline-sm">phone</mat-icon>{{ data.customer.phone }}</span>
+          <span *ngIf="data.customer.email" class="flex-center-gap-1"><mat-icon class="icon-inline-sm">email</mat-icon>{{ data.customer.email }}</span>
         </div>
       </div>
     </div>
@@ -158,13 +158,13 @@
       <!-- Tab 1: Data Pelanggan -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon style="margin-right: 0.5rem; font-size: 1.25rem; width: auto; height: auto;">person</mat-icon>
+          <mat-icon class="tab-label-icon">person</mat-icon>
           Data Pelanggan
         </ng-template>
 
-        <div style="padding-top: 1rem;">
+        <div class="pt-1-rem">
           <form [formGroup]="customerForm">
-            <div class="dialog-section" style="border: none; padding: 0; background: none;">
+            <div class="dialog-section dialog-section-flat">
               <div class="form-col-wrapper mb-3">
                 <label class="form-label-static">Nama Lengkap <span class="text-danger">*</span></label>
                 <mat-form-field appearance="outline" class="full-width">
@@ -219,38 +219,38 @@
       <!-- Tab 2: Daftar Kendaraan -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon style="margin-right: 0.5rem; font-size: 1.25rem; width: auto; height: auto;">directions_car</mat-icon>
+          <mat-icon class="tab-label-icon">directions_car</mat-icon>
           Daftar Kendaraan ({{ vehicles.length }})
         </ng-template>
 
-        <div style="padding-top: 1rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-            <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; margin: 0; font-size: 0.95rem;">Aset Mobil Terdaftar</h4>
-            <button mat-stroked-button color="primary" (click)="openAddVehicleDialog()" style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">
-              <mat-icon style="margin-right: 0.25rem; font-size: 1.15rem; width: auto; height: auto;">add_circle_outline</mat-icon>
+        <div class="pt-1-rem">
+          <div class="flex-between-center-mb-1">
+            <h4 class="section-title-sm">Aset Mobil Terdaftar</h4>
+            <button mat-stroked-button color="primary" (click)="openAddVehicleDialog()" class="btn-font-heading">
+              <mat-icon class="icon-mr-xs">add_circle_outline</mat-icon>
               Tambah Mobil
             </button>
           </div>
 
           <!-- Loading State for Vehicles -->
-          <div *ngIf="loadingVehicles" style="padding: 3rem; text-align: center;">
-            <mat-spinner diameter="35" style="margin: 0 auto;"></mat-spinner>
-            <p style="margin-top: 0.75rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.85rem;">Memuat data kendaraan...</p>
+          <div *ngIf="loadingVehicles" class="p-3-center">
+            <mat-spinner diameter="35" class="margin-x-auto"></mat-spinner>
+            <p class="loading-text-xs">Memuat data kendaraan...</p>
           </div>
 
           <!-- Empty State for Vehicles -->
-          <div *ngIf="!loadingVehicles && vehicles.length === 0" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-            <mat-icon style="font-size: 3rem; width: auto; height: auto; margin-bottom: 0.5rem; color: #cbd5e1;">minor_crash</mat-icon>
-            <p style="margin: 0; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif;">Belum ada kendaraan terdaftar.</p>
+          <div *ngIf="!loadingVehicles && vehicles.length === 0" class="empty-state-centered-p3">
+            <mat-icon class="empty-state-icon-md">minor_crash</mat-icon>
+            <p class="empty-state-desc">Belum ada kendaraan terdaftar.</p>
           </div>
 
-          <div *ngIf="!loadingVehicles && vehicles.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; max-height: 450px; overflow-y: auto; padding: 2px;">
-            <div *ngFor="let car of vehicles" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem; background-color: #f8fafc; position: relative;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1e3a8a; font-size: 0.95rem; letter-spacing: 0.05em;">{{ car.licensePlate }}</div>
+          <div *ngIf="!loadingVehicles && vehicles.length > 0" class="vehicles-grid-scroll">
+            <div *ngFor="let car of vehicles" class="vehicle-card-custom">
+              <div class="flex-between-start">
+                <div class="plate-text-monospace">{{ car.licensePlate }}</div>
                 
-                <button mat-icon-button [matMenuTriggerFor]="vehicleMenu" style="width: 1.75rem; height: 1.75rem; line-height: 1.75rem; margin-top: -0.25rem; margin-right: -0.5rem;">
-                  <mat-icon style="font-size: 1rem; color: #94a3b8;">more_vert</mat-icon>
+                <button mat-icon-button [matMenuTriggerFor]="vehicleMenu" class="btn-icon-adjust">
+                  <mat-icon class="icon-color-muted">more_vert</mat-icon>
                 </button>
                 <mat-menu #vehicleMenu="matMenu">
                   <button mat-menu-item (click)="openEditVehicleDialog(car)">
@@ -258,15 +258,15 @@
                     <span>Edit Kendaraan</span>
                   </button>
                   <button mat-menu-item (click)="deleteVehicle(car.id!)">
-                    <mat-icon style="color: #ef4444;">delete_outline</mat-icon>
-                    <span style="color: #ef4444;">Hapus Kendaraan</span>
+                    <mat-icon class="text-color-warn">delete_outline</mat-icon>
+                    <span class="text-color-warn">Hapus Kendaraan</span>
                   </button>
                 </mat-menu>
               </div>
-              <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #1e293b; margin: 0.35rem 0 0.15rem 0; font-size: 0.9rem;">{{ car.brand }} {{ car.model }}</h4>
-              <div style="display: flex; gap: 0.75rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #64748b; margin-top: 0.15rem;">
-                <div>Tahun: <span style="font-weight: 600; color: #334155;">{{ car.yearMade || '-' }}</span></div>
-                <div>Transmisi: <span style="font-weight: 600; color: #334155;">{{ car.transmission || '-' }}</span></div>
+              <h4 class="vehicle-card-title">{{ car.brand }} {{ car.model }}</h4>
+              <div class="vehicle-card-meta">
+                <div>Tahun: <span class="text-semibold-dark">{{ car.yearMade || '-' }}</span></div>
+                <div>Transmisi: <span class="text-semibold-dark">{{ car.transmission || '-' }}</span></div>
               </div>
             </div>
           </div>
@@ -276,60 +276,60 @@
       <!-- Tab 3: Riwayat Service -->
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon style="margin-right: 0.5rem; font-size: 1.25rem; width: auto; height: auto;">history</mat-icon>
+          <mat-icon class="tab-label-icon">history</mat-icon>
           Riwayat Service
         </ng-template>
 
         <!-- Loading State for History -->
-        <div *ngIf="loadingHistory" style="padding: 3rem; text-align: center;">
-          <mat-spinner diameter="35" style="margin: 0 auto;"></mat-spinner>
-          <p style="margin-top: 0.75rem; color: #64748b; font-family: 'Inter', sans-serif; font-size: 0.85rem;">Memuat riwayat servis...</p>
+        <div *ngIf="loadingHistory" class="p-3-center">
+          <mat-spinner diameter="35" class="margin-x-auto"></mat-spinner>
+          <p class="loading-text-xs">Memuat riwayat servis...</p>
         </div>
 
         <!-- Empty State for History -->
-        <div *ngIf="!loadingHistory && transactions.length === 0" style="text-align: center; padding: 3rem 1rem; color: #94a3b8;">
-          <mat-icon style="font-size: 3rem; width: auto; height: auto; margin-bottom: 0.5rem; color: #cbd5e1;">history</mat-icon>
-          <p style="margin: 0; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif;">Belum ada riwayat booking atau servis.</p>
+        <div *ngIf="!loadingHistory && transactions.length === 0" class="empty-state-centered-p3">
+          <mat-icon class="empty-state-icon-md">history</mat-icon>
+          <p class="empty-state-desc">Belum ada riwayat booking atau servis.</p>
         </div>
 
-        <div *ngIf="!loadingHistory && transactions.length > 0" style="padding-top: 1rem; max-height: 450px; overflow-y: auto;">
-          <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #475569; margin: 0 0 0.75rem 0; font-size: 0.9rem;">Transaksi Terakhir</h4>
+        <div *ngIf="!loadingHistory && transactions.length > 0" class="history-list-scroll">
+          <h4 class="history-section-title">Transaksi Terakhir</h4>
 
-          <table mat-table [dataSource]="transactions" style="width: 100%;">
+          <table mat-table [dataSource]="transactions" class="w-100">
 
             <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.5rem; color: #475569;">Tanggal</th>
-              <td mat-cell *matCellDef="let tx" style="font-family: 'Inter', sans-serif; color: #475569; padding: 0.5rem;">
+              <th mat-header-cell *matHeaderCellDef class="history-th">Tanggal</th>
+              <td mat-cell *matCellDef="let tx" class="history-td">
                 {{ tx.date | date:'dd MMMM yyyy':'':'id-ID' }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="plate">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.5rem; color: #475569;">Plat / Mobil</th>
-              <td mat-cell *matCellDef="let tx" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #1e293b; padding: 0.5rem;">
+              <th mat-header-cell *matHeaderCellDef class="history-th">Plat / Mobil</th>
+              <td mat-cell *matCellDef="let tx" class="history-td-plate">
                 {{ tx.plate }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="notes">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.5rem; color: #475569;">Keluhan Utama</th>
-              <td mat-cell *matCellDef="let tx" style="font-family: 'Inter', sans-serif; color: #475569; padding: 0.5rem;">{{ tx.notes }}</td>
+              <th mat-header-cell *matHeaderCellDef class="history-th">Keluhan Utama</th>
+              <td mat-cell *matCellDef="let tx" class="history-td">{{ tx.notes }}</td>
             </ng-container>
 
             <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.5rem; color: #475569;">Status</th>
-              <td mat-cell *matCellDef="let tx" style="padding: 0.5rem;">
+              <th mat-header-cell *matHeaderCellDef class="history-th">Status</th>
+              <td mat-cell *matCellDef="let tx" class="td-padding-sm">
                 <span [style.background-color]="getStatusDetails(tx.status).color + '15'"
                       [style.color]="getStatusDetails(tx.status).color"
                       [style.border]="'1px solid ' + getStatusDetails(tx.status).color + '40'"
-                      style="padding: 0.2rem 0.5rem; border-radius: 9999px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 0.7rem; display: inline-block;">
+                      class="status-pill-badge">
                   {{ getStatusDetails(tx.status).label }}
                 </span>
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="txDisplayedColumns" style="border-bottom: 2px solid #e2e8f0; background-color: #f8fafc;"></tr>
-            <tr mat-row *matRowDef="let row; columns: txDisplayedColumns;" style="border-bottom: 1px solid #f1f5f9;"></tr>
+            <tr mat-header-row *matHeaderRowDef="txDisplayedColumns" class="tr-header-standard"></tr>
+            <tr mat-row *matRowDef="let row; columns: txDisplayedColumns;" class="tr-row-clickable"></tr>
           </table>
         </div>
       </mat-tab>

@@ -2,8 +2,10 @@
 
   <!-- Header Section -->
   <div class="portal-page-header">
-    <h2>Pengaturan Akun & Profil</h2>
-    <p>Perbarui informasi profil personal Anda serta atur kredensial kata sandi.</p>
+    <div>
+      <h2>Pengaturan Akun & Profil</h2>
+      <p>Perbarui informasi profil personal Anda serta atur kredensial kata sandi.</p>
+    </div>
   </div>
 
   <!-- Loading State -->
@@ -32,24 +34,27 @@
             </mat-form-field>
           </div>
 
-          <!-- WhatsApp Number (Read-only) -->
-          <div class="form-col-wrapper">
-            <label class="form-label-static">Nomor WhatsApp</label>
-            <mat-form-field appearance="outline" class="full-width">
-              <input matInput [value]="customerPhone" readonly class="input-readonly" />
-              <mat-icon matSuffix class="input-suffix-icon">phone</mat-icon>
-              <mat-hint>Nomor WhatsApp terverifikasi OTP</mat-hint>
-            </mat-form-field>
-          </div>
+          <!-- WhatsApp Number & Username (Compact 2 Columns on Mobile) -->
+          <div class="grid-2-col-compact grid-span-2">
+            <!-- WhatsApp Number (Read-only) -->
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Nomor WhatsApp</label>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput [value]="customerPhone" readonly class="input-readonly" />
+                <mat-icon matSuffix class="input-suffix-icon">phone</mat-icon>
+                <mat-hint>Nomor WhatsApp terverifikasi OTP</mat-hint>
+              </mat-form-field>
+            </div>
 
-          <!-- Username -->
-          <div class="form-col-wrapper">
-            <label class="form-label-static">Username Akun <span class="required">*</span></label>
-            <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="username" placeholder="Username login" />
-              <mat-icon matSuffix class="input-suffix-icon">account_circle</mat-icon>
-              <mat-error *ngIf="profileForm.get('username')?.hasError('required')">Username wajib diisi</mat-error>
-            </mat-form-field>
+            <!-- Username -->
+            <div class="form-col-wrapper">
+              <label class="form-label-static">Username Akun <span class="required">*</span></label>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="username" placeholder="Username login" />
+                <mat-icon matSuffix class="input-suffix-icon">account_circle</mat-icon>
+                <mat-error *ngIf="profileForm.get('username')?.hasError('required')">Username wajib diisi</mat-error>
+              </mat-form-field>
+            </div>
           </div>
 
           <!-- Alamat -->
@@ -88,8 +93,8 @@
             </mat-form-field>
           </div>
 
-          <!-- Password Grid (New & Confirm) -->
-          <div class="portal-profile-grid">
+          <!-- Password Grid (New & Confirm - Compact 2 Columns on Mobile) -->
+          <div class="grid-2-col-compact grid-span-2">
             <!-- New Password -->
             <div class="form-col-wrapper">
               <label class="form-label-static">Kata Sandi Baru</label>

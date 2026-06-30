@@ -55,4 +55,8 @@ export class FinanceService {
     let params = new HttpParams().set('period', period);
     return this.http.get<FinanceChartItem[]>(`${this.financeUrl}/chart`, { params });
   }
+
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
 }

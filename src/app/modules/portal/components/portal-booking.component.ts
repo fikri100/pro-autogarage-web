@@ -21,14 +21,15 @@ export class PortalBookingComponent implements OnInit {
 
   filteredVehicles$!: Observable<any[]>;
 
-  brands = ['Honda', 'Toyota', 'Daihatsu', 'Suzuki', 'Mitsubishi', 'Nissan', 'Mazda', 'Hyundai', 'Wuling', 'Lainnya'];
+  brands: string[] = [];
   filteredBrands$!: Observable<string[]>;
 
-  transmissions = [{id: 'AUTOMATIC', label: 'Automatic (AT)'}, {id: 'MANUAL', label: 'Manual (MT)'}];
+  transmissions: any[] = [];
   filteredTransmissions$!: Observable<any[]>;
 
-  bookingTimes = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
+  bookingTimes: string[] = [];
   filteredTimes$!: Observable<string[]>;
+  bookedTimes: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +48,11 @@ export class PortalBookingComponent implements OnInit {
     this.customerName = customer.name;
     this.initForm();
     this.loadVehicles();
+
+    const tomorrowVal = this.bookingForm.get('bookingDate')?.value;
+    if (tomorrowVal) {
+      this.loadBookedSlots(tomorrowVal);
+    }
   }
 
   private initForm(): void {
@@ -65,7 +71,25 @@ export class PortalBookingComponent implements OnInit {
       complaints: ['', []]
     });
 
-    this.setupAutocomplete();
+    this.bookingForm.get('bookingDate')?.valueChanges.subscribe(date => {
+      this.loadBookedSlots(date);
+    });
+
+    this.portalService.getParamsByGroup('VEHICLE_BRAND').subscribe(brandData => {
+      this.brands = (brandData || []).map(p => p.kode_param);
+      
+      this.portalService.getParamsByGroup('VEHICLE_TRANSMISSION').subscribe(transData => {
+        this.transmissions = (transData || []).map(p => ({
+          id: p.kode_param,
+          label: p.nama_param
+        }));
+        
+        this.portalService.getParamsByGroup('BOOKING_TIME').subscribe(timeData => {
+          this.bookingTimes = (timeData || []).map(p => p.kode_param);
+          this.setupAutocomplete();
+        });
+      });
+    });
   }
 
   setupAutocomplete(): void {
@@ -92,7 +116,10 @@ export class PortalBookingComponent implements OnInit {
 
     this.filteredTimes$ = this.bookingForm.get('bookingTime')!.valueChanges.pipe(
       startWith(''),
-      map(value => value ? this._filterStringArray(value, this.bookingTimes) : this.bookingTimes.slice())
+      map(value => {
+        const available = this.bookingTimes.filter(t => !this.bookedTimes.includes(t));
+        return value ? this._filterStringArray(value, available) : available;
+      })
     );
   }
 
@@ -145,6 +172,39 @@ export class PortalBookingComponent implements OnInit {
         console.error('Failed to load customer vehicles for booking:', err);
         this.loadingVehicles = false;
         this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadBookedSlots(dateVal: any): void {
+    if (!dateVal) {
+      this.bookedTimes = [];
+      this.bookingForm.get('bookingTime')?.setValue(null, { emitEvent: true });
+      return;
+    }
+    let dateStr = '';
+    if (dateVal instanceof Date) {
+      const year = dateVal.getFullYear();
+      const month = String(dateVal.getMonth() + 1).padStart(2, '0');
+      const day = String(dateVal.getDate()).padStart(2, '0');
+      dateStr = `${year}-${month}-${day}`;
+    } else {
+      dateStr = String(dateVal);
+    }
+
+    this.portalService.getBookedSlots(dateStr).subscribe({
+      next: (slots) => {
+        this.bookedTimes = slots || [];
+        const current = this.bookingForm.get('bookingTime')?.value;
+        this.bookingForm.get('bookingTime')?.setValue(current, { emitEvent: true });
+        
+        if (current && this.bookedTimes.includes(current)) {
+          this.bookingForm.get('bookingTime')?.setValue(null);
+          this.snackBar.open('Jam yang Anda pilih sebelumnya telah penuh terisi. Silakan pilih jam lain.', 'Tutup', { duration: 4000 });
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load booked slots:', err);
       }
     });
   }

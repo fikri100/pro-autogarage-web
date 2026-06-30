@@ -53,5 +53,9 @@ export class InventoryService {
   getProductStockLogs(id: number): Observable<StockLog[]> {
     return this.http.get<StockLog[]>(`${this.apiUrl}/${id}/stock-logs`);
   }
+
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
 }
 

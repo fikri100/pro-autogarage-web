@@ -31,7 +31,7 @@
 
             <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
               placeholder="Contoh: B 1234 ABC"
-              style="font-family: 'JetBrains Mono', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;" />
+              class="input-plate-monospace" />
             <mat-icon matSuffix>badge</mat-icon>
             <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
               Plat nomor wajib diisi

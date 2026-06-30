@@ -1,14 +1,14 @@
 <mat-sidenav-container class="layout-wrapper" autosize>
   <!-- Sidebar -->
-  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="layout-sidebar" style="width: 16rem; border-right: 1px solid #e2e8f0; background-color: #f8fafc;">
+  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="layout-sidebar portal-sidebar">
     <!-- Logo -->
-    <div class="sidebar-logo-container" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+    <div class="sidebar-logo-container portal-sidebar-logo-container">
       <div>
-        <h1 class="sidebar-logo" style="margin: 0;">Bengkel Pro</h1>
-        <span class="sidebar-subtitle" style="display: block; margin-top: 0.15rem;">Customer Portal</span>
+        <h1 class="sidebar-logo margin-0">Bengkel Pro</h1>
+        <span class="sidebar-subtitle block-mt-xs">Customer Portal</span>
       </div>
-      <button mat-icon-button (click)="sidenav.close()" style="color: #64748b;" title="Sembunyikan Sidebar">
-        <mat-icon style="font-size: 1.25rem; width: 1.25rem; height: 1.25rem;">chevron_left</mat-icon>
+      <button mat-icon-button (click)="sidenav.close()" class="icon-color-muted" title="Sembunyikan Sidebar">
+        <mat-icon class="icon-inline-lg">chevron_left</mat-icon>
       </button>
     </div>
 
@@ -30,40 +30,40 @@
   </mat-sidenav>
 
   <!-- Main Content -->
-  <mat-sidenav-content class="layout-main" style="background-color: #f1f5f9;">
+  <mat-sidenav-content class="layout-main portal-main-content">
     <!-- Topbar -->
-    <mat-toolbar class="layout-topbar" style="background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 1rem; justify-content: space-between;">
+    <mat-toolbar class="layout-topbar portal-topbar">
       
-      <div style="display: flex; align-items: center;">
+      <div class="flex-center">
         <!-- Hamburger Menu -->
-        <button mat-icon-button (click)="sidenav.toggle()" style="margin-right: 1rem; color: #64748b;" title="Tampilkan/Sembunyikan Sidebar">
+        <button mat-icon-button (click)="sidenav.toggle()" class="mr-1-color-slate" title="Tampilkan/Sembunyikan Sidebar">
           <mat-icon>menu</mat-icon>
         </button>
       </div>
 
-      <div style="display: flex; gap: 1rem; align-items: center;">
-        <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">Halo, <strong style="color: #1e3a8a;">{{ customerName }}</strong></span>
+      <div class="flex-center-gap-4">
+        <span class="halo-text">Halo, <strong class="text-color-primary-dark">{{ customerName }}</strong></span>
         
         <!-- Profile Avatar with Menu -->
-        <div class="profile-avatar" style="margin-left: 0.5rem;" [matMenuTriggerFor]="profileMenu">
+        <div class="profile-avatar ml-0-5" [matMenuTriggerFor]="profileMenu">
           {{ getCustomerInitials() }}
         </div>
         <mat-menu #profileMenu="matMenu">
-          <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 0.2rem; min-width: 160px;">
-            <span style="font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; color: #1e293b;">
+          <div class="portal-profile-menu-header">
+            <span class="portal-profile-menu-name">
               {{ customerName }}
             </span>
-            <span style="font-size: 0.65rem; color: #64748b;" class="text-xs-caps">
+            <span class="text-xxs-muted text-xs-caps">
               PELANGGAN
             </span>
           </div>
           <button mat-menu-item routerLink="/portal/profile">
-            <mat-icon style="color: #64748b;">person</mat-icon>
-            <span style="color: #334155; font-weight: 600;">PROFIL SAYA</span>
+            <mat-icon class="icon-color-muted">person</mat-icon>
+            <span class="text-semibold-slate">PROFIL SAYA</span>
           </button>
           <button mat-menu-item (click)="logout()">
-            <mat-icon style="color: #ef4444;">logout</mat-icon>
-            <span style="color: #ef4444; font-weight: 600;">LOGOUT</span>
+            <mat-icon class="icon-color-warn">logout</mat-icon>
+            <span class="text-semibold-warn">LOGOUT</span>
           </button>
         </mat-menu>
       </div>

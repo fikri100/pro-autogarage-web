@@ -7,9 +7,8 @@
       <p>Kelola daftar mobil Anda yang terdaftar di sistem pelayanan Pro Auto Garage.</p>
     </div>
 
-    <button mat-flat-button color="primary" (click)="onAddVehicle()"
-      style="font-family: var(--font-heading); font-weight: 700; background-color: #1e3a8a; color: #ffffff; border-radius: 8px; padding: 0.6rem 1.25rem;">
-      <mat-icon style="margin-right: 0.35rem;">add_circle</mat-icon>
+    <button mat-flat-button color="primary" (click)="onAddVehicle()" class="btn-portal-primary-lg">
+      <mat-icon class="icon-mr-xs">add_circle</mat-icon>
       TAMBAH KENDARAAN
     </button>
   </div>
@@ -24,8 +23,7 @@
     <mat-icon>directions_car</mat-icon>
     <h3>Belum Ada Kendaraan Terdaftar</h3>
     <p>Anda belum pernah menambahkan data mobil. Silakan daftarkan kendaraan Anda sekarang untuk mempermudah proses reservasi.</p>
-    <button mat-flat-button color="primary" (click)="onAddVehicle()"
-      style="font-family: var(--font-heading); font-weight: 700; background-color: #1e3a8a; color: #ffffff; padding: 0.6rem 1.2rem; border-radius: 8px; margin-top: 0.5rem;">
+    <button mat-flat-button color="primary" (click)="onAddVehicle()" class="btn-portal-primary-lg-mt">
       DAFTARKAN KENDARAAN SEKARANG
     </button>
   </div>
@@ -37,8 +35,8 @@
     <div *ngFor="let v of vehicles" class="car-card portal-vehicle-card">
 
       <!-- Brand & Model -->
-      <div class="vehicle-brand-row" style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <h3 style="font-family: var(--font-heading); font-weight: 700; color: #0f172a; font-size: 1.1rem; margin: 0;">
+      <div class="vehicle-brand-row flex-between-align-start">
+        <h3 class="portal-vehicle-card-title">
           {{ v.brand }} {{ v.model }}
         </h3>
 
@@ -49,21 +47,21 @@
       </div>
 
       <!-- Year -->
-      <span style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Tahun Pembuatan: {{ v.yearMade || 'Tidak tercatat' }}</span>
+      <span class="text-xs-slate-medium">Tahun Pembuatan: {{ v.yearMade || 'Tidak tercatat' }}</span>
 
       <!-- Monospace License Plate -->
       <div class="vehicle-plate-row">
-        <span class="plate-badge" style="font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; color: #1e3a8a;">
+        <span class="plate-badge plate-badge-bold-blue">
           {{ v.licensePlate }}
         </span>
       </div>
 
       <div class="vehicle-card-footer">
-        <button mat-stroked-button (click)="onEditVehicle(v)" class="vehicle-card-btn" style="border-color: #cbd5e1; color: #475569;">
+        <button mat-stroked-button (click)="onEditVehicle(v)" class="vehicle-card-btn btn-vehicle-edit">
           <mat-icon>edit</mat-icon>
           EDIT
         </button>
-        <button mat-stroked-button color="warn" (click)="onDeleteVehicle(v)" class="vehicle-card-btn" style="border-color: #fecaca; color: #ef4444;">
+        <button mat-stroked-button color="warn" (click)="onDeleteVehicle(v)" class="vehicle-card-btn btn-vehicle-delete">
           <mat-icon>delete_outline</mat-icon>
           HAPUS
         </button>

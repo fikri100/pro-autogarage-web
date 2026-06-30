@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Vehicle } from '../models/object';
+import { BookingService } from '../../booking/booking.service';
 
 export interface VehicleDialogData {
   mode: 'add' | 'edit' | 'confirm';
@@ -21,16 +22,12 @@ export class VehicleDialogComponent implements OnInit {
   vehicleForm!: FormGroup;
   isSaving = false;
 
-  transmissions = [
-    { value: 'Manual (MT)', label: 'Manual (MT)' },
-    { value: 'Automatic (AT)', label: 'Automatic (AT)' },
-    { value: 'CVT', label: 'CVT' },
-    { value: 'Lainnya', label: 'Lainnya' }
-  ];
+  transmissions: { value: string; label: string }[] = [];
   filteredTransmissions$!: Observable<any[]>;
 
   constructor(
     private fb: FormBuilder,
+    private bookingService: BookingService,
     public dialogRef: MatDialogRef<VehicleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: VehicleDialogData
   ) {}
@@ -38,7 +35,13 @@ export class VehicleDialogComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.mode !== 'confirm') {
       this.initForm();
-      this.setupAutocomplete();
+      this.bookingService.getParamsByGroup('VEHICLE_TRANSMISSION').subscribe(data => {
+        this.transmissions = (data || []).map(p => ({
+          value: p.nama_param,
+          label: p.nama_param
+        }));
+        this.setupAutocomplete();
+      });
     }
   }
 

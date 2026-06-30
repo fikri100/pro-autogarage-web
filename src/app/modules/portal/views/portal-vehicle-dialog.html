@@ -16,7 +16,7 @@
         <label class="form-label-static">Plat Nomor (Nomor Polisi) <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
           <input matInput formControlName="licensePlate" (input)="onPlateInput($event)" placeholder="Contoh: B 1234 ABC"
-                 class="input-plate" style="text-transform: uppercase;" />
+                 class="input-plate" />
           <mat-icon matSuffix class="input-suffix-icon">badge</mat-icon>
           <mat-hint>Format standar Indonesia (misal: B 1234 ABC, dengan spasi)</mat-hint>
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
@@ -28,7 +28,7 @@
         </mat-form-field>
       </div>
 
-      <div class="responsive-dialog-grid" style="margin-top: 1.5rem;">
+      <div class="responsive-dialog-grid mt-1-5">
         <!-- Brand -->
         <div class="form-col-wrapper">
           <label class="form-label-static">Merek Mobil <span class="required">*</span></label>
@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div class="responsive-dialog-grid" style="margin-top: 1rem;">
+      <div class="responsive-dialog-grid mt-1">
         <!-- Year Made -->
         <div class="form-col-wrapper">
           <label class="form-label-static">Tahun Pembuatan <span class="required">*</span></label>
@@ -91,10 +91,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="dialog-actions">
-  <button mat-stroked-button (click)="onCancel()" class="btn-cancel" style="font-weight: 600;">BATAL</button>
-  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving" class="btn-save"
-          style="font-weight: 700; background-color: #1e3a8a; color: #ffffff;">
-    <mat-icon style="margin-right: 0.25rem;">save</mat-icon>
+  <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving" class="btn-save">
+    <mat-icon class="icon-mr-xs">save</mat-icon>
     {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN KENDARAAN' }}
   </button>
 </mat-dialog-actions>

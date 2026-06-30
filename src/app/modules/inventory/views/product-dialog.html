@@ -48,7 +48,7 @@
             <mat-form-field appearance="outline">
             
             <input matInput formControlName="code" placeholder="e.g. OLI-HX7" 
-                   style="font-family: monospace; font-weight: 600;" 
+                   class="font-mono-semibold" 
                    [readonly]="data.mode === 'edit'" />
             <mat-icon matSuffix>qr_code</mat-icon>
             <mat-error *ngIf="productForm.get('code')?.hasError('required')">
@@ -64,7 +64,7 @@
         <div class="two-col-grid">
           <div class="form-col-wrapper">
             <label class="form-label-static">Nama Item / Jasa <span class="required">*</span></label>
-            <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
+            <mat-form-field appearance="outline" class="full-width grid-span-2">
             
             <input matInput formControlName="name" placeholder="e.g. Shell Helix HX7 1L / Spooring Balancing" />
             <mat-icon matSuffix>inventory_2</mat-icon>
@@ -127,7 +127,7 @@
         <div class="two-col-grid" *ngIf="productForm.get('itemType')?.value === 'SRV'">
           <div class="form-col-wrapper">
             <label class="form-label-static">Harga Jasa <span class="required">*</span></label>
-            <mat-form-field appearance="outline" class="full-width" style="grid-column: span 2;">
+            <mat-form-field appearance="outline" class="full-width grid-span-2">
             
             <span matTextPrefix>Rp&nbsp;</span>
             <input matInput type="number" formControlName="salePrice" min="0" placeholder="0" />
