@@ -40,7 +40,25 @@ export class PortalService {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem(this.PORTAL_SESSION_KEY);
+    const customer = this.currentCustomer;
+    if (!customer || !customer.token) return false;
+    return !this.isTokenExpired(customer.token);
+  }
+
+  private isTokenExpired(token: string): boolean {
+    if (!token) return true;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+      const payload = JSON.parse(atob(parts[1]));
+      if (payload.exp) {
+        const expirationDate = new Date(payload.exp * 1000);
+        return expirationDate < new Date();
+      }
+      return false;
+    } catch {
+      return true;
+    }
   }
 
   get currentCustomer(): any | null {

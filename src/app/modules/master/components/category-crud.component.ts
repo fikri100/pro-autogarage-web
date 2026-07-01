@@ -15,7 +15,7 @@ export class CategoryCrudComponent implements OnInit {
   categories: Category[] = [];
   filteredCategories: Category[] = [];
   loading = false;
-  displayedColumns: string[] = ['id', 'name', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'itemType', 'actions'];
 
   constructor(
     private api: MasterService,
@@ -26,6 +26,12 @@ export class CategoryCrudComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  getItemTypeLabel(typeId?: number): string {
+    if (typeId === 3) return 'Sparepart';
+    if (typeId === 4) return 'Jasa/Service';
+    return typeId ? typeId.toString() : '-';
   }
 
   loadCategories(): void {
@@ -127,6 +133,8 @@ export class CategoryCrudComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredCategories = this.categories.filter(c => 
       c.name.toLowerCase().includes(filterValue) ||
+      (c.itemTypeId && c.itemTypeId.toString().includes(filterValue)) ||
+      (c.itemTypeName && c.itemTypeName.toLowerCase().includes(filterValue)) ||
       (c.id && c.id.toString().includes(filterValue))
     );
   }

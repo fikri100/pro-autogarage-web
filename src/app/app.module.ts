@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 import { App } from './app';
 import { routes } from './app.routes';
@@ -63,7 +64,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
         verticalPosition: 'top'
       }
     },
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
     provideAnimationsAsync(),
     providePrimeNG({
         theme: {

@@ -16,6 +16,20 @@
           <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">Nama kategori minimal 3 karakter</mat-error>
         </mat-form-field>
       </div>
+
+      <div class="form-col-wrapper" style="margin-top: 1rem;">
+        <label class="form-label-static">Tipe Item <span class="text-danger">*</span></label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix class="icon-prefix-slate">category</mat-icon>
+          <input matInput formControlName="itemTypeId" [matAutocomplete]="autoType" placeholder="Pilih Tipe Item..." />
+          <mat-autocomplete #autoType="matAutocomplete" [displayWith]="displayItemType">
+            <mat-option *ngFor="let t of filteredItemTypes$ | async" [value]="t.value">
+              {{ t.label }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="categoryForm.get('itemTypeId')?.hasError('required')">Tipe item wajib dipilih</mat-error>
+        </mat-form-field>
+      </div>
     </div>
 
   </form>

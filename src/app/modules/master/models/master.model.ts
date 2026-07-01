@@ -7,6 +7,8 @@ export interface Role {
 export interface Category {
   id?: number;
   name: string;
+  itemTypeId?: number;
+  itemTypeName?: string;
 }
 
 export interface Employee {

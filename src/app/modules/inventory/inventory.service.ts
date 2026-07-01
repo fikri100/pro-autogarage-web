@@ -57,5 +57,13 @@ export class InventoryService {
   getParamsByGroup(group: string): Observable<any[]> {
     return this.http.get<any[]>(`/api/params?group_param=${group}`);
   }
+
+  getCategories(itemTypeId?: number): Observable<any[]> {
+    let params = new HttpParams();
+    if (itemTypeId) {
+      params = params.set('item_type_id', itemTypeId.toString());
+    }
+    return this.http.get<any[]>('/api/categories', { params });
+  }
 }
 

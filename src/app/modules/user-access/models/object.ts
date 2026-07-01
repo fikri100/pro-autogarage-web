@@ -8,6 +8,7 @@ export interface User {
   status?: string;
   password?: string;
   menus?: any[];
+  token?: string;
 }
 
 export interface Role {

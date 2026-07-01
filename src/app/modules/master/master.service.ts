@@ -10,6 +10,11 @@ import { PaginatedResponse } from '../../models/pagination.model';
 export class MasterService {
   constructor(private http: HttpClient) {}
 
+  // Parameter Operations
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
+
   // Role CRUD Operations
   getRoles(): Observable<Role[]> {
     return this.http.get<Role[]>('/api/roles');
@@ -28,8 +33,12 @@ export class MasterService {
   }
 
   // Category CRUD Operations
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>('/api/categories');
+  getCategories(itemTypeId?: number): Observable<Category[]> {
+    let params = new HttpParams();
+    if (itemTypeId) {
+      params = params.set('item_type_id', itemTypeId.toString());
+    }
+    return this.http.get<Category[]>('/api/categories', { params });
   }
 
   createCategory(category: Category): Observable<Category> {

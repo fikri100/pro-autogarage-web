@@ -59,11 +59,11 @@ export class ProductDialogComponent implements OnInit {
           label: t.nama_param
         }));
 
-        this.inventoryService.getParamsByGroup('PRODUCT_CATEGORY_SPR').subscribe(sprData => {
-          this.categories['SPR'] = (sprData || []).map(c => c.kode_param);
+        this.inventoryService.getCategories(3).subscribe(sprData => {
+          this.categories['SPR'] = (sprData || []).map(c => c.name);
 
-          this.inventoryService.getParamsByGroup('PRODUCT_CATEGORY_SRV').subscribe(srvData => {
-            this.categories['SRV'] = (srvData || []).map(c => c.kode_param);
+          this.inventoryService.getCategories(4).subscribe(srvData => {
+            this.categories['SRV'] = (srvData || []).map(c => c.name);
 
             this.updateFormValidation(p?.itemType ?? 'SPR');
 
