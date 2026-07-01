@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { UserDetailComponent } from './user-detail.component';
 import { AuthService } from '../../../services/auth.service';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-user-access',
@@ -226,30 +227,45 @@ export class UserAccessComponent implements OnInit {
   saveMenuPermissions(): void {
     if (!this.selectedRole) return;
 
-    this.isSavingMenus = true;
-    this.cdr.detectChanges();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Simpan Hak Akses',
+        message: `Apakah Anda yakin ingin menyimpan perubahan hak akses menu untuk role "${this.selectedRole.roleName}"?`,
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
 
-    this.api.updateRoleMenus(this.selectedRole.id, this.roleMenuIds).subscribe({
-      next: () => {
-        this.snackBar.open(`Hak akses menu untuk ${this.selectedRole!.roleName} berhasil disimpan!`, 'OK', { duration: 3000, panelClass: 'snack-success' });
-        this.isSavingMenus = false;
-        
-        // Dynamic reactive sidebar session update via BehaviorSubject
-        const currentUser = this.authService.currentUser;
-        if (currentUser && currentUser.roleId === this.selectedRole!.id) {
-          const newMenus = this.buildMenuTree(this.systemMenus, this.roleMenuIds);
-          currentUser.menus = newMenus;
-          localStorage.setItem('pro_auto_garage_session', JSON.stringify(currentUser));
-          // Push into the reactive stream so App component updates sidebar immediately
-          this.authService.updateMenus(newMenus);
-        }
-        
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.isSavingMenus = true;
         this.cdr.detectChanges();
-      },
-      error: () => {
-        this.snackBar.open('Gagal menyimpan hak akses menu', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
-        this.isSavingMenus = false;
-        this.cdr.detectChanges();
+
+        this.api.updateRoleMenus(this.selectedRole!.id, this.roleMenuIds).subscribe({
+          next: () => {
+            this.snackBar.open(`Hak akses menu untuk ${this.selectedRole!.roleName} berhasil disimpan!`, 'OK', { duration: 3000, panelClass: 'snack-success' });
+            this.isSavingMenus = false;
+            
+            // Dynamic reactive sidebar session update via BehaviorSubject
+            const currentUser = this.authService.currentUser;
+            if (currentUser && currentUser.roleId === this.selectedRole!.id) {
+              const newMenus = this.buildMenuTree(this.systemMenus, this.roleMenuIds);
+              currentUser.menus = newMenus;
+              localStorage.setItem('pro_auto_garage_session', JSON.stringify(currentUser));
+              // Push into the reactive stream so App component updates sidebar immediately
+              this.authService.updateMenus(newMenus);
+            }
+            
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.snackBar.open('Gagal menyimpan hak akses menu', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+            this.isSavingMenus = false;
+            this.cdr.detectChanges();
+          }
+        });
       }
     });
   }

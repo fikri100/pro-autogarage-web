@@ -41,41 +41,37 @@
           <div class="form-col-wrapper">
             <label class="form-label-static">Pelanggan <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input type="text" matInput formControlName="customerId" 
-                   [matAutocomplete]="custAuto" 
-                   #custTrigger="matAutocompleteTrigger" 
-                   (focus)="custTrigger.openPanel()" 
-                   placeholder="Ketik pelanggan..." />
-            <mat-autocomplete #custAuto="matAutocomplete" [displayWith]="displayCustomer">
-              <mat-option *ngFor="let c of filteredCustomers$ | async" [value]="c.id">
-                {{ c.name }} ({{ c.phone }})
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">
-              Pelanggan wajib dipilih
-            </mat-error>
-          </mat-form-field>
+
+              <input type="text" matInput formControlName="customerId" [matAutocomplete]="custAuto"
+                #custTrigger="matAutocompleteTrigger" (focus)="custTrigger.openPanel()"
+                placeholder="Ketik pelanggan..." />
+              <mat-autocomplete #custAuto="matAutocomplete" [displayWith]="displayCustomer">
+                <mat-option *ngFor="let c of filteredCustomers$ | async" [value]="c.id">
+                  {{ c.name }} ({{ c.phone }})
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">
+                Pelanggan wajib dipilih
+              </mat-error>
+            </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
             <label class="form-label-static">Kendaraan Terdaftar <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input type="text" matInput formControlName="vehicleId" 
-                   [matAutocomplete]="vehAuto" 
-                   #vehTrigger="matAutocompleteTrigger" 
-                   (focus)="vehTrigger.openPanel()" 
-                   placeholder="Ketik kendaraan..." />
-            <mat-autocomplete #vehAuto="matAutocomplete" [displayWith]="displayVehicle">
-              <mat-option *ngFor="let v of filteredVehicles$ | async" [value]="v.id">
-                {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="bookingForm.get('vehicleId')?.hasError('required')">
-              Kendaraan wajib dipilih
-            </mat-error>
-          </mat-form-field>
+
+              <input type="text" matInput formControlName="vehicleId" [matAutocomplete]="vehAuto"
+                #vehTrigger="matAutocompleteTrigger" (focus)="vehTrigger.openPanel()"
+                placeholder="Ketik kendaraan..." />
+              <mat-autocomplete #vehAuto="matAutocomplete" [displayWith]="displayVehicle">
+                <mat-option *ngFor="let v of filteredVehicles$ | async" [value]="v.id">
+                  {{ v.licensePlate }} - {{ v.brand }} {{ v.model }}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="bookingForm.get('vehicleId')?.hasError('required')">
+                Kendaraan wajib dipilih
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
       </div>
@@ -91,45 +87,42 @@
           <div class="form-col-wrapper">
             <label class="form-label-static">Tanggal Servis <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
-            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
-            <mat-datepicker #datePicker></mat-datepicker>
-            <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">
-              Tanggal reservasi wajib diisi
-            </mat-error>
-          </mat-form-field>
+
+              <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
+              <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+              <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">
+                Tanggal reservasi wajib diisi
+              </mat-error>
+            </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
             <label class="form-label-static">Jam Servis <span class="required">*</span></label>
             <mat-form-field appearance="outline">
-            
-            <input type="text" matInput formControlName="bookingTime" 
-                   [matAutocomplete]="timeAuto" 
-                   #timeTrigger="matAutocompleteTrigger" 
-                   (focus)="timeTrigger.openPanel()" 
-                   placeholder="Pilih Jam" />
-            <mat-autocomplete #timeAuto="matAutocomplete" [displayWith]="displayTime">
-              <mat-option *ngFor="let t of filteredBookingTimes$ | async" [value]="t">
-                {{ t }} WIB
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
-              Jam reservasi wajib diisi
-            </mat-error>
-          </mat-form-field>
+
+              <input type="text" matInput formControlName="bookingTime" [matAutocomplete]="timeAuto"
+                #timeTrigger="matAutocompleteTrigger" (focus)="timeTrigger.openPanel()" placeholder="Pilih Jam" />
+              <mat-autocomplete #timeAuto="matAutocomplete" [displayWith]="displayTime">
+                <mat-option *ngFor="let t of filteredBookingTimes$ | async" [value]="t">
+                  {{ t }} WIB
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error *ngIf="bookingForm.get('bookingTime')?.hasError('required')">
+                Jam reservasi wajib diisi
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
 
         <div class="form-col-wrapper">
           <label class="form-label-static">Keluhan / Catatan Awal</label>
           <mat-form-field appearance="outline" class="full-width">
-          
-          <textarea matInput formControlName="complaints" rows="3" 
-                    placeholder="Contoh: Bunyi berdecit di rem depan, AC kurang dingin"></textarea>
-          <mat-icon matSuffix>notes</mat-icon>
-        </mat-form-field>
+
+            <textarea matInput formControlName="complaints" rows="3"
+              placeholder="Contoh: Bunyi berdecit di rem depan, AC kurang dingin"></textarea>
+            <mat-icon matSuffix>notes</mat-icon>
+          </mat-form-field>
         </div>
       </div>
 
@@ -140,7 +133,7 @@
     <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
     <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
       <mat-icon>save</mat-icon>
-      {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN BOOKING' }}
+      {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}
     </button>
   </mat-dialog-actions>
 </ng-container>

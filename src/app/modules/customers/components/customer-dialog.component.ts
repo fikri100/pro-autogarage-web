@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomerService } from '../customers.service';
 import { Vehicle } from '../models/object';
 import { VehicleDialogComponent } from './vehicle-dialog.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 export interface CustomerDialogData {
   mode: 'add' | 'edit' | 'confirm';
@@ -135,9 +136,15 @@ export class CustomerDialogComponent implements OnInit {
   }
 
   deleteVehicle(id: number): void {
-    const dialogRef = this.dialog.open(VehicleDialogComponent, {
-      width: '400px',
-      data: { mode: 'confirm', message: 'Hapus kendaraan dari daftar aset pelanggan?' }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Kendaraan',
+        message: 'Apakah Anda yakin ingin menghapus kendaraan ini dari daftar aset pelanggan?',
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {
@@ -233,7 +240,25 @@ export class CustomerDialogComponent implements OnInit {
       this.customerForm.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.customerForm.value);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: this.data.mode === 'add' ? 'Simpan Pelanggan' : 'Perbarui Pelanggan',
+        message: this.data.mode === 'add'
+          ? 'Apakah Anda yakin ingin menyimpan pelanggan baru ini?'
+          : 'Apakah Anda yakin ingin memperbarui data pelanggan ini?',
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.dialogRef.close(this.customerForm.value);
+      }
+    });
   }
 
   onConfirm(): void {

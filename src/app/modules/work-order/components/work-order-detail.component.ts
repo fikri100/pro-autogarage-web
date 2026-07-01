@@ -9,6 +9,7 @@ import { map, startWith } from 'rxjs/operators';
 import { WorkOrderService } from '../work-order.service';
 import { WorkOrder } from '../models/object';
 import { EstimateDialogComponent } from './estimate-dialog.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 export interface WorkOrderDetailData {
   workOrder: WorkOrder;
@@ -245,10 +246,45 @@ export class WorkOrderDetailComponent implements OnInit {
   }
 
   deleteItem(index: number): void {
-    this.estimationDetails.splice(index, 1);
-    this.estimationDetails = [...this.estimationDetails]; // Trigger change detection
+    const item = this.estimationDetails[index];
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Item Estimasi',
+        message: `Apakah Anda yakin ingin menghapus "${item.productName}" dari estimasi?`,
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.estimationDetails.splice(index, 1);
+        this.estimationDetails = [...this.estimationDetails]; // Trigger change detection
+        this.calculateTotal();
+        this.saveEstimationToBackend();
+      }
+    });
+  }
+
+  incrementQty(index: number): void {
+    if (this.workOrder?.workStatus !== 'IN_PROGRESS') return;
+    this.estimationDetails[index].quantity += 1;
     this.calculateTotal();
     this.saveEstimationToBackend();
+  }
+
+  decrementQty(index: number): void {
+    if (this.workOrder?.workStatus !== 'IN_PROGRESS') return;
+    const currentQty = this.estimationDetails[index].quantity;
+    if (currentQty <= 1) {
+      this.deleteItem(index);
+    } else {
+      this.estimationDetails[index].quantity -= 1;
+      this.calculateTotal();
+      this.saveEstimationToBackend();
+    }
   }
 
   saveEstimationToBackend(): void {
@@ -297,13 +333,28 @@ export class WorkOrderDetailComponent implements OnInit {
   completeWO(): void {
     if (!this.workOrder) return;
 
-    this.woService.completeWorkOrder(this.workOrder.id!).subscribe({
-      next: () => {
-        this.snackBar.open('Servis selesai! Tiket dikirim ke Kasir.', 'OK', { duration: 4000, panelClass: 'snack-success' });
-        this.dialogRef.close({ reload: true });
-      },
-      error: () => {
-        this.snackBar.open('Gagal memproses status selesai', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Selesai Servis',
+        message: 'Apakah Anda yakin ingin menyelesaikan servis untuk kendaraan ini? Tiket pengerjaan akan dikirim ke Kasir.',
+        confirmText: 'Selesai',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.woService.completeWorkOrder(this.workOrder.id!).subscribe({
+          next: () => {
+            this.snackBar.open('Servis selesai! Tiket dikirim ke Kasir.', 'OK', { duration: 4000, panelClass: 'snack-success' });
+            this.dialogRef.close({ reload: true });
+          },
+          error: () => {
+            this.snackBar.open('Gagal memproses status selesai', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
+          }
+        });
       }
     });
   }

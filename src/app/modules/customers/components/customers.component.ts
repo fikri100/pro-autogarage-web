@@ -8,6 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import { CustomerService } from '../customers.service';
 import { Customer } from '../models/object';
 import { CustomerDialogComponent } from './customer-dialog.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -116,9 +117,15 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   deleteCustomer(customer: Customer): void {
-    const dialogRef = this.dialog.open(CustomerDialogComponent, {
-      width: '400px',
-      data: { mode: 'confirm', message: `Hapus pelanggan "${customer.name}"?` }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Pelanggan',
+        message: `Apakah Anda yakin ingin menghapus pelanggan "${customer.name}"?`,
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {

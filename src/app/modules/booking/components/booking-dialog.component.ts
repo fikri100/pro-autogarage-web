@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { BookingService } from '../booking.service';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 export interface BookingDialogData {
   mode: 'add' | 'confirm' | 'cancel';
@@ -36,6 +37,7 @@ export class BookingDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private bookingService: BookingService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<BookingDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BookingDialogData
   ) {}
@@ -159,15 +161,31 @@ export class BookingDialogComponent implements OnInit {
       this.bookingForm.markAllAsTouched();
       return;
     }
-    const val = { ...this.bookingForm.value };
-    if (val.bookingDate instanceof Date) {
-      const d = val.bookingDate;
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      val.bookingDate = `${year}-${month}-${day}`;
-    }
-    this.dialogRef.close(val);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Simpan Booking',
+        message: 'Apakah Anda yakin ingin menyimpan data booking baru ini?',
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        const val = { ...this.bookingForm.value };
+        if (val.bookingDate instanceof Date) {
+          const d = val.bookingDate;
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          val.bookingDate = `${year}-${month}-${day}`;
+        }
+        this.dialogRef.close(val);
+      }
+    });
   }
 
   onConfirm(): void {

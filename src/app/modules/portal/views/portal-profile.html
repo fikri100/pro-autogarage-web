@@ -78,7 +78,8 @@
             <mat-icon class="icon-accent">lock_reset</mat-icon>
             <span>Ubah Kata Sandi Akun</span>
           </h3>
-          <p class="portal-hint-text">Biarkan isian di bawah ini kosong jika Anda tidak ingin mengubah kata sandi saat ini.</p>
+          <p class="portal-hint-text">Biarkan isian di bawah ini kosong jika Anda tidak ingin mengubah kata sandi saat
+            ini.</p>
         </div>
 
         <div class="portal-single-col-grid">
@@ -86,8 +87,10 @@
           <div class="form-col-wrapper">
             <label class="form-label-static">Kata Sandi Saat Ini</label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" formControlName="currentPassword" placeholder="Masukkan kata sandi lama Anda" />
-              <button mat-icon-button type="button" matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideCurrentPassword">
+              <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" formControlName="currentPassword"
+                placeholder="Masukkan kata sandi lama Anda" />
+              <button mat-icon-button type="button" matSuffix (click)="hideCurrentPassword = !hideCurrentPassword"
+                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideCurrentPassword">
                 <mat-icon class="input-suffix-icon">{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
@@ -99,8 +102,10 @@
             <div class="form-col-wrapper">
               <label class="form-label-static">Kata Sandi Baru</label>
               <mat-form-field appearance="outline" class="full-width">
-                <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" placeholder="Minimal 6 karakter" />
-                <button mat-icon-button type="button" matSuffix (click)="hideNewPassword = !hideNewPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideNewPassword">
+                <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword"
+                  placeholder="Minimal 6 karakter" />
+                <button mat-icon-button type="button" matSuffix (click)="hideNewPassword = !hideNewPassword"
+                  [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideNewPassword">
                   <mat-icon class="input-suffix-icon">{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
               </mat-form-field>
@@ -110,9 +115,12 @@
             <div class="form-col-wrapper">
               <label class="form-label-static">Ulangi Kata Sandi Baru</label>
               <mat-form-field appearance="outline" class="full-width">
-                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Konfirmasi kata sandi baru" />
-                <button mat-icon-button type="button" matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
-                  <mat-icon class="input-suffix-icon">{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+                  placeholder="Konfirmasi kata sandi baru" />
+                <button mat-icon-button type="button" matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
+                  [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirmPassword">
+                  <mat-icon class="input-suffix-icon">{{hideConfirmPassword ? 'visibility_off' :
+                    'visibility'}}</mat-icon>
                 </button>
               </mat-form-field>
             </div>
@@ -123,9 +131,9 @@
       <!-- Action Footer -->
       <div class="portal-card-footer">
         <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid || isSaving"
-                class="btn-portal-save">
+          class="btn-portal-save">
           <mat-icon>save</mat-icon>
-          {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN PERUBAHAN' }}
+          {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}
         </button>
       </div>
 

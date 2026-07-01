@@ -16,7 +16,7 @@
         <label class="form-label-static">Plat Nomor (Nomor Polisi) <span class="required">*</span></label>
         <mat-form-field appearance="outline" class="full-width">
           <input matInput formControlName="licensePlate" (input)="onPlateInput($event)" placeholder="Contoh: B 1234 ABC"
-                 class="input-plate" />
+            class="input-plate" />
           <mat-icon matSuffix class="input-suffix-icon">badge</mat-icon>
           <mat-hint>Format standar Indonesia (misal: B 1234 ABC, dengan spasi)</mat-hint>
           <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
@@ -33,7 +33,8 @@
         <div class="form-col-wrapper">
           <label class="form-label-static">Merek Mobil <span class="required">*</span></label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput formControlName="brand" [matAutocomplete]="brandAuto" placeholder="Ketik atau pilih merek..." />
+            <input type="text" matInput formControlName="brand" [matAutocomplete]="brandAuto"
+              placeholder="Ketik atau pilih merek..." />
             <mat-autocomplete #brandAuto="matAutocomplete">
               <mat-option *ngFor="let b of filteredBrands$ | async" [value]="b">{{ b }}</mat-option>
             </mat-autocomplete>
@@ -76,7 +77,8 @@
         <div class="form-col-wrapper">
           <label class="form-label-static">Transmisi <span class="required">*</span></label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto" placeholder="Ketik transmisi..." />
+            <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto"
+              placeholder="Ketik transmisi..." />
             <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
               <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.id">{{ t.label }}</mat-option>
             </mat-autocomplete>
@@ -92,8 +94,9 @@
 
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving" class="btn-save">
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving"
+    class="btn-save">
     <mat-icon class="icon-mr-xs">save</mat-icon>
-    {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN KENDARAAN' }}
+    {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}
   </button>
 </mat-dialog-actions>

@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MasterService } from '../master.service';
 import { Employee, Role } from '../models/master.model';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
@@ -25,6 +26,7 @@ export class EmployeeDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private api: MasterService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<EmployeeDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EmployeeDetailData
   ) {}
@@ -80,6 +82,24 @@ export class EmployeeDetailComponent implements OnInit {
       this.employeeForm.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.employeeForm.value);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: this.data.mode === 'add' ? 'Simpan Karyawan' : 'Perbarui Karyawan',
+        message: this.data.mode === 'add'
+          ? 'Apakah Anda yakin ingin menyimpan karyawan baru ini?'
+          : 'Apakah Anda yakin ingin memperbarui data karyawan ini?',
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.dialogRef.close(this.employeeForm.value);
+      }
+    });
   }
 }

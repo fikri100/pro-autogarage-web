@@ -30,8 +30,7 @@
           <mat-form-field appearance="outline" class="full-width">
 
             <input matInput formControlName="licensePlate" (input)="onPlateInput($event)"
-              placeholder="Contoh: B 1234 ABC"
-              class="input-plate-monospace" />
+              placeholder="Contoh: B 1234 ABC" class="input-plate-monospace" />
             <mat-icon matSuffix>badge</mat-icon>
             <mat-error *ngIf="vehicleForm.get('licensePlate')?.hasError('required')">
               Plat nomor wajib diisi
@@ -100,7 +99,7 @@
     <button mat-flat-button color="primary" (click)="onSave()" [disabled]="vehicleForm.invalid || isSaving"
       class="btn-save">
       <mat-icon>save</mat-icon>
-      {{ isSaving ? 'MENYIMPAN...' : 'SIMPAN KENDARAAN' }}
+      {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}
     </button>
   </mat-dialog-actions>
 </ng-container>

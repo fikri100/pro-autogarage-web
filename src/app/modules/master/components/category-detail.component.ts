@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Category } from '../models/master.model';
 import { MasterService } from '../master.service';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -26,6 +27,7 @@ export class CategoryDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private api: MasterService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<CategoryDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CategoryDetailData
   ) { }
@@ -77,6 +79,24 @@ export class CategoryDetailComponent implements OnInit {
       this.categoryForm.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.categoryForm.value);
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: this.data.mode === 'add' ? 'Simpan Kategori' : 'Perbarui Kategori',
+        message: this.data.mode === 'add' 
+          ? 'Apakah Anda yakin ingin menyimpan kategori baru ini?' 
+          : 'Apakah Anda yakin ingin memperbarui data kategori ini?',
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.dialogRef.close(this.categoryForm.value);
+      }
+    });
   }
 }

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { CashierService } from '../cashier.service';
 import { InvoicePrintDialogComponent } from './invoice-print-dialog.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 export interface CashierDetailData {
   workOrder: any;
@@ -147,8 +148,24 @@ export class CashierDetailComponent implements OnInit {
   }
 
   deleteItem(index: number): void {
-    this.transaction.details.splice(index, 1);
-    this.calculateTotals();
+    const item = this.transaction.details[index];
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Item Pembayaran',
+        message: `Apakah Anda yakin ingin menghapus "${item.productName}" dari daftar tagihan/invoice?`,
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.transaction.details.splice(index, 1);
+        this.calculateTotals();
+      }
+    });
   }
 
   payAndPrint(): void {

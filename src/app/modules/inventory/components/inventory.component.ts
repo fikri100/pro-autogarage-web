@@ -10,6 +10,7 @@ import { Product, StockLog } from '../models/object';
 import { ProductDialogComponent } from './product-dialog.component';
 import { RestockDialogComponent } from './restock-dialog.component';
 import { ProductDetailDialogComponent } from './product-detail-dialog.component';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-inventory-list',
@@ -160,10 +161,16 @@ export class InventoryComponent implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    const label = product.itemType === 'SPR' ? 'sparepart' : 'jasa';
-    const dialogRef = this.dialog.open(ProductDialogComponent, {
-      width: '400px',
-      data: { mode: 'confirm', message: `Hapus ${label} "${product.name}" (${product.code})?` }
+    const label = product.itemType === 'SPR' ? 'Sparepart' : 'Jasa/Service';
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: 'Hapus Item',
+        message: `Apakah Anda yakin ingin menghapus ${label} "${product.name}" (${product.code})?`,
+        confirmText: 'Hapus',
+        cancelText: 'Batal',
+        warn: true
+      }
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {

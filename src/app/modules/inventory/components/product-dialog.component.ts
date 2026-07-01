@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Product } from '../models/object';
 import { InventoryService } from '../inventory.service';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 export interface ProductDialogData {
   mode: 'add' | 'edit' | 'confirm';
@@ -35,6 +36,7 @@ export class ProductDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private inventoryService: InventoryService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<ProductDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProductDialogData
   ) {}
@@ -165,9 +167,26 @@ export class ProductDialogComponent implements OnInit {
       return;
     }
     
-    // Get raw values because disabled controls are not included in this.productForm.value
-    const val = this.productForm.getRawValue();
-    this.dialogRef.close(val);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '440px',
+      data: {
+        title: this.data.mode === 'add' ? 'Simpan Item' : 'Perbarui Item',
+        message: this.data.mode === 'add'
+          ? 'Apakah Anda yakin ingin menyimpan item baru ini?'
+          : 'Apakah Anda yakin ingin memperbarui data item ini?',
+        confirmText: 'Simpan',
+        cancelText: 'Batal',
+        warn: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        // Get raw values because disabled controls are not included in this.productForm.value
+        const val = this.productForm.getRawValue();
+        this.dialogRef.close(val);
+      }
+    });
   }
 
   onConfirm(): void {
