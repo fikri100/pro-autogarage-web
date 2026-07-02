@@ -7896,11 +7896,22 @@ table td,
 
 .permission-mapping-wrapper {
   padding-top: 1.5rem !important;
-  max-width: 680px !important;
-  margin: 0 auto !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 1.25rem !important;
+}
+
+.select-role-field {
+  width: 280px !important;
+}
+
+@media (max-width: 768px) {
+  .select-role-field {
+    width: 100% !important;
+  }
+  .tree-child-row {
+    margin-left: 1.5rem !important;
+  }
 }
 
 .font-body-select {

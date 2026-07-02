@@ -73,4 +73,17 @@ export class MasterService {
   deleteEmployee(id: number): Observable<any> {
     return this.http.delete<any>(`/api/employees/${id}`);
   }
+
+  // Menu Operations
+  getSystemMenus(): Observable<any[]> {
+    return this.http.get<any[]>('/api/menus');
+  }
+
+  getRoleMenus(roleId: number): Observable<number[]> {
+    return this.http.get<number[]>(`/api/roles/${roleId}/menus`);
+  }
+
+  updateRoleMenus(roleId: number, menuIds: number[]): Observable<any> {
+    return this.http.put<any>(`/api/roles/${roleId}/menus`, { menuIds });
+  }
 }

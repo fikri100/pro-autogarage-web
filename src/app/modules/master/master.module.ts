@@ -14,6 +14,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { RoleCrudComponent } from './components/role-crud.component';
 import { CategoryCrudComponent } from './components/category-crud.component';
@@ -48,6 +51,9 @@ import { SharedModule } from '../shared.module';
     MatTooltipModule,
     MatAutocompleteModule,
     MatPaginatorModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatCheckboxModule,
     SharedModule
   ]
 })

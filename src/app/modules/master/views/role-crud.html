@@ -12,67 +12,152 @@
     </button>
   </div>
 
-  <!-- ROLES LIST -->
-  <div class="admin-panel-card flex flex-col">
-    <div class="card-header-responsive">
-      <span class="card-header-title">Daftar Role Aktif</span>
-      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input search-field-md">
-        <mat-icon matPrefix class="icon-prefix-slate">search</mat-icon>
-        <input matInput placeholder="Cari role..." (keyup)="applyFilter($event)">
-      </mat-form-field>
-    </div>
-
-    <div class="admin-table-container">
-      <div *ngIf="loading" class="dialog-loading-state">
-        <mat-spinner diameter="40"></mat-spinner>
-      </div>
-
-      <div *ngIf="!loading && filteredRoles.length === 0" class="table-empty-state">
-        <mat-icon class="table-empty-state-icon">shield</mat-icon>
-        <div class="table-empty-state-title">Tidak ada role aktif</div>
-      </div>
-
-      <!-- Table -->
-      <div *ngIf="!loading && filteredRoles.length > 0" class="table-responsive">
-        <table mat-table [dataSource]="filteredRoles" class="w-full-table">
-          
-          <!-- Column: ID -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 60px;">ID</th>
-            <td mat-cell *matCellDef="let row" class="admin-td admin-td-code-slate">
-              #{{ row.id }}
-            </td>
-          </ng-container>
-
-          <!-- Column: Nama Role -->
-          <ng-container matColumnDef="roleName">
-            <th mat-header-cell *matHeaderCellDef class="admin-th">Nama Role</th>
-            <td mat-cell *matCellDef="let row" class="admin-td admin-td-bold">
-              {{ row.roleName }}
-            </td>
-          </ng-container>
-
-          <!-- Column: Aksi -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="admin-th th-center" style="width: 140px;">Aksi</th>
-            <td mat-cell *matCellDef="let row" class="admin-td-actions">
-              <div class="actions-wrapper">
-                <button mat-icon-button (click)="showEditDialog(row); $event.stopPropagation()" matTooltip="Ubah Nama Role" class="btn-icon-blue">
-                  <mat-icon class="icon-md">edit</mat-icon>
-                </button>
-                <button mat-icon-button (click)="deleteRole(row); $event.stopPropagation()" matTooltip="Hapus Role" class="btn-icon-red" [disabled]="row.id === 1">
-                  <mat-icon class="icon-md">delete</mat-icon>
-                </button>
-              </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover cursor-pointer"
-              (click)="showEditDialog(row)"></tr>
-        </table>
-      </div>
-    </div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-box-centered">
+    <mat-spinner diameter="48" class="margin-auto"></mat-spinner>
+    <p class="loading-text-desc">Memuat data role...</p>
   </div>
+
+  <mat-tab-group *ngIf="!loading" animationDuration="200ms" class="panel-tab-group-container">
+    <!-- Tab 1: Daftar Role -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon-tab-label-lg">shield</mat-icon>
+        Daftar Role &amp; Jabatan
+      </ng-template>
+
+      <div class="pt-1-5">
+        <!-- ROLES LIST -->
+        <div class="admin-panel-card flex flex-col">
+          <div class="card-header-responsive">
+            <span class="card-header-title">Daftar Role Aktif</span>
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="dense-search-input search-field-md">
+              <mat-icon matPrefix class="icon-prefix-slate">search</mat-icon>
+              <input matInput placeholder="Cari role..." (keyup)="applyFilter($event)">
+            </mat-form-field>
+          </div>
+
+          <div class="admin-table-container">
+            <div *ngIf="filteredRoles.length === 0" class="table-empty-state">
+              <mat-icon class="table-empty-state-icon">shield</mat-icon>
+              <div class="table-empty-state-title">Tidak ada role aktif</div>
+            </div>
+
+            <!-- Table -->
+            <div *ngIf="filteredRoles.length > 0" class="table-responsive">
+              <table mat-table [dataSource]="filteredRoles" class="w-full-table">
+                
+                <!-- Column: ID -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="admin-th" style="width: 60px;">ID</th>
+                  <td mat-cell *matCellDef="let row" class="admin-td admin-td-code-slate">
+                    #{{ row.id }}
+                  </td>
+                </ng-container>
+
+                <!-- Column: Nama Role -->
+                <ng-container matColumnDef="roleName">
+                  <th mat-header-cell *matHeaderCellDef class="admin-th">Nama Role</th>
+                  <td mat-cell *matCellDef="let row" class="admin-td admin-td-bold">
+                    {{ row.roleName }}
+                  </td>
+                </ng-container>
+
+                <!-- Column: Aksi -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="admin-th th-center" style="width: 140px;">Aksi</th>
+                  <td mat-cell *matCellDef="let row" class="admin-td-actions">
+                    <div class="actions-wrapper">
+                      <button mat-icon-button (click)="showEditDialog(row); $event.stopPropagation()" matTooltip="Ubah Nama Role" class="btn-icon-blue">
+                        <mat-icon class="icon-md">edit</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="deleteRole(row); $event.stopPropagation()" matTooltip="Hapus Role" class="btn-icon-red" [disabled]="row.id === 1">
+                        <mat-icon class="icon-md">delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row-hover cursor-pointer"
+                    (click)="showEditDialog(row)"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Pemetaan Hak Akses Menu -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="icon-tab-label-lg">admin_panel_settings</mat-icon>
+        Pemetaan Hak Akses Menu
+      </ng-template>
+
+      <div class="permission-mapping-wrapper">
+        <div class="form-col-wrapper">
+          <label class="form-label-static">Pilih Role Hak Akses</label>
+          <mat-form-field appearance="outline" class="full-width select-role-field">
+            <mat-select [value]="selectedMappingRoleId" (selectionChange)="onMappingRoleChange($event.value)"
+              class="font-body-select">
+              <mat-option *ngFor="let role of roles" [value]="role.id" class="font-body-option">
+                {{ role.roleName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="selectedRole" class="flex-col-gap-3">
+          <p class="permission-desc-text">
+            Pilih menu navigasi yang dapat diakses oleh role
+            <strong style="color: #1e3a8a;">{{ selectedRole.roleName }}</strong>
+          </p>
+
+          <div class="permission-tree-container">
+            <div *ngFor="let parent of fullMenuTree" class="flex-col-gap-xs">
+
+              <!-- Parent Menu Option -->
+              <div class="tree-parent-row">
+                <div class="tree-row-click-target" (click)="toggleMenuAccordion(parent)">
+                  <mat-icon class="accordion-chevron-icon" *ngIf="parent.children && parent.children.length > 0">
+                    {{ parent.isOpen ? 'expand_more' : 'chevron_right' }}
+                  </mat-icon>
+                  <div *ngIf="!parent.children || parent.children.length === 0" class="w-16-px"></div>
+                  <i [class]="parent.icon" class="parent-menu-icon"></i>
+                  <span class="parent-menu-label">{{ parent.label }}</span>
+                </div>
+                <mat-checkbox [checked]="isMenuChecked(parent.id)" (change)="toggleMenu(parent.id)"
+                  color="primary"></mat-checkbox>
+              </div>
+
+              <!-- Child Menu Options -->
+              <ng-container *ngIf="parent.isOpen">
+                <div *ngFor="let child of parent.children" class="tree-child-row">
+                  <div class="flex-center-gap-2">
+                    <i [class]="child.icon" class="child-menu-icon"></i>
+                    <span class="child-menu-label">{{ child.label }}</span>
+                    <span class="child-menu-link-mono">({{ child.routerLink }})</span>
+                  </div>
+                  <mat-checkbox [checked]="isMenuChecked(child.id)" (change)="toggleMenu(child.id)"
+                    color="primary"></mat-checkbox>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+
+          <div class="permission-actions-row">
+            <button mat-stroked-button (click)="loadRoleMenus(selectedRole.id)" class="btn-font-heading">BATAL</button>
+            <button mat-flat-button color="primary" [disabled]="isSavingMenus" (click)="saveMenuPermissions()"
+              class="btn-primary">
+              <mat-icon class="icon-mr-1">save</mat-icon>
+              {{ isSavingMenus ? 'TUNGGU...' : 'SIMPAN' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 
 </div>
