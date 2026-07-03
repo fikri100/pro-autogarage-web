@@ -88,7 +88,7 @@
             <label class="form-label-static">Tanggal Servis <span class="required">*</span></label>
             <mat-form-field appearance="outline">
 
-              <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
+              <input matInput [min]="minDate" [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" />
               <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
               <mat-datepicker #datePicker></mat-datepicker>
               <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">

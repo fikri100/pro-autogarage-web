@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PortalService } from '../services/portal.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
 
 @Component({
   selector: 'app-portal-booking',
@@ -18,6 +20,7 @@ export class PortalBookingComponent implements OnInit {
   customerName = '';
   vehicles: any[] = [];
   selectedVehicle: any = null;
+  minDate = new Date();
 
   filteredVehicles$!: Observable<any[]>;
 
@@ -36,7 +39,8 @@ export class PortalBookingComponent implements OnInit {
     private portalService: PortalService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -195,6 +199,28 @@ export class PortalBookingComponent implements OnInit {
     this.portalService.getBookedSlots(dateStr).subscribe({
       next: (slots) => {
         this.bookedTimes = slots || [];
+        
+        // Check if all slot times are booked
+        const isFull = this.bookingTimes.length > 0 && this.bookingTimes.every(t => this.bookedTimes.includes(t));
+        if (isFull) {
+          this.bookingForm.get('bookingDate')?.setValue(null, { emitEvent: false });
+          this.bookingForm.get('bookingTime')?.setValue(null, { emitEvent: false });
+          this.bookedTimes = [];
+          
+          this.dialog.open(ConfirmationDialogComponent, {
+            width: '440px',
+            data: {
+              title: 'Jadwal Penuh',
+              message: 'Maaf, jadwal servis untuk tanggal tersebut sudah penuh. Silakan pilih tanggal lainnya.',
+              confirmText: 'Pilih Tanggal Lain',
+              cancelText: 'Tutup',
+              warn: true
+            }
+          });
+          this.cdr.detectChanges();
+          return;
+        }
+
         const current = this.bookingForm.get('bookingTime')?.value;
         this.bookingForm.get('bookingTime')?.setValue(current, { emitEvent: true });
         

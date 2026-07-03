@@ -8567,4 +8567,21 @@ table td,
     gap: 0.75rem !important;
   }
 }
+
+.flex-center {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.flex-center-gap-4 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+.flex-col-gap-3 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+}
 

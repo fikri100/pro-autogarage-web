@@ -23,6 +23,7 @@ export class BookingDialogComponent implements OnInit {
 
   bookingForm!: FormGroup;
   isSaving = false;
+  minDate = new Date();
 
   customers: any[] = [];
   filteredVehicles: any[] = [];
@@ -211,6 +212,27 @@ export class BookingDialogComponent implements OnInit {
     this.bookingService.getBookedSlots(dateStr).subscribe({
       next: (slots) => {
         this.bookedTimes = slots || [];
+        
+        // Check if all slot times are booked
+        const isFull = this.bookingTimes.length > 0 && this.bookingTimes.every(t => this.bookedTimes.includes(t));
+        if (isFull) {
+          this.bookingForm.get('bookingDate')?.setValue(null, { emitEvent: false });
+          this.bookingForm.get('bookingTime')?.setValue(null, { emitEvent: false });
+          this.bookedTimes = [];
+          
+          this.dialog.open(ConfirmationDialogComponent, {
+            width: '440px',
+            data: {
+              title: 'Jadwal Penuh',
+              message: 'Maaf, jadwal servis untuk tanggal tersebut sudah penuh. Silakan pilih tanggal lainnya.',
+              confirmText: 'Pilih Tanggal Lain',
+              cancelText: 'Tutup',
+              warn: true
+            }
+          });
+          return;
+        }
+
         const current = this.bookingForm.get('bookingTime')?.value;
         this.bookingForm.get('bookingTime')?.setValue(current, { emitEvent: true });
         

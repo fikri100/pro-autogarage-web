@@ -126,7 +126,7 @@
               <div class="form-col-wrapper">
                 <label class="form-label-static">Tanggal Kedatangan</label>
                 <mat-form-field appearance="outline" class="full-width">
-                  <input matInput [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" class="input-body">
+                  <input matInput [min]="minDate" [matDatepicker]="datePicker" formControlName="bookingDate" placeholder="Pilih tanggal" class="input-body">
                   <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
                   <mat-datepicker #datePicker></mat-datepicker>
                   <mat-error *ngIf="bookingForm.get('bookingDate')?.hasError('required')">Tanggal wajib diisi</mat-error>
