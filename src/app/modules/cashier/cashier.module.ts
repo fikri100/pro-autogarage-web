@@ -22,6 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { SharedModule } from '../shared.module';
+
 @NgModule({
   declarations: [
     CashierComponent,
@@ -44,7 +46,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatTooltipModule,
     MatSelectModule,
     MatPaginatorModule,
-    MatTabsModule
+    MatTabsModule,
+    SharedModule
   ]
 })
 export class CashierModule { }

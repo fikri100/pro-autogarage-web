@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { CashierService } from '../cashier.service';
 import { InvoicePrintDialogComponent } from './invoice-print-dialog.component';
 import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
+import { EstimateDialogComponent } from '../../work-order/components/estimate-dialog.component';
 
 export interface CashierDetailData {
   workOrder: any;
@@ -32,6 +34,8 @@ export class CashierDetailComponent implements OnInit {
   subtotal = 0;
   taxAmount = 0;
   grandTotal = 0;
+  invoiceDetails: any[] = [];
+  dataSource = new MatTableDataSource<any>([]);
 
   displayedColumns = ['code', 'name', 'qty', 'price', 'subtotal', 'actions'];
 
@@ -58,6 +62,8 @@ export class CashierDetailComponent implements OnInit {
     this.cashierService.getTransactionByWO(this.workOrder.id).subscribe({
       next: (data: any) => {
         this.transaction = data;
+        this.invoiceDetails = data?.details ? [...data.details] : [];
+        this.dataSource.data = this.invoiceDetails;
         this.discount = 0;
         this.cashAmount = 0;
         this.paymentMethod = 'Tunai';
@@ -74,7 +80,7 @@ export class CashierDetailComponent implements OnInit {
   }
 
   calculateTotals(): void {
-    if (!this.transaction || !this.transaction.details) {
+    if (!this.transaction || !this.invoiceDetails) {
       this.subtotal = 0;
       this.taxAmount = 0;
       this.grandTotal = 0;
@@ -82,7 +88,7 @@ export class CashierDetailComponent implements OnInit {
       return;
     }
 
-    this.subtotal = this.transaction.details.reduce(
+    this.subtotal = this.invoiceDetails.reduce(
       (sum: number, item: any) => sum + (item.quantity * item.priceAtTransaction), 0
     );
 
@@ -129,26 +135,32 @@ export class CashierDetailComponent implements OnInit {
   }
 
   increaseQty(index: number): void {
-    const item = this.transaction.details[index];
+    const item = this.invoiceDetails[index];
     if (item.productType === 'SPR' && item.quantity >= item.stockQuantity) {
       this.snackBar.open('Tidak bisa melebihi stok yang tersedia!', 'Tutup', { duration: 2500, panelClass: 'snack-error' });
       return;
     }
     item.quantity++;
     item.subtotal = item.quantity * item.priceAtTransaction;
+    this.invoiceDetails = [...this.invoiceDetails];
+    this.dataSource.data = this.invoiceDetails;
     this.calculateTotals();
+    this.cdr.detectChanges();
   }
 
   decreaseQty(index: number): void {
-    const item = this.transaction.details[index];
+    const item = this.invoiceDetails[index];
     if (item.quantity <= 1) return;
     item.quantity--;
     item.subtotal = item.quantity * item.priceAtTransaction;
+    this.invoiceDetails = [...this.invoiceDetails];
+    this.dataSource.data = this.invoiceDetails;
     this.calculateTotals();
+    this.cdr.detectChanges();
   }
 
   deleteItem(index: number): void {
-    const item = this.transaction.details[index];
+    const item = this.invoiceDetails[index];
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '440px',
       data: {
@@ -162,8 +174,37 @@ export class CashierDetailComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.transaction.details.splice(index, 1);
+        this.invoiceDetails.splice(index, 1);
+        this.invoiceDetails = [...this.invoiceDetails]; // Trigger change detection
+        this.dataSource.data = this.invoiceDetails;
         this.calculateTotals();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  showAddItemModal(): void {
+    if (!this.transaction) return;
+
+    const dialogRef = this.dialog.open(EstimateDialogComponent, {
+      width: '560px'
+    });
+
+    dialogRef.afterClosed().subscribe(item => {
+      if (item) {
+        const existing = this.invoiceDetails.find((d: any) => d.productId === item.productId);
+        if (existing) {
+          existing.quantity += item.quantity;
+          existing.subtotal = existing.quantity * existing.priceAtTransaction;
+        } else {
+          this.invoiceDetails.push(item);
+        }
+
+        // Trigger change detection for mat-table by creating a new array reference
+        this.invoiceDetails = [...this.invoiceDetails];
+        this.dataSource.data = this.invoiceDetails;
+        this.calculateTotals();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -180,7 +221,7 @@ export class CashierDetailComponent implements OnInit {
     const payload = {
       paymentMethod: this.paymentMethod,
       discount: this.discount,
-      details: this.transaction.details.map((d: any) => ({
+      details: this.invoiceDetails.map((d: any) => ({
         productId: d.productId,
         quantity: d.quantity,
         priceAtTransaction: d.priceAtTransaction
@@ -193,6 +234,7 @@ export class CashierDetailComponent implements OnInit {
 
         const printedTransaction = {
           ...this.transaction,
+          details: this.invoiceDetails,
           paymentMethod: this.paymentMethod,
           discount: this.discount,
           totalAmount: this.grandTotal,

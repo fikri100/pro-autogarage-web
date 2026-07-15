@@ -57,7 +57,7 @@
         </div>
 
         <!-- Action Button -->
-        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading"
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading"
           style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; background-color: #1e3a8a; color: #ffffff; width: 100%; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
           <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
           <span>{{ loading ? 'WAITING...' : 'LOGIN' }}</span>

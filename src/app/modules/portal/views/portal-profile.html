@@ -130,7 +130,7 @@
 
       <!-- Action Footer -->
       <div class="portal-card-footer">
-        <button mat-flat-button color="primary" type="submit" [disabled]="profileForm.invalid || isSaving"
+        <button mat-flat-button color="primary" type="submit" [disabled]="isSaving"
           class="btn-portal-save">
           <mat-icon>save</mat-icon>
           {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}

@@ -40,7 +40,7 @@
                 </mat-form-field>
 
                 <button mat-stroked-button type="button" *ngIf="!otpSent" (click)="sendOTP()"
-                  [disabled]="step1Form.get('name')?.invalid || step1Form.get('phone')?.invalid || loading"
+                  [disabled]="loading"
                   class="btn-otp-send">
                   KIRIM OTP
                 </button>
@@ -63,7 +63,7 @@
 
             <!-- Send OTP Action -->
             <button mat-flat-button color="primary" type="button" *ngIf="otpSent" (click)="verifyOTP()"
-              [disabled]="step1Form.invalid || loading"
+              [disabled]="loading"
               class="btn-portal-submit">
               <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
               <span>VERIFIKASI OTP & LANJUT</span>
@@ -122,7 +122,7 @@
             </div>
 
             <!-- Submit Register Action -->
-            <button mat-flat-button color="primary" type="submit" [disabled]="step2Form.invalid || loading"
+            <button mat-flat-button color="primary" type="submit" [disabled]="loading"
               class="btn-portal-submit">
               <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
               <span>DAFTAR SEKARANG</span>

@@ -82,7 +82,7 @@
 
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="userForm.invalid || isSaving" class="btn-save btn-primary-custom">
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save btn-primary-custom">
     <mat-icon>save</mat-icon>
     <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'SIMPAN USER' }}</span>
   </button>

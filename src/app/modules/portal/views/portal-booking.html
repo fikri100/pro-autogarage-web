@@ -159,7 +159,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button mat-flat-button color="primary" type="submit" [disabled]="bookingForm.invalid || loading"
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading"
           class="btn-portal-submit">
           <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
           <span>{{ loading ? 'MENGAJUKAN...' : 'AJUKAN RESERVASI SEKARANG' }}</span>

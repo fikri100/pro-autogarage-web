@@ -33,6 +33,7 @@ export class WorkOrderDetailComponent implements OnInit {
   mechanicsLoaded = false;
   estimationDetails: any[] = [];
   estimationTotal = 0;
+  hasUnsavedEstimations = false;
 
   // Mechanic assignment fields
   selectedMechanicId: number | null = null;
@@ -73,8 +74,11 @@ export class WorkOrderDetailComponent implements OnInit {
       }
 
       this.computeEstimatedCompletion(this.workOrder);
-      this.loadEstimationDetails(this.workOrder.id!);
-      this.setupMechanicAutocomplete();
+
+      setTimeout(() => {
+        this.loadEstimationDetails(this.workOrder.id!);
+        this.setupMechanicAutocomplete();
+      });
 
       // Handle closing via backdrop click or ESC key to return correct reload status
       this.dialogRef.backdropClick().subscribe(() => {
@@ -162,11 +166,13 @@ export class WorkOrderDetailComponent implements OnInit {
           this.estimationDetails = [];
           this.estimationTotal = 0;
         }
+        this.hasUnsavedEstimations = false;
         this.cdr.detectChanges();
       },
       error: () => {
         this.estimationDetails = [];
         this.estimationTotal = 0;
+        this.hasUnsavedEstimations = false;
         this.cdr.detectChanges();
       }
     });
@@ -240,7 +246,8 @@ export class WorkOrderDetailComponent implements OnInit {
         // Trigger change detection for mat-table by creating a new array reference
         this.estimationDetails = [...this.estimationDetails];
         this.calculateTotal();
-        this.saveEstimationToBackend();
+        this.hasUnsavedEstimations = true;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -263,7 +270,8 @@ export class WorkOrderDetailComponent implements OnInit {
         this.estimationDetails.splice(index, 1);
         this.estimationDetails = [...this.estimationDetails]; // Trigger change detection
         this.calculateTotal();
-        this.saveEstimationToBackend();
+        this.hasUnsavedEstimations = true;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -272,7 +280,8 @@ export class WorkOrderDetailComponent implements OnInit {
     if (this.workOrder?.workStatus !== 'IN_PROGRESS') return;
     this.estimationDetails[index].quantity += 1;
     this.calculateTotal();
-    this.saveEstimationToBackend();
+    this.hasUnsavedEstimations = true;
+    this.cdr.detectChanges();
   }
 
   decrementQty(index: number): void {
@@ -283,12 +292,16 @@ export class WorkOrderDetailComponent implements OnInit {
     } else {
       this.estimationDetails[index].quantity -= 1;
       this.calculateTotal();
-      this.saveEstimationToBackend();
+      this.hasUnsavedEstimations = true;
+      this.cdr.detectChanges();
     }
   }
 
   saveEstimationToBackend(): void {
     if (!this.workOrder) return;
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
 
     const payload = this.estimationDetails.map(d => ({
       productId: d.productId,
@@ -301,11 +314,16 @@ export class WorkOrderDetailComponent implements OnInit {
         this.snackBar.open('Estimasi biaya berhasil diperbarui!', 'OK', { duration: 2500, panelClass: 'snack-success' });
         this.loadEstimationDetails(this.workOrder.id!);
         this.isChanged = true;
+        this.isSaving = false;
+        this.hasUnsavedEstimations = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         const errMsg = err.error || 'Gagal menyimpan estimasi';
         this.snackBar.open(errMsg, 'Tutup', { duration: 3000, panelClass: 'snack-error' });
         this.loadEstimationDetails(this.workOrder.id!);
+        this.isSaving = false;
+        this.cdr.detectChanges();
       }
     });
   }

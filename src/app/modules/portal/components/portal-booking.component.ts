@@ -311,7 +311,10 @@ export class PortalBookingComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.bookingForm.invalid) return;
+    if (this.bookingForm.invalid) {
+      this.bookingForm.markAllAsTouched();
+      return;
+    }
     this.loading = true;
 
     // Use getRawValue to retrieve disabled inputs (e.g. brand, license plate)

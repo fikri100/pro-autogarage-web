@@ -66,7 +66,7 @@
 
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="employeeForm.invalid || isSaving" class="btn-save">
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
     <mat-icon>save</mat-icon>
     <span>{{ data.mode === 'edit' ? 'SIMPAN PERUBAHAN' : 'TAMBAH KARYAWAN' }}</span>
   </button>

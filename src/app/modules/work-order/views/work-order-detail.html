@@ -105,7 +105,7 @@
       </mat-tab>
 
       <!-- Tab 2: Rincian Estimasi -->
-      <mat-tab>
+      <mat-tab [disabled]="!workOrder || !workOrder.mechanicId">
         <ng-template mat-tab-label>
           <mat-icon class="icon-mr-0-4">receipt_long</mat-icon>
           Rincian Estimasi
@@ -237,9 +237,18 @@
     <span>SIMPAN</span>
   </button>
 
+  <!-- Muncul hanya saat Tab 2 (Rincian Estimasi) aktif -->
+  <button mat-flat-button color="primary"
+    *ngIf="workOrder && workOrder.workStatus === 'IN_PROGRESS' && selectedTabIndex === 1"
+    class="btn-dialog-primary-dark mr-8px"
+    [disabled]="isSaving" (click)="saveEstimationToBackend()">
+    <mat-icon class="icon-mr-0-4">save</mat-icon>
+    <span>SIMPAN ESTIMASI</span>
+  </button>
+
   <button mat-flat-button color="primary" class="btn-complete-service"
     *ngIf="workOrder && workOrder.workStatus === 'IN_PROGRESS' && selectedTabIndex === 1 && workOrder.mechanicId"
-    [disabled]="estimationDetails.length === 0 || isSaving" (click)="completeWO()">
+    [disabled]="estimationDetails.length === 0 || isSaving || hasUnsavedEstimations" (click)="completeWO()">
     <mat-icon class="icon-mr-0-4">check_circle</mat-icon>
     SELESAI SERVIS
   </button>

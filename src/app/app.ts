@@ -2,6 +2,7 @@ import { Component, ViewChild, HostListener, OnInit, OnDestroy } from '@angular/
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import { PortalService } from './modules/portal/services/portal.service';
 
 @Component({
   selector: 'app-root',
@@ -17,9 +18,11 @@ export class App implements OnInit, OnDestroy {
   // Plain property — safe for *ngFor, no CD loop
   menuItems: any[] = [];
   private menusSub?: Subscription;
+  private sessionCheckInterval: any;
 
   constructor(
     private authService: AuthService,
+    private portalService: PortalService,
     private router: Router
   ) {}
   
@@ -31,10 +34,33 @@ export class App implements OnInit, OnDestroy {
     this.menusSub = this.authService.menus$.subscribe(menus => {
       this.menuItems = menus;
     });
+
+    // Check session validity periodically (every 5 seconds)
+    this.sessionCheckInterval = setInterval(() => {
+      this.checkSessionExpiry();
+    }, 5000);
   }
 
   ngOnDestroy() {
     this.menusSub?.unsubscribe();
+    if (this.sessionCheckInterval) {
+      clearInterval(this.sessionCheckInterval);
+    }
+  }
+
+  checkSessionExpiry() {
+    const url = this.router.url;
+    if (this.isPortalRoute()) {
+      const customer = this.portalService.currentCustomer;
+      if (customer && !this.portalService.isLoggedIn() && url !== '/portal/login') {
+        this.portalService.logout();
+      }
+    } else {
+      const user = this.authService.currentUser;
+      if (user && !this.authService.isLoggedIn() && url !== '/login') {
+        this.authService.logout();
+      }
+    }
   }
 
   @HostListener('window:resize')

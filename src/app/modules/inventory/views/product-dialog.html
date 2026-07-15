@@ -41,6 +41,9 @@
               <mat-autocomplete #typeAuto="matAutocomplete" [displayWith]="displayItemType">
                 <mat-option *ngFor="let t of filteredItemTypes$ | async" [value]="t.value">{{ t.label }}</mat-option>
               </mat-autocomplete>
+              <mat-error *ngIf="productForm.get('itemType')?.hasError('required')">
+                Tipe item wajib dipilih
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -85,6 +88,9 @@
               <mat-autocomplete #catAuto="matAutocomplete" [displayWith]="displayCategory">
                 <mat-option *ngFor="let cat of filteredCategories$ | async" [value]="cat">{{ cat }}</mat-option>
               </mat-autocomplete>
+              <mat-error *ngIf="productForm.get('category')?.hasError('required')">
+                Kategori wajib dipilih
+              </mat-error>
             </mat-form-field>
           </div>
         </div>

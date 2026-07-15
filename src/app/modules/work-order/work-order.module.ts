@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { WorkOrderComponent } from './components/work-order.component';
-import { EstimateDialogComponent } from './components/estimate-dialog.component';
 import { WorkOrderDetailComponent } from './components/work-order-detail.component';
 import { routes } from './work-order.routes';
+import { SharedModule } from '../shared.module';
 
 // Angular Material
 import { MatTableModule } from '@angular/material/table';
@@ -26,7 +26,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 @NgModule({
   declarations: [
     WorkOrderComponent,
-    EstimateDialogComponent,
     WorkOrderDetailComponent
   ],
   imports: [
@@ -46,7 +45,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSelectModule,
     MatAutocompleteModule,
     MatPaginatorModule,
-    MatTabsModule
+    MatTabsModule,
+    SharedModule
   ]
 })
 export class WorkOrderModule { }

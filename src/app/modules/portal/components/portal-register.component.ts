@@ -57,7 +57,11 @@ export class PortalRegisterComponent implements OnInit {
   }
 
   sendOTP(): void {
-    if (this.step1Form.get('name')?.invalid || this.step1Form.get('phone')?.invalid) return;
+    if (this.step1Form.get('name')?.invalid || this.step1Form.get('phone')?.invalid) {
+      this.step1Form.get('name')?.markAsTouched();
+      this.step1Form.get('phone')?.markAsTouched();
+      return;
+    }
     this.loading = true;
     this.cdr.detectChanges();
 
@@ -82,7 +86,11 @@ export class PortalRegisterComponent implements OnInit {
   }
 
   verifyOTP(): void {
-    if (this.step1Form.invalid || !this.otpSent) return;
+    if (!this.otpSent) return;
+    if (this.step1Form.invalid) {
+      this.step1Form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
     this.cdr.detectChanges();
 
@@ -105,7 +113,11 @@ export class PortalRegisterComponent implements OnInit {
   }
 
   onSubmitRegister(): void {
-    if (this.step2Form.invalid || !this.otpVerified) return;
+    if (!this.otpVerified) return;
+    if (this.step2Form.invalid) {
+      this.step2Form.markAllAsTouched();
+      return;
+    }
     this.loading = true;
     this.cdr.detectChanges();
 

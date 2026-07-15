@@ -47,15 +47,28 @@
 
         <div class="dialog-tab-scroll-container">
 
+          <!-- Header Row with Add Item Button -->
+          <div class="cashier-details-header-row">
+            <h4 class="cashier-details-title">
+              <mat-icon class="cashier-details-icon">receipt_long</mat-icon>
+              Rincian Item Faktur
+            </h4>
+            <div *ngIf="transaction && transaction.paymentStatus === 'UNPAID'">
+              <button mat-icon-button class="btn-add-circle" matTooltip="Tambah Sparepart / Jasa" (click)="showAddItemModal()">
+                <mat-icon class="icon-1-2">add</mat-icon>
+              </button>
+            </div>
+          </div>
+
           <!-- Empty Items State -->
-          <div *ngIf="transaction.details.length === 0" class="dialog-empty-state">
+          <div *ngIf="invoiceDetails.length === 0" class="dialog-empty-state">
             <mat-icon class="dialog-empty-state-icon">remove_shopping_cart</mat-icon>
             <p class="dialog-empty-state-text">Tidak ada item di faktur ini.</p>
           </div>
 
           <!-- Items Table -->
-          <div *ngIf="transaction.details.length > 0" class="dialog-table-wrapper">
-            <table mat-table [dataSource]="transaction.details" class="dialog-table">
+          <div *ngIf="invoiceDetails.length > 0" class="dialog-table-wrapper scrollable-table-wrapper">
+            <table mat-table [dataSource]="dataSource" class="dialog-table">
 
               <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef class="dialog-th">Kode</th>
@@ -120,7 +133,7 @@
           </div>
 
           <!-- Subtotal Summary Footer inside Faktur tab -->
-          <div *ngIf="transaction.details.length > 0" class="dialog-tab-footer">
+          <div *ngIf="invoiceDetails.length > 0" class="dialog-tab-footer">
             <div class="dialog-footer-text">
               Subtotal Item:
               <span class="dialog-footer-val">
@@ -247,7 +260,7 @@
 
   <!-- Muncul hanya saat Tab Pembayaran aktif -->
   <button mat-flat-button *ngIf="selectedTabIndex === 1" class="btn-dialog-primary-green"
-    [disabled]="submitting || !transaction || transaction?.details?.length === 0 || (paymentMethod === 'Tunai' && cashAmount < grandTotal)"
+    [disabled]="submitting || !transaction || invoiceDetails.length === 0 || (paymentMethod === 'Tunai' && cashAmount < grandTotal)"
     (click)="payAndPrint()">
     <mat-icon class="icon-mr-0-4" style="margin-right: 0.35rem !important;">print</mat-icon>
     <span>{{ submitting ? 'MEMPROSES...' : 'BAYAR &amp; CETAK STRUK' }}</span>

@@ -73,7 +73,10 @@ export class PortalProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.profileForm.invalid) return;
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
 
     const { name, username, address, currentPassword, newPassword, confirmPassword } = this.profileForm.value;
     

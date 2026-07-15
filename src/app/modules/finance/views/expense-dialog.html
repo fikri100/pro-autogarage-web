@@ -18,6 +18,9 @@
           <mat-autocomplete #cashflowAuto="matAutocomplete" [displayWith]="displayCashflowType">
             <mat-option *ngFor="let t of filteredCashflowTypes$ | async" [value]="t.value">{{ t.label }}</mat-option>
           </mat-autocomplete>
+          <mat-error *ngIf="expenseForm.get('cashflowType')?.hasError('required')">
+            Tipe arus kas wajib dipilih
+          </mat-error>
         </mat-form-field>
       </div>
 

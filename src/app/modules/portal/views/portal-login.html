@@ -47,7 +47,7 @@
         </div>
 
         <!-- Action Button -->
-        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading"
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading"
           class="btn-portal-submit">
           <mat-spinner diameter="20" *ngIf="loading" color="warn"></mat-spinner>
           <span>{{ loading ? 'WAITING...' : 'LOGIN' }}</span>
