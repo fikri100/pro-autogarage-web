@@ -2,7 +2,10 @@ import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { CustomerService } from '../customers.service';
+import { BookingService } from '../../booking/booking.service';
 import { Vehicle } from '../models/object';
 import { VehicleDialogComponent } from './vehicle-dialog.component';
 import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
@@ -21,6 +24,9 @@ export interface CustomerDialogData {
 export class CustomerDialogComponent implements OnInit {
   customerForm!: FormGroup;
   isSaving = false;
+
+  transmissions: { value: string; label: string }[] = [];
+  filteredTransmissions$!: Observable<any[]>;
 
   // State for Vehicles tab (edit mode)
   vehicles: Vehicle[] = [];
@@ -43,6 +49,7 @@ export class CustomerDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private customerService: CustomerService,
+    private bookingService: BookingService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
@@ -57,9 +64,19 @@ export class CustomerDialogComponent implements OnInit {
         phone: [this.data.customer?.phone ?? null, [Validators.required, Validators.pattern('^[0-9]*$')]],
         email: [this.data.customer?.email ?? null, [Validators.email]],
         address: [this.data.customer?.address ?? null],
-        plate: [null, [Validators.pattern(/^[A-Z]{1,3}\s[0-9]{1,4}\s[A-Z]{1,3}$/)]],
+        licensePlate: [null, [Validators.pattern(/^[A-Z]{1,3}\s[0-9]{1,4}\s[A-Z]{1,3}$/)]],
         brand: [null],
-        year: [null]
+        model: [null],
+        yearMade: [null],
+        transmission: [null]
+      });
+
+      this.bookingService.getParamsByGroup('VEHICLE_TRANSMISSION').subscribe(data => {
+        this.transmissions = (data || []).map(p => ({
+          value: p.nama_param,
+          label: p.nama_param
+        }));
+        this.setupAutocomplete();
       });
 
       if (this.data.mode === 'edit' && this.data.customer?.id) {
@@ -67,6 +84,20 @@ export class CustomerDialogComponent implements OnInit {
         this.loadHistory(this.data.customer.id);
       }
     }
+  }
+
+  setupAutocomplete() {
+    this.filteredTransmissions$ = this.customerForm.get('transmission')!.valueChanges.pipe(
+      startWith(this.customerForm.get('transmission')!.value || ''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value;
+        return name ? this.transmissions.filter(t => t.label.toLowerCase().includes(name.toLowerCase())) : this.transmissions.slice();
+      })
+    );
+  }
+
+  displayTransmission = (value: string): string => {
+    return value || '';
   }
 
   // Vehicle CRUD methods
@@ -219,7 +250,7 @@ export class CustomerDialogComponent implements OnInit {
 
   onPlateInput(event: any): void {
     const formatted = this.formatPlate(event.target.value);
-    this.customerForm.get('plate')?.setValue(formatted, { emitEvent: false });
+    this.customerForm.get('licensePlate')?.setValue(formatted, { emitEvent: false });
     event.target.value = formatted;
     event.target.setSelectionRange(formatted.length, formatted.length);
   }
@@ -256,7 +287,11 @@ export class CustomerDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.dialogRef.close(this.customerForm.value);
+        const val = { ...this.customerForm.value };
+        if (val.licensePlate) {
+          val.licensePlate = this.formatPlate(val.licensePlate);
+        }
+        this.dialogRef.close(val);
       }
     });
   }

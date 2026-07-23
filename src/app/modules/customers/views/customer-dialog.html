@@ -88,31 +88,53 @@
           <span class="optional-badge">OPSIONAL</span>
         </div>
 
-        <div class="three-col-grid">
+        <div class="form-col-wrapper mb-3">
+          <label class="form-label-static">Plat Nomor</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="licensePlate" (input)="onPlateInput($event)" placeholder="Contoh: B 1234 ABC"
+              class="input-plate-monospace" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="customerForm.get('licensePlate')?.hasError('pattern')">
+              Format salah. Contoh: B 1234 ABC atau AE 7887 RK
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="two-col-grid mb-3">
           <div class="form-col-wrapper">
-            <label class="form-label-static">Plat Nomor</label>
+            <label class="form-label-static">Brand / Merk</label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="plate" (input)="onPlateInput($event)" placeholder="Contoh: B 1234 ABC"
-                class="input-plate-monospace" />
-              <mat-icon matSuffix>badge</mat-icon>
-              <mat-hint>Ketik saja — format otomatis: B 6877 XYZ atau AE 7887 RK</mat-hint>
-              <mat-error *ngIf="customerForm.get('plate')?.hasError('pattern')">
-                Format salah. Contoh: B 1234 ABC atau AE 7887 RK
-              </mat-error>
+              <input matInput formControlName="brand" placeholder="e.g. Honda" />
+              <mat-icon matSuffix>directions_car</mat-icon>
             </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
-            <label class="form-label-static">Brand / Model</label>
+            <label class="form-label-static">Model / Seri</label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="brand" placeholder="e.g. Toyota Avanza" />
+              <input matInput formControlName="model" placeholder="e.g. Jazz GE8" />
+              <mat-icon matSuffix>minor_crash</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="two-col-grid">
+          <div class="form-col-wrapper">
+            <label class="form-label-static">Tahun Pembuatan</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput type="number" formControlName="yearMade" placeholder="e.g. 2013" min="1900" max="2100" />
+              <mat-icon matSuffix>calendar_today</mat-icon>
             </mat-form-field>
           </div>
 
           <div class="form-col-wrapper">
-            <label class="form-label-static">Tahun</label>
+            <label class="form-label-static">Transmisi</label>
             <mat-form-field appearance="outline" class="full-width">
-              <input matInput formControlName="year" placeholder="2020" type="number" />
+              <input type="text" matInput formControlName="transmission" [matAutocomplete]="transAuto"
+                placeholder="Ketik transmisi..." />
+              <mat-autocomplete #transAuto="matAutocomplete" [displayWith]="displayTransmission">
+                <mat-option *ngFor="let t of filteredTransmissions$ | async" [value]="t.value">{{ t.label }}</mat-option>
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </div>
@@ -123,8 +145,7 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving"
-      class="btn-save">
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
       <mat-icon>save</mat-icon>
       {{ isSaving ? 'TUNGGU...' : 'SIMPAN' }}
     </button>
@@ -343,8 +364,7 @@
 
   <mat-dialog-actions align="end" class="dialog-actions">
     <button mat-stroked-button (click)="onCancel()" class="btn-cancel">BATAL</button>
-    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving"
-      class="btn-save">
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="isSaving" class="btn-save">
       <mat-icon>save</mat-icon>
       SIMPAN PERUBAHAN
     </button>

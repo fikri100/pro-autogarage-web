@@ -57,6 +57,7 @@ export class ProductDialogComponent implements OnInit {
 
       this.inventoryService.getParamsByGroup('ITEM_TYPE').subscribe(typeData => {
         this.itemTypes = (typeData || []).map(t => ({
+          id: t.id,
           value: t.kode_param,
           label: t.nama_param
         }));
@@ -184,6 +185,10 @@ export class ProductDialogComponent implements OnInit {
       if (confirmed) {
         // Get raw values because disabled controls are not included in this.productForm.value
         const val = this.productForm.getRawValue();
+        const typeObj = this.itemTypes.find(t => t.value === val.itemType);
+        if (typeObj) {
+          val.itemTypeId = (typeObj as any).id;
+        }
         this.dialogRef.close(val);
       }
     });

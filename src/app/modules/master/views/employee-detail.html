@@ -25,18 +25,12 @@
           <label class="form-label-static">Jabatan / Posisi <span class="text-danger">*</span></label>
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matPrefix class="icon-prefix-slate">badge</mat-icon>
-            <input type="text" matInput formControlName="position" 
-                   [matAutocomplete]="autoPosition" 
-                   #posTrigger="matAutocompleteTrigger" 
-                   (focus)="posTrigger.openPanel()" 
-                   (click)="posTrigger.openPanel()" 
-                   placeholder="Pilih Jabatan (Role)" />
-            <mat-autocomplete #autoPosition="matAutocomplete" autoActiveFirstOption>
-              <mat-option *ngFor="let role of filteredRoles$ | async" [value]="role.roleName">
-                {{ role.roleName }}
+            <mat-select formControlName="positionId" placeholder="Pilih Jabatan / Posisi">
+              <mat-option *ngFor="let pos of positions" [value]="pos.id">
+                {{ pos.nama_param }}
               </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="employeeForm.get('position')?.hasError('required')">Jabatan/posisi wajib diisi</mat-error>
+            </mat-select>
+            <mat-error *ngIf="employeeForm.get('positionId')?.hasError('required')">Jabatan/posisi wajib diisi</mat-error>
           </mat-form-field>
         </div>
 

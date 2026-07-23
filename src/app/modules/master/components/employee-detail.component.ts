@@ -2,10 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MasterService } from '../master.service';
-import { Employee, Role } from '../models/master.model';
+import { Employee } from '../models/master.model';
 import { ConfirmationDialogComponent } from '../../../components/confirmation-dialog.component';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 
 export interface EmployeeDetailData {
   mode: 'add' | 'edit';
@@ -20,8 +18,7 @@ export interface EmployeeDetailData {
 export class EmployeeDetailComponent implements OnInit {
   employeeForm!: FormGroup;
   isSaving = false;
-  roles: Role[] = [];
-  filteredRoles$!: Observable<Role[]>;
+  positions: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -33,21 +30,16 @@ export class EmployeeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadRoles();
+    this.loadPositions();
   }
 
   private initForm(): void {
     this.employeeForm = this.fb.group({
       name: [this.data.employee?.name || '', [Validators.required, Validators.minLength(2)]],
       phone: [this.data.employee?.phone || '', [Validators.required, Validators.pattern('^[0-9]*$')]],
-      position: [this.data.employee?.position || null, [Validators.required]],
+      positionId: [this.data.employee?.positionId || null, [Validators.required]],
       address: [this.data.employee?.address || '', []]
     });
-
-    this.filteredRoles$ = this.employeeForm.get('position')!.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterRoles(value || ''))
-    );
   }
 
   onPhoneKeyPress(event: KeyboardEvent): void {
@@ -57,18 +49,10 @@ export class EmployeeDetailComponent implements OnInit {
     }
   }
 
-  private _filterRoles(value: string): Role[] {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-    return this.roles.filter(role => role.roleName.toLowerCase().includes(filterValue));
-  }
-
-  loadRoles(): void {
-    this.api.getRoles().subscribe({
+  loadPositions(): void {
+    this.api.getParamsByGroup('EMPLOYEE_POSITION').subscribe({
       next: (data) => {
-        this.roles = data || [];
-        // Force filteredRoles$ to emit with the loaded roles
-        const currentVal = this.employeeForm.get('position')?.value;
-        this.employeeForm.get('position')?.setValue(currentVal, { emitEvent: true });
+        this.positions = data || [];
       }
     });
   }

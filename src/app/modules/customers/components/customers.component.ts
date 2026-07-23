@@ -74,7 +74,8 @@ export class CustomersComponent implements OnInit, OnDestroy {
 
   showAddModal(): void {
     const dialogRef = this.dialog.open(CustomerDialogComponent, {
-      width: '620px',
+      width: '680px',
+      maxWidth: '95vw',
       disableClose: false,
       data: { mode: 'add' }
     });

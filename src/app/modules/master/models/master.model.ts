@@ -16,5 +16,6 @@ export interface Employee {
   name: string;
   phone: string;
   address?: string;
-  position: string;
+  positionId?: number;
+  position?: string;
 }

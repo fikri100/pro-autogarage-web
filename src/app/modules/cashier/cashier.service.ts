@@ -27,4 +27,8 @@ export class CashierService {
   payInvoice(transId: number, payload: any): Observable<void> {
     return this.http.post<void>(`${this.transactionUrl}/${transId}/pay`, payload);
   }
+
+  getParamsByGroup(group: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/params?group_param=${group}`);
+  }
 }

@@ -186,30 +186,18 @@
           <!-- Payment Methods -->
           <div style="display: flex; flex-direction: column; gap: 0.4rem;">
             <span class="dialog-section-label-caps">Metode Pembayaran</span>
-            <div style="display: flex; gap: 0.5rem;">
-              <button mat-stroked-button class="btn-payment-method" style="flex: 1;"
-                [class.btn-payment-method--tunai-active]="paymentMethod === 'Tunai'"
-                (click)="changePaymentMethod('Tunai')">
-                <mat-icon class="icon-mr-0-4">payments</mat-icon>
-                TUNAI
-              </button>
-              <button mat-stroked-button class="btn-payment-method" style="flex: 1.3;"
-                [class.btn-payment-method--transfer-active]="paymentMethod === 'Transfer Bank'"
-                (click)="changePaymentMethod('Transfer Bank')">
-                <mat-icon class="icon-mr-0-4">account_balance</mat-icon>
-                TRANSFER
-              </button>
-              <button mat-stroked-button class="btn-payment-method" style="flex: 1;"
-                [class.btn-payment-method--qris-active]="paymentMethod === 'QRIS'"
-                (click)="changePaymentMethod('QRIS')">
-                <mat-icon class="icon-mr-0-4">qr_code_scanner</mat-icon>
-                QRIS
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button *ngFor="let method of paymentMethods" mat-stroked-button class="btn-payment-method" style="flex: 1; min-width: 100px;"
+                [class.btn-payment-method--tunai-active]="paymentMethodId === method.id || paymentMethod === method.nama_param"
+                (click)="changePaymentMethod(method)">
+                <mat-icon class="icon-mr-0-4">{{ method.kode_param === 'CASH' ? 'payments' : (method.kode_param === 'TRANSFER' ? 'account_balance' : (method.kode_param === 'QRIS' ? 'qr_code_scanner' : 'credit_card')) }}</mat-icon>
+                {{ method.nama_param | uppercase }}
               </button>
             </div>
           </div>
 
-          <!-- Cash Input (only Tunai) -->
-          <div *ngIf="paymentMethod === 'Tunai'" class="dialog-cash-input-box">
+          <!-- Cash Input (only Tunai/CASH) -->
+          <div *ngIf="paymentMethod === 'Tunai' || paymentMethod === 'CASH'" class="dialog-cash-input-box">
             <div class="form-col-wrapper">
               <label class="form-label-static" style="font-size: 0.75rem;">Uang Tunai Diterima <span class="required">*</span></label>
               <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-100">
@@ -230,7 +218,7 @@
           </div>
 
           <!-- Info for non-Tunai -->
-          <div *ngIf="paymentMethod !== 'Tunai'" class="dialog-info-box-blue">
+          <div *ngIf="paymentMethod !== 'Tunai' && paymentMethod !== 'CASH'" class="dialog-info-box-blue">
             <mat-icon class="icon-mr-0-4">info_outline</mat-icon>
             <span>Jumlah yang harus dibayar: <strong>{{ grandTotal | currency:'IDR':'Rp ':'1.0-0' }}</strong></span>
           </div>

@@ -36,7 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error) => {
-      // 401 Unauthorized handling for protected endpoints
+      // Public endpoints that don't trigger logout redirect
       const isPublicRoute = req.url.includes('/api/login') ||
                             req.url.includes('/api/portal/login') ||
                             req.url.includes('/api/portal/register') ||
@@ -44,7 +44,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                             req.url.includes('/api/portal/send-otp') ||
                             req.url.includes('/api/health');
 
-      if (error && error.status === 401 && !isPublicRoute) {
+      const errBodyStr = typeof error?.error === 'string' 
+        ? error.error 
+        : JSON.stringify(error?.error || '');
+
+      const isUnauthorized = !isPublicRoute && (
+        error?.status === 401 ||
+        error?.status === 403 ||
+        errBodyStr.toLowerCase().includes('unauthorized') ||
+        errBodyStr.toLowerCase().includes('missing token') ||
+        errBodyStr.toLowerCase().includes('invalid token')
+      );
+
+      if (isUnauthorized) {
         if (isPortalApi) {
           portalService.logout();
         } else {

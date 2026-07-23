@@ -28,7 +28,9 @@ export class CashierDetailComponent implements OnInit {
   discount = 0;
   cashAmount = 0;
   changeAmount = 0;
-  paymentMethod: 'Tunai' | 'Transfer Bank' | 'QRIS' = 'Tunai';
+  paymentMethods: any[] = [];
+  paymentMethodId: number = 0;
+  paymentMethod: string = 'Tunai';
 
   // Computed Values
   subtotal = 0;
@@ -51,7 +53,24 @@ export class CashierDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadPaymentMethods();
     this.loadTransaction();
+  }
+
+  loadPaymentMethods(): void {
+    this.cashierService.getParamsByGroup('PAYMENT_METHOD').subscribe({
+      next: (res: any[]) => {
+        this.paymentMethods = res || [];
+        const defaultMethod = this.paymentMethods.find(m => m.kode_param === 'CASH' || m.nama_param === 'Tunai');
+        if (defaultMethod) {
+          this.paymentMethodId = defaultMethod.id;
+          this.paymentMethod = defaultMethod.nama_param;
+        } else if (this.paymentMethods.length > 0) {
+          this.paymentMethodId = this.paymentMethods[0].id;
+          this.paymentMethod = this.paymentMethods[0].nama_param;
+        }
+      }
+    });
   }
 
   loadTransaction(): void {
@@ -66,7 +85,6 @@ export class CashierDetailComponent implements OnInit {
         this.dataSource.data = this.invoiceDetails;
         this.discount = 0;
         this.cashAmount = 0;
-        this.paymentMethod = 'Tunai';
         this.calculateTotals();
         this.loading = false;
         this.cdr.detectChanges();
@@ -98,7 +116,8 @@ export class CashierDetailComponent implements OnInit {
     this.taxAmount = cleanNet * 0.11;
     this.grandTotal = cleanNet + this.taxAmount;
 
-    if (this.paymentMethod !== 'Tunai') {
+    const isTunai = this.paymentMethod === 'Tunai' || this.paymentMethod === 'CASH';
+    if (!isTunai) {
       this.cashAmount = this.grandTotal;
     }
 
@@ -124,9 +143,18 @@ export class CashierDetailComponent implements OnInit {
     this.calculateChange();
   }
 
-  changePaymentMethod(method: 'Tunai' | 'Transfer Bank' | 'QRIS'): void {
-    this.paymentMethod = method;
-    if (method !== 'Tunai') {
+  changePaymentMethod(methodInput: any): void {
+    if (typeof methodInput === 'object' && methodInput !== null) {
+      this.paymentMethodId = methodInput.id;
+      this.paymentMethod = methodInput.nama_param;
+    } else {
+      this.paymentMethod = methodInput;
+      const found = this.paymentMethods.find(m => m.nama_param === methodInput || m.kode_param === methodInput);
+      if (found) this.paymentMethodId = found.id;
+    }
+
+    const isTunai = this.paymentMethod === 'Tunai' || this.paymentMethod === 'CASH';
+    if (!isTunai) {
       this.cashAmount = this.grandTotal;
     } else {
       this.cashAmount = 0;
@@ -175,7 +203,7 @@ export class CashierDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         this.invoiceDetails.splice(index, 1);
-        this.invoiceDetails = [...this.invoiceDetails]; // Trigger change detection
+        this.invoiceDetails = [...this.invoiceDetails];
         this.dataSource.data = this.invoiceDetails;
         this.calculateTotals();
         this.cdr.detectChanges();
@@ -200,7 +228,6 @@ export class CashierDetailComponent implements OnInit {
           this.invoiceDetails.push(item);
         }
 
-        // Trigger change detection for mat-table by creating a new array reference
         this.invoiceDetails = [...this.invoiceDetails];
         this.dataSource.data = this.invoiceDetails;
         this.calculateTotals();
@@ -210,7 +237,8 @@ export class CashierDetailComponent implements OnInit {
   }
 
   payAndPrint(): void {
-    if (this.paymentMethod === 'Tunai' && this.cashAmount < this.grandTotal) {
+    const isTunai = this.paymentMethod === 'Tunai' || this.paymentMethod === 'CASH';
+    if (isTunai && this.cashAmount < this.grandTotal) {
       this.snackBar.open('Uang yang diterima kurang dari total tagihan!', 'Tutup', { duration: 3000, panelClass: 'snack-error' });
       return;
     }
@@ -219,6 +247,7 @@ export class CashierDetailComponent implements OnInit {
     this.cdr.detectChanges();
 
     const payload = {
+      paymentMethodId: this.paymentMethodId,
       paymentMethod: this.paymentMethod,
       discount: this.discount,
       details: this.invoiceDetails.map((d: any) => ({
@@ -235,6 +264,7 @@ export class CashierDetailComponent implements OnInit {
         const printedTransaction = {
           ...this.transaction,
           details: this.invoiceDetails,
+          paymentMethodId: this.paymentMethodId,
           paymentMethod: this.paymentMethod,
           discount: this.discount,
           totalAmount: this.grandTotal,

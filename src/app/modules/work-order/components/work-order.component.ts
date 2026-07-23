@@ -77,7 +77,7 @@ export class WorkOrderComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(WorkOrderDetailComponent, {
       width: '85vw',
       maxWidth: '950px',
-      data: { workOrder: wo }
+      data: { workOrder: { ...wo } }
     });
 
     dialogRef.afterClosed().subscribe(result => {

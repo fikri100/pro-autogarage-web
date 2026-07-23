@@ -51,6 +51,7 @@ export class ExpenseDialogComponent implements OnInit {
 
     this.financeService.getParamsByGroup('CASHFLOW_TYPE').subscribe(typeData => {
       this.cashflowTypes = (typeData || []).map(p => ({
+        id: p.id,
         value: p.kode_param,
         label: p.kode_param === 'INC' ? 'Pemasukan (Income)' : p.kode_param === 'EXP' ? 'Pengeluaran (Expense)' : p.nama_param
       }));
@@ -161,7 +162,10 @@ export class ExpenseDialogComponent implements OnInit {
       flowDateStr = `${year}-${month}-${day}`;
     }
 
+    const selectedTypeObj = this.cashflowTypes.find(t => t.value === val.cashflowType);
+
     const payload = {
+      cashflowTypeId: selectedTypeObj ? (selectedTypeObj as any).id : null,
       cashflowType: val.cashflowType,
       amount: val.amount,
       category: val.category,

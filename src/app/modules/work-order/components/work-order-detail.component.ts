@@ -56,7 +56,7 @@ export class WorkOrderDetailComponent implements OnInit {
     public dialogRef: MatDialogRef<WorkOrderDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: WorkOrderDetailData
   ) {
-    this.workOrder = data.workOrder;
+    this.workOrder = data.workOrder ? { ...data.workOrder } : {} as WorkOrder;
   }
 
   ngOnInit(): void {
@@ -74,11 +74,8 @@ export class WorkOrderDetailComponent implements OnInit {
       }
 
       this.computeEstimatedCompletion(this.workOrder);
-
-      setTimeout(() => {
-        this.loadEstimationDetails(this.workOrder.id!);
-        this.setupMechanicAutocomplete();
-      });
+      this.setupMechanicAutocomplete();
+      this.loadEstimationDetails(this.workOrder.id!);
 
       // Handle closing via backdrop click or ESC key to return correct reload status
       this.dialogRef.backdropClick().subscribe(() => {
